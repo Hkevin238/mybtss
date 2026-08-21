@@ -94,7 +94,6 @@ Respond to the user in the language they selected or requested. Always maintain 
 """
 
 # 4. Initialize Groq Client
-# (Ensure you have set your GROQ_API_KEY environment variable or replace it securely)
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
 # 5. Main UI Layout (ChatGPT Style)
@@ -132,30 +131,27 @@ if user_query or uploaded_file:
             st.image(img, caption="Uploaded Image", use_column_width=True)
         st.markdown(prompt_content)
 
-    # Generate AI response using Groq
+    # Generate AI response using Groq with requested model
     with st.chat_message("assistant"):
         with st.spinner("BULINGA AI irimo gutekereza..."):
             try:
-                # Construct messages including system instructions and language context
                 messages_payload = [
                     {"role": "system", "content": BULINGA_INFO + f"\n[Current Preferred Language: {selected_lang}]"},
                 ]
                 
-                # Append history
                 for m in st.session_state.messages:
                     messages_payload.append({"role": m["role"], "content": m["content"]})
 
                 completion = client.chat.completions.create(
-                    model="llama-3.2-11b-vision-preview" if uploaded_file else "llama-3.3-70b-versatile",
+                    model="openai/gpt-oss-20b",
                     messages=messages_payload,
-                    temperature=0.5,
+                    temperature=0.7,
                     max_tokens=1024
                 )
                 
                 response_text = completion.choices[0].message.content
                 st.markdown(response_text)
                 
-                # Save assistant response to history
                 st.session_state.messages.append({"role": "assistant", "content": response_text})
 
             except Exception as e:
