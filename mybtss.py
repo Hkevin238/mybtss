@@ -3,7 +3,7 @@ import streamlit as st
 from PIL import Image
 from groq import Groq
 
-# 1. Page Configuration (ChatGPT-like layout)
+# 1. Page Configuration
 st.set_page_config(
     page_title="BULINGA AI - Assistant",
     page_icon="🤖",
@@ -11,11 +11,35 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to match ChatGPT UI look, bubble alignments, and custom input styling
+# 2. Custom CSS to align User messages to the Right and AI messages to the Left like ChatGPT
 st.markdown("""
     <style>
     .stApp { background-color: #0e1117; color: #ffffff; }
+
+    /* Hide standard Streamlit avatars or adjust layout for chat bubbles */
+    .stChatMessage {
+        padding: 1rem;
+        border-radius: 1rem;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+    }
     
+    /* User message styling: align to right */
+    [data-testid="stChatMessage"]:nth-child(odd) {
+        flex-direction: row-reverse;
+        background-color: #2f323b;
+        margin-left: 20%;
+        border-radius: 15px 15px 0px 15px;
+    }
+
+    /* Assistant message styling: align to left */
+    [data-testid="stChatMessage"]:nth-child(even) {
+        background-color: #1e2129;
+        margin-right: 20%;
+        border-radius: 15px 15px 15px 0px;
+    }
+
     /* ChatGPT-like Input styling */
     .stChatInputContainer {
         border-radius: 12px;
@@ -112,7 +136,6 @@ st.caption("Your intelligent guide for Bulinga Technical Secondary School | Crea
 # Load logo image for assistant avatar if present
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
 
-# Display Logo in sidebar
 if avatar_img:
     logo_img = Image.open(avatar_img)
     st.sidebar.image(logo_img, caption="Bulinga TVET School Logo")
@@ -123,8 +146,8 @@ if "messages" not in st.session_state:
 
 # Display chat messages from history with specific avatars (btss.png for assistant)
 for message in st.session_state.messages:
-    avatar = avatar_img if message["role"] == "assistant" else None
-    with st.chat_message(message["role"], avatar=avatar):
+    current_avatar = avatar_img if message["role"] == "assistant" else None
+    with st.chat_message(message["role"], avatar=current_avatar):
         st.markdown(message["content"])
 
 # Chat input from user with ChatGPT-like placeholder text
@@ -138,7 +161,6 @@ if user_query:
 
     # Generate AI response using Groq with requested model and custom thinking state
     with st.chat_message("assistant", avatar=avatar_img):
-        # Thinking placeholder message matching user requirement
         thinking_placeholder = st.empty()
         thinking_placeholder.markdown('<p class="thinking-text">⚪ Bulinga TSS AI thinking....</p>', unsafe_allow_html=True)
         
@@ -159,11 +181,9 @@ if user_query:
             
             response_text = completion.choices[0].message.content
             
-            # Clear thinking placeholder and show actual response
             thinking_placeholder.empty()
             st.markdown(response_text)
             
-            # Save assistant response to history
             st.session_state.messages.append({"role": "assistant", "content": response_text})
 
         except Exception as e:
