@@ -3,7 +3,7 @@ import streamlit as st
 from PIL import Image
 from groq import Groq
 
-# 1. Page Configuration
+# 1. Page Configuration (Full-width / Centered clean layout)
 st.set_page_config(
     page_title="BULINGA AI - Assistant",
     page_icon="🤖",
@@ -11,43 +11,25 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to align User messages to the Right and AI messages to the Left like ChatGPT
+# 2. Custom CSS to style the chat input box like Gemini/ChatGPT (dark capsule style)
 st.markdown("""
     <style>
-    .stApp { background-color: #0e1117; color: #ffffff; }
+    .stApp { background-color: #131314; color: #e3e3e3; }
 
-    /* Hide standard Streamlit avatars or adjust layout for chat bubbles */
-    .stChatMessage {
-        padding: 1rem;
-        border-radius: 1rem;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: row;
-    }
-    
-    /* User message styling: align to right */
-    [data-testid="stChatMessage"]:nth-child(odd) {
-        flex-direction: row-reverse;
-        background-color: #2f323b;
-        margin-left: 20%;
-        border-radius: 15px 15px 0px 15px;
-    }
-
-    /* Assistant message styling: align to left */
-    [data-testid="stChatMessage"]:nth-child(even) {
-        background-color: #1e2129;
-        margin-right: 20%;
-        border-radius: 15px 15px 15px 0px;
-    }
-
-    /* ChatGPT-like Input styling */
+    /* Customizing the Streamlit chat input box container to look like Gemini/ChatGPT bar */
     .stChatInputContainer {
-        border-radius: 12px;
-        border: 1px solid #303033;
-        background-color: #212121;
+        background-color: #1e1f20 !important;
+        border-radius: 30px !important;
+        border: 1px solid #444746 !important;
+        padding: 4px 12px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     
-    /* Thinking animation text style */
+    .stChatInputContainer textarea {
+        color: #e3e3e3 !important;
+    }
+
+    /* Thinking animation styling */
     .thinking-text {
         font-style: italic;
         color: #9ca3af;
@@ -133,7 +115,7 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 st.title("🤖 BULINGA AI Assistant")
 st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
 
-# Load logo image for assistant avatar if present
+# Load logo image for assistant avatar if present (`btss.png`)
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
 
 if avatar_img:
@@ -150,7 +132,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=current_avatar):
         st.markdown(message["content"])
 
-# Chat input from user with ChatGPT-like placeholder text
+# Chat input from user styled precisely like Gemini / ChatGPT bottom bar
 user_query = st.chat_input("Ask related Bulinga TSS...")
 
 if user_query:
@@ -159,7 +141,7 @@ if user_query:
     with st.chat_message("user"):
         st.markdown(user_query)
 
-    # Generate AI response using Groq with requested model and custom thinking state
+    # Generate AI response using Groq with custom thinking state and btss.png avatar
     with st.chat_message("assistant", avatar=avatar_img):
         thinking_placeholder = st.empty()
         thinking_placeholder.markdown('<p class="thinking-text">⚪ Bulinga TSS AI thinking....</p>', unsafe_allow_html=True)
