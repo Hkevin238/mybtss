@@ -46,6 +46,28 @@ header {
 
 
 /* =====================================================
+   SLOW UP AND DOWN ANIMATION FOR TITLE
+   ===================================================== */
+
+@keyframes bounceSlow {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.moving-title {
+    display: inline-block;
+    animation: bounceSlow 3s ease-in-out infinite;
+}
+
+
+/* =====================================================
    IMPORTANT:
    EVERY MESSAGE GETS ITS OWN FULL ROW
    ===================================================== */
@@ -112,7 +134,7 @@ header {
 
 /* =====================================================
    USER MESSAGE
-   LEFT SIDE (BYAHINDURUWE)
+   LEFT SIDE
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
@@ -129,7 +151,7 @@ header {
 }
 
 
-/* USER CONTENT (BYAHINDURUWE) */
+/* USER CONTENT */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarUser"]
@@ -658,7 +680,7 @@ The school is also near a Catholic church.
 SCHOOL CONTACTS
 =========================================================
 
-Headmaster:MUVUNYI Noel
+Headmaster:
 
 0788546462
 
@@ -821,10 +843,10 @@ if st.sidebar.button("Clear Chat"):
 
 
 # =========================================================
-# 12. MAIN HEADER
+# 12. MAIN HEADER (WITH MOVING ANIMATION)
 # =========================================================
 
-st.title("🤖 BULINGA AI Assistant")
+st.markdown('<h1 class="moving-title">🤖 BULINGA AI Assistant</h1>', unsafe_allow_html=True)
 
 
 st.caption(
