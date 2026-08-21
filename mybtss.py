@@ -11,41 +11,47 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to explicitly align User messages to the Right and AI messages to the Left
+# 2. Custom CSS to match the exact ChatGPT UI layout from your screenshot
 st.markdown("""
     <style>
-    .stApp { background-color: #212121; color: #ececec; }
+    /* Dark Theme Background */
+    .stApp { background-color: #0b0f19; color: #ececec; }
 
+    /* Hide default streamlit header/footer */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Target Chat Message blocks */
-    [data-testid="stChatMessage"] {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 15px;
+    /* Styling chat rows */
+    .stChatMessage {
+        background-color: transparent !important;
+        padding: 0.8rem 0;
     }
 
-    /* AI Message (Left side) */
-    [data-testid="stChatMessage"]:not(.user-message) {
-        flex-direction: row;
-        background-color: transparent;
-    }
-
-    /* User Message (Right side): Reverses flex direction and aligns text to right */
-    [data-testid="stChatMessage"][data-testid*="user"], 
-    [data-testid="stChatMessage"]:has(svg[aria-label="user"]) {
+    /* Style User messages to appear as right-aligned bubbles */
+    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd),
+    [data-testid="stChatMessage"]:nth-child(odd) {
         flex-direction: row-reverse;
         text-align: right;
     }
 
-    /* Style the Chat Input Box like ChatGPT */
+    /* Target the text container inside user messages to form a bubble */
+    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd) [data-testid="stMarkdownContainer"] p,
+    [data-testid="stChatMessage"]:nth-child(odd) [data-testid="stMarkdownContainer"] p {
+        background-color: #1f6feb;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 18px;
+        display: inline-block;
+        text-align: left;
+    }
+
+    /* Style the Chat Input Box to match ChatGPT bottom bar */
     .stChatInputContainer {
-        background-color: #2f2f3f !important;
+        background-color: #1e1f26 !important;
         border-radius: 25px !important;
-        border: 1px solid #424255 !important;
-        padding: 6px 16px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        border: 1px solid #333842 !important;
+        padding: 4px 14px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
     
     .stChatInputContainer textarea {
@@ -149,14 +155,14 @@ if avatar_img:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history with correct alignment setup
+# Display chat history with correct avatar assignment
 for message in st.session_state.messages:
     current_avatar = avatar_img if message["role"] == "assistant" else None
     with st.chat_message(message["role"], avatar=current_avatar):
         st.markdown(message["content"])
 
-# Chat input matching ChatGPT bottom text field style
-user_query = st.chat_input("Message ChatGPT...")
+# Chat input with placeholder "Ask anything" matching the screenshot style
+user_query = st.chat_input("Ask anything")
 
 if user_query:
     # Append user message
