@@ -658,7 +658,7 @@ The school is also near a Catholic church.
 SCHOOL CONTACTS
 =========================================================
 
-Headmaster:
+Headmaster:MUVUNYI Noel
 
 0788546462
 
