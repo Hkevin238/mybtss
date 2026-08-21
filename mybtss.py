@@ -6,47 +6,56 @@ from groq import Groq
 # 1. Page Configuration (ChatGPT-like layout)
 st.set_page_config(
     page_title="BULINGA AI - Assistant",
-    page_icon="btss.png",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# 2. Sidebar Settings (Theme & Language Selector)
+# 2. Custom CSS to match ChatGPT UI look, bubble alignments, and custom input styling
+st.markdown("""
+    <style>
+    .stApp { background-color: #0e1117; color: #ffffff; }
+    
+    /* ChatGPT-like Input styling */
+    .stChatInputContainer {
+        border-radius: 12px;
+        border: 1px solid #303033;
+        background-color: #212121;
+    }
+    
+    /* Thinking animation text style */
+    .thinking-text {
+        font-style: italic;
+        color: #9ca3af;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 3. Sidebar Settings (Theme & Language Selector)
 st.sidebar.title("⚙️ Settings & Control")
 
-# Theme Selector (Dark, Light, Custom)
 theme_mode = st.sidebar.selectbox(
     "Select Theme / Imiterere",
     ["Dark Mode", "Light Mode", "Custom Theme"]
 )
 
-# Language Selector
 selected_lang = st.sidebar.selectbox(
     "Choose Language / Ururimi",
     ["Kinyarwanda", "English", "French", "Kiswahili", "Chinese", "Lingara", "Ikirundi", "Icyarabu"]
 )
 
-# Apply Theme Styling using Markdown/CSS
-if theme_mode == "Dark Mode":
-    st.markdown("""
-        <style>
-        .stApp { background-color: #1e1e1e; color: #ffffff; }
-        </style>
-    """, unsafe_allow_html=True)
-elif theme_mode == "Light Mode":
-    st.markdown("""
-        <style>
-        .stApp { background-color: #ffffff; color: #000000; }
-        </style>
-    """, unsafe_allow_html=True)
-else: # Custom Theme
-    st.markdown("""
-        <style>
-        .stApp { background-color: #0f172a; color: #38bdf8; }
-        </style>
-    """, unsafe_allow_html=True)
+if theme_mode == "Light Mode":
+    st.markdown("""<style>.stApp { background-color: #ffffff; color: #000000; }</style>""", unsafe_allow_html=True)
+elif theme_mode == "Custom Theme":
+    st.markdown("""<style>.stApp { background-color: #0f172a; color: #38bdf8; }</style>""", unsafe_allow_html=True)
 
-# 3. System Prompt containing all Bulinga TVET School details & restrictions
+# 4. System Prompt containing all Bulinga TVET School details & restrictions
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL). 
 You were developed exclusively by Developer Kevin. If anyone asks whether you were made by Meta or any other company, explicitly and firmly state that you were created by Developer Kevin.
@@ -88,72 +97,76 @@ SCHOOL DETAILS & INFORMATION:
   * Secretary: 0785098759
 - Strict Rules: No student is allowed to bring or use Laptops, SIM cards, phones, headsets, AirPods, or other electronic devices.
 - School Email: bulingatvetschool@gmail.com
-- Logo: As provided in the school image.
+- Logo: As provided in the school image (btss.png).
 
 Respond to the user in the language they selected or requested. Always maintain this persona.
 """
 
-# 4. Initialize Groq Client
+# 5. Initialize Groq Client
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
-# 5. Main UI Layout (ChatGPT Style)
+# 6. Main UI Layout
 st.title("🤖 BULINGA AI Assistant")
 st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
 
-# Display Logo if available in directory
-if os.path.exists("btss.png"):
-    logo_img = Image.open("btss.png")
+# Load logo image for assistant avatar if present
+avatar_img = "btss.png" if os.path.exists("btss.png") else None
+
+# Display Logo in sidebar
+if avatar_img:
+    logo_img = Image.open(avatar_img)
     st.sidebar.image(logo_img, caption="Bulinga TVET School Logo")
 
 # Initialize chat history in session state
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
+# Display chat messages from history with specific avatars (btss.png for assistant)
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    avatar = avatar_img if message["role"] == "assistant" else None
+    with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# Image upload feature for image explanation
-uploaded_file = st.file_uploader("Upload an image related to Bulinga TVET (e.g., Logo/Campus) for analysis:", type=["png", "jpg", "jpeg"])
+# Chat input from user with ChatGPT-like placeholder text
+user_query = st.chat_input("Ask related Bulinga TSS...")
 
-# Chat input from user
-user_query = st.chat_input("Baza ikibazo cyose kijyanye na Bulinga TVET School...")
-
-if user_query or uploaded_file:
-    prompt_content = user_query if user_query else "Can you describe or explain this image in relation to Bulinga TVET School?"
-    
-    # Append user message to display
-    st.session_state.messages.append({"role": "user", "content": prompt_content})
+if user_query:
+    # Append user message to history
+    st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
-        if uploaded_file:
-            img = Image.open(uploaded_file)
-            st.image(img, caption="Uploaded Image", use_column_width=True)
-        st.markdown(prompt_content)
+        st.markdown(user_query)
 
-    # Generate AI response using Groq with requested model
-    with st.chat_message("assistant"):
-        with st.spinner("BULINGA AI irimo gutekereza..."):
-            try:
-                messages_payload = [
-                    {"role": "system", "content": BULINGA_INFO + f"\n[Current Preferred Language: {selected_lang}]"},
-                ]
-                
-                for m in st.session_state.messages:
-                    messages_payload.append({"role": m["role"], "content": m["content"]})
+    # Generate AI response using Groq with requested model and custom thinking state
+    with st.chat_message("assistant", avatar=avatar_img):
+        # Thinking placeholder message matching user requirement
+        thinking_placeholder = st.empty()
+        thinking_placeholder.markdown('<p class="thinking-text">⚪ Bulinga TSS AI thinking....</p>', unsafe_allow_html=True)
+        
+        try:
+            messages_payload = [
+                {"role": "system", "content": BULINGA_INFO + f"\n[Current Preferred Language: {selected_lang}]"},
+            ]
+            
+            for m in st.session_state.messages:
+                messages_payload.append({"role": m["role"], "content": m["content"]})
 
-                completion = client.chat.completions.create(
-                    model="openai/gpt-oss-20b",
-                    messages=messages_payload,
-                    temperature=0.7,
-                    max_tokens=1024
-                )
-                
-                response_text = completion.choices[0].message.content
-                st.markdown(response_text)
-                
-                st.session_state.messages.append({"role": "assistant", "content": response_text})
+            completion = client.chat.completions.create(
+                model="openai/gpt-oss-20b",
+                messages=messages_payload,
+                temperature=0.7,
+                max_tokens=1024
+            )
+            
+            response_text = completion.choices[0].message.content
+            
+            # Clear thinking placeholder and show actual response
+            thinking_placeholder.empty()
+            st.markdown(response_text)
+            
+            # Save assistant response to history
+            st.session_state.messages.append({"role": "assistant", "content": response_text})
 
-            except Exception as e:
-                error_msg = f"Habaye ikibazo: {e}. Nyamuneka reba niba Groq API Key yawe irimo neza."
-                st.error(error_msg)
+        except Exception as e:
+            thinking_placeholder.empty()
+            error_msg = f"Habaye ikibazo: {e}. Nyamuneka reba niba Groq API Key yawe irimo neza."
+            st.error(error_msg)
