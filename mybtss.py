@@ -5,56 +5,66 @@ from groq import Groq
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="BULINGA AI - Gemini Style",
-    page_icon="✨",
+    page_title="GKevin AI Assistant",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to match Gemini AI Layout
+# 2. Custom CSS to force User messages to the RIGHT side and AI to the LEFT side (Gemini/ChatGPT style)
 st.markdown("""
     <style>
-    /* Gemini Dark Theme Background & Colors */
+    /* Dark Theme Background */
     .stApp { background-color: #131314; color: #e3e3e3; }
 
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Styling chat message containers */
+    /* Styling chat rows */
     .stChatMessage {
-        background-color: transparent !important;
-        padding: 1rem 0;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
     }
 
-    /* Target User messages to align to the Right (Gemini & ChatGPT style) */
-    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd),
-    [data-testid="stChatMessage"]:nth-child(odd) {
+    /* AI Message (Left side) */
+    [data-testid="stChatMessage"]:not(:has(div[data-testid="stChatMessageAvatarUser"])) {
+        flex-direction: row;
+    }
+
+    /* User Message (Right side): Force alignment to the right */
+    [data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]),
+    [data-testid="stChatMessage"] [data-testid="stChatMessageAvatarUser"] {
+        order: 2;
+    }
+
+    /* Target User chat message container and flip it to the right */
+    [data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) {
         flex-direction: row-reverse;
         text-align: right;
     }
 
-    /* Style User message bubble */
-    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd) [data-testid="stMarkdownContainer"] p,
-    [data-testid="stChatMessage"]:nth-child(odd) [data-testid="stMarkdownContainer"] p {
-        background-color: #004a77;
+    /* Style the User message text bubble to look distinct */
+    [data-testid="stChatMessage"]:has(div[data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdownContainer"] p {
+        background-color: #2b2d31;
         color: #ffffff;
-        padding: 12px 18px;
-        border-radius: 24px;
+        padding: 10px 16px;
+        border-radius: 18px;
         display: inline-block;
         text-align: left;
     }
 
-    /* Gemini-style Bottom Chat Input Box */
+    /* Gemini/ChatGPT-style Bottom Chat Input Box */
     .stChatInputContainer {
         background-color: #1e1f20 !important;
         border-radius: 30px !important;
         border: 1px solid #444746 !important;
-        padding: 6px 16px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        padding: 4px 16px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
     
     .stChatInputContainer textarea {
-        color: #e3e3e3 !important;
+        color: #ffffff !important;
     }
 
     /* Thinking animation text style */
@@ -89,7 +99,7 @@ if theme_mode == "Light Mode":
 
 # 4. System Prompt containing Bulinga TVET School details & restrictions
 BULINGA_INFO = """
-You are BULINGA AI, an official AI assistant built exclusively for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL). 
+You are GKEVIN AI (BULINGA AI), an official AI assistant built exclusively for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL). 
 You were developed exclusively by Developer Kevin. If anyone asks whether you were made by Meta or any other company, explicitly and firmly state that you were created by Developer Kevin.
 
 YOUR CORE RULE:
@@ -110,7 +120,7 @@ SCHOOL DETAILS & INFORMATION:
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
 # 6. Main UI Layout
-st.title("✨ BULINGA Gemini AI")
+st.title("🤖 GKevin AI Assistant")
 st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
 
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
@@ -129,8 +139,8 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=current_avatar):
         st.markdown(message["content"])
 
-# Gemini-style Chat Input placeholder
-user_query = st.chat_input("Ask Gemini...")
+# Prompt input with exact requested text: "Ask here GKevin AI ..."
+user_query = st.chat_input("Ask here GKevin AI ...")
 
 if user_query:
     st.session_state.messages.append({"role": "user", "content": user_query})
@@ -139,7 +149,7 @@ if user_query:
 
     with st.chat_message("assistant", avatar=avatar_img):
         thinking_placeholder = st.empty()
-        thinking_placeholder.markdown('<p class="thinking-text">✨ Bulinga AI is thinking...</p>', unsafe_allow_html=True)
+        thinking_placeholder.markdown('<p class="thinking-text">🤖 GKevin AI is thinking...</p>', unsafe_allow_html=True)
         
         try:
             messages_payload = [
