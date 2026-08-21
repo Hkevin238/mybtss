@@ -112,7 +112,7 @@ header {
 
 /* =====================================================
    USER MESSAGE
-   LEFT SIDE
+   LEFT SIDE (BYAHINDURUWE)
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
@@ -121,27 +121,27 @@ header {
 
     width: 100% !important;
 
-    justify-content: flex-end !important;
+    justify-content: flex-start !important;
 
-    flex-direction: row-reverse !important;
+    flex-direction: row !important;
 
     text-align: left !important;
 }
 
 
-/* USER CONTENT */
+/* USER CONTENT (BYAHINDURUWE) */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarUser"]
 ) [data-testid="stChatMessageContent"] {
 
-    max-width: 65% !important;
-
-    margin-right: auto !important;
+    max-width: 75% !important;
 
     margin-left: 0 !important;
 
-    text-align: right !important;
+    margin-right: auto !important;
+
+    text-align: left !important;
 
     background-color: #303030 !important;
 
@@ -175,7 +175,7 @@ header {
 
 [data-testid="stChatMessageAvatarUser"] {
 
-    margin-left: 10px !important;
+    margin-right: 10px !important;
 
     flex-shrink: 0 !important;
 }
@@ -899,7 +899,7 @@ if user_query:
 
     # =====================================================
     # USER MESSAGE
-    # RIGHT SIDE
+    # LEFT SIDE
     # =====================================================
 
     with st.chat_message(
