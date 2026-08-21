@@ -5,8 +5,8 @@ from groq import Groq
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="BULINGA AI - Assistant",
-    page_icon="🤖",
+    page_title="BULINGA TSS AI",
+    page_icon="btss.png",
     layout="centered",
     initial_sidebar_state="expanded"
 )
@@ -42,7 +42,7 @@ st.markdown("""
     /* Style the Chat Input Box like ChatGPT */
     .stChatInputContainer {
         background-color: #2f2f3f !important;
-        border-radius: 25px !important;
+        border-radius: 15px !important;
         border: 1px solid #424255 !important;
         padding: 6px 16px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.4);
