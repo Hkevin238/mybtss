@@ -3,36 +3,59 @@ import streamlit as st
 from PIL import Image
 from groq import Groq
 
-# 1. Page Configuration (Full-width / Centered clean layout)
+# 1. Page Configuration
 st.set_page_config(
-    page_title="BULINGA AI - Assistant",
-    page_icon="🤖",
+    page_title="BULINGA TSS AI",
+    page_icon="btss.png",
     layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to style the chat input box like Gemini/ChatGPT (dark capsule style)
+# 2. Custom CSS to replicate exact ChatGPT layout (User messages as right-aligned pills, AI on left, ChatGPT input bar)
 st.markdown("""
     <style>
-    .stApp { background-color: #131314; color: #e3e3e3; }
+    /* Main Background & Text Color */
+    .stApp { background-color: #212121; color: #ececec; }
 
-    /* Customizing the Streamlit chat input box container to look like Gemini/ChatGPT bar */
+    /* Hide default streamlit elements if needed */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Styling chat messages container */
+    .stChatMessage {
+        background-color: transparent !important;
+        padding: 1rem 0;
+        margin-bottom: 5px;
+    }
+
+    /* Target User Message (Right-aligned bubble pill) */
+    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd) {
+        flex-direction: row-reverse;
+        text-align: right;
+    }
+    
+    /* User bubble background styling */
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
+        border-radius: 20px;
+    }
+
+    /* Style the Chat Input Box to look exactly like ChatGPT */
     .stChatInputContainer {
-        background-color: #1e1f20 !important;
-        border-radius: 30px !important;
-        border: 1px solid #444746 !important;
-        padding: 4px 12px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        background-color: #2f2f3f !important;
+        border-radius: 25px !important;
+        border: 1px solid #424255 !important;
+        padding: 6px 16px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
     
     .stChatInputContainer textarea {
-        color: #e3e3e3 !important;
+        color: #ffffff !important;
     }
 
-    /* Thinking animation styling */
+    /* Thinking animation text style */
     .thinking-text {
         font-style: italic;
-        color: #9ca3af;
+        color: #8e8ea0;
         animation: pulse 1.5s infinite;
     }
     @keyframes pulse {
@@ -44,15 +67,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 3. Sidebar Settings (Theme & Language Selector)
-st.sidebar.title("⚙️ Settings & Control")
+st.sidebar.title("Settings & Control")
 
 theme_mode = st.sidebar.selectbox(
-    "Select Theme / Imiterere",
+    "Select Theme",
     ["Dark Mode", "Light Mode", "Custom Theme"]
 )
 
 selected_lang = st.sidebar.selectbox(
-    "Choose Language / Ururimi",
+    "Choose Language",
     ["Kinyarwanda", "English", "French", "Kiswahili", "Chinese", "Lingara", "Ikirundi", "Icyarabu"]
 )
 
@@ -112,36 +135,36 @@ Respond to the user in the language they selected or requested. Always maintain 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
 # 6. Main UI Layout
-st.title("🤖 BULINGA AI Assistant")
-st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
+st.title("BULINGA AI Assistant")
+st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by BULINGA Devs")
 
-# Load logo image for assistant avatar if present (`btss.png`)
+# Load logo image for assistant avatar (`btss.png`)
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
 
 if avatar_img:
     logo_img = Image.open(avatar_img)
-    st.sidebar.image(logo_img, caption="Bulinga TVET School Logo")
+    st.sidebar.image(logo_img, caption="Bulinga TVET School")
 
 # Initialize chat history in session state
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history with specific avatars (btss.png for assistant)
+# Display chat history with correct avatars
 for message in st.session_state.messages:
     current_avatar = avatar_img if message["role"] == "assistant" else None
     with st.chat_message(message["role"], avatar=current_avatar):
         st.markdown(message["content"])
 
-# Chat input from user styled precisely like Gemini / ChatGPT bottom bar
-user_query = st.chat_input("Ask related Bulinga TSS...")
+# Chat input matching ChatGPT bottom text field style
+user_query = st.chat_input("Message ChatGPT...")
 
 if user_query:
-    # Append user message to history
+    # Append user message
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
         st.markdown(user_query)
 
-    # Generate AI response using Groq with custom thinking state and btss.png avatar
+    # Generate assistant response with thinking state and btss.png avatar
     with st.chat_message("assistant", avatar=avatar_img):
         thinking_placeholder = st.empty()
         thinking_placeholder.markdown('<p class="thinking-text">⚪ Bulinga TSS AI thinking....</p>', unsafe_allow_html=True)
