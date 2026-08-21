@@ -26,23 +26,23 @@ st.markdown("""
         margin-bottom: 15px;
     }
 
-    /* AI Message (Left side) */
+    /* AI Message (right side) */
     [data-testid="stChatMessage"]:not(.user-message) {
         flex-direction: row;
         background-color: transparent;
     }
 
-    /* User Message (Right side): Reverses flex direction and aligns text to right */
+    /* User Message (left side): Reverses flex direction and aligns text to leftt */
     [data-testid="stChatMessage"][data-testid*="user"], 
     [data-testid="stChatMessage"]:has(svg[aria-label="user"]) {
         flex-direction: row-reverse;
-        text-align: right;
+        text-align: left;
     }
 
     /* Style the Chat Input Box like ChatGPT */
     .stChatInputContainer {
         background-color: #2f2f3f !important;
-        border-radius: 15px !important;
+        border-radius: 95px !important;
         border: 1px solid #424255 !important;
         padding: 6px 16px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -136,14 +136,14 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
 # 6. Main UI Layout
 st.title("🤖 BULINGA AI Assistant")
-st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
+st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by BULINGA Developers Team")
 
 # Load logo image for assistant avatar (`btss.png`)
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
 
 if avatar_img:
     logo_img = Image.open(avatar_img)
-    st.sidebar.image(logo_img, caption="Bulinga TVET School Logo")
+    st.sidebar.image(logo_img, caption="Bulinga TVET School")
 
 # Initialize chat history in session state
 if "messages" not in st.session_state:
@@ -156,7 +156,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Chat input matching ChatGPT bottom text field style
-user_query = st.chat_input("Message ChatGPT...")
+user_query = st.chat_input("Ask related BULINGA....")
 
 if user_query:
     # Append user message
