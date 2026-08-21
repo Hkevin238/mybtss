@@ -27,7 +27,7 @@ st.markdown("""
         padding: 0.8rem 0;
     }
 
-    /* Style User messages to appear as right-aligned bubbles */
+    /* Style User messages to appear as left-aligned bubbles */
     [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd),
     [data-testid="stChatMessage"]:nth-child(odd) {
         flex-direction: row-reverse;
@@ -42,7 +42,7 @@ st.markdown("""
         padding: 10px 16px;
         border-radius: 18px;
         display: inline-block;
-        text-align: left;
+        text-align: right;
     }
 
     /* Style the Chat Input Box to match ChatGPT bottom bar */
