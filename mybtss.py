@@ -6,7 +6,7 @@ from groq import Groq
 # 1. Page Configuration (ChatGPT-like layout)
 st.set_page_config(
     page_title="BULINGA AI - Assistant",
-    page_icon="🤖",
+    page_icon="btss.png",
     layout="centered",
     initial_sidebar_state="expanded"
 )
