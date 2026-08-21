@@ -5,41 +5,41 @@ from groq import Groq
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="BULINGA TSS AI",
-    page_icon="btss.png",
+    page_title="BULINGA AI - Assistant",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# 2. Custom CSS to replicate exact ChatGPT layout (User messages as right-aligned pills, AI on left, ChatGPT input bar)
+# 2. Custom CSS to explicitly align User messages to the Right and AI messages to the Left
 st.markdown("""
     <style>
-    /* Main Background & Text Color */
     .stApp { background-color: #212121; color: #ececec; }
 
-    /* Hide default streamlit elements if needed */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 
-    /* Styling chat messages container */
-    .stChatMessage {
-        background-color: transparent !important;
-        padding: 1rem 0;
-        margin-bottom: 5px;
+    /* Target Chat Message blocks */
+    [data-testid="stChatMessage"] {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
     }
 
-    /* Target User Message (Right-aligned bubble pill) */
-    [data-testid="stChatMessage"]:has(div.st-emotion-cache-1c7y2kd) {
+    /* AI Message (Left side) */
+    [data-testid="stChatMessage"]:not(.user-message) {
+        flex-direction: row;
+        background-color: transparent;
+    }
+
+    /* User Message (Right side): Reverses flex direction and aligns text to right */
+    [data-testid="stChatMessage"][data-testid*="user"], 
+    [data-testid="stChatMessage"]:has(svg[aria-label="user"]) {
         flex-direction: row-reverse;
         text-align: right;
     }
-    
-    /* User bubble background styling */
-    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] p {
-        border-radius: 20px;
-    }
 
-    /* Style the Chat Input Box to look exactly like ChatGPT */
+    /* Style the Chat Input Box like ChatGPT */
     .stChatInputContainer {
         background-color: #2f2f3f !important;
         border-radius: 25px !important;
@@ -67,15 +67,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 3. Sidebar Settings (Theme & Language Selector)
-st.sidebar.title("Settings & Control")
+st.sidebar.title("⚙️ Settings & Control")
 
 theme_mode = st.sidebar.selectbox(
-    "Select Theme",
+    "Select Theme / Imiterere",
     ["Dark Mode", "Light Mode", "Custom Theme"]
 )
 
 selected_lang = st.sidebar.selectbox(
-    "Choose Language",
+    "Choose Language / Ururimi",
     ["Kinyarwanda", "English", "French", "Kiswahili", "Chinese", "Lingara", "Ikirundi", "Icyarabu"]
 )
 
@@ -135,21 +135,21 @@ Respond to the user in the language they selected or requested. Always maintain 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", "YOUR_GROQ_API_KEY"))
 
 # 6. Main UI Layout
-st.title("BULINGA AI Assistant")
-st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by BULINGA Devs")
+st.title("🤖 BULINGA AI Assistant")
+st.caption("Your intelligent guide for Bulinga Technical Secondary School | Created by Developer Kevin")
 
 # Load logo image for assistant avatar (`btss.png`)
 avatar_img = "btss.png" if os.path.exists("btss.png") else None
 
 if avatar_img:
     logo_img = Image.open(avatar_img)
-    st.sidebar.image(logo_img, caption="Bulinga TVET School")
+    st.sidebar.image(logo_img, caption="Bulinga TVET School Logo")
 
 # Initialize chat history in session state
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat history with correct avatars
+# Display chat history with correct alignment setup
 for message in st.session_state.messages:
     current_avatar = avatar_img if message["role"] == "assistant" else None
     with st.chat_message(message["role"], avatar=current_avatar):
