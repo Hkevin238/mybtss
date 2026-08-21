@@ -24,7 +24,7 @@ st.markdown("""
 <style>
 
 /* =====================================================
-   MAIN APPLICATION
+   MAIN APP
    ===================================================== */
 
 .stApp {
@@ -46,35 +46,59 @@ header {
 
 
 /* =====================================================
-   CHAT MESSAGE GENERAL
+   IMPORTANT:
+   EVERY MESSAGE GETS ITS OWN FULL ROW
    ===================================================== */
 
 [data-testid="stChatMessage"] {
     width: 100% !important;
+
     display: flex !important;
-    margin-bottom: 18px !important;
+
+    clear: both !important;
+
+    position: relative !important;
+
+    margin-top: 12px !important;
+
+    margin-bottom: 28px !important;
+
     padding: 0 !important;
+
     background: transparent !important;
 }
 
 
 /* =====================================================
-   AI MESSAGE - LEFT
+   AI MESSAGE
+   LEFT SIDE
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarAssistant"]
 ) {
+
+    width: 100% !important;
+
     justify-content: flex-start !important;
+
     flex-direction: row !important;
+
+    text-align: left !important;
 }
 
 
-/* AI MESSAGE CONTENT */
+/* AI CONTENT */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarAssistant"]
 ) [data-testid="stChatMessageContent"] {
+
+    max-width: 75% !important;
+
+    margin-left: 0 !important;
+
+    margin-right: auto !important;
 
     text-align: left !important;
 
@@ -82,32 +106,40 @@ header {
 
     color: #ececec !important;
 
-    max-width: 80% !important;
-
     padding: 8px 12px !important;
-
-    margin-left: 0 !important;
-    margin-right: auto !important;
 }
 
 
 /* =====================================================
-   USER MESSAGE - RIGHT
+   USER MESSAGE
+   RIGHT SIDE
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarUser"]
 ) {
+
+    width: 100% !important;
+
     justify-content: flex-end !important;
+
     flex-direction: row-reverse !important;
+
+    text-align: right !important;
 }
 
 
-/* USER MESSAGE CONTENT */
+/* USER CONTENT */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarUser"]
 ) [data-testid="stChatMessageContent"] {
+
+    max-width: 65% !important;
+
+    margin-left: auto !important;
+
+    margin-right: 0 !important;
 
     text-align: left !important;
 
@@ -115,27 +147,37 @@ header {
 
     color: #ffffff !important;
 
-    max-width: 75% !important;
-
     padding: 10px 16px !important;
 
     border-radius: 18px !important;
 
-    margin-left: auto !important;
-    margin-right: 0 !important;
+    word-wrap: break-word !important;
+
+    overflow-wrap: break-word !important;
 }
 
 
 /* =====================================================
-   AVATARS
+   AI AVATAR
    ===================================================== */
 
 [data-testid="stChatMessageAvatarAssistant"] {
+
     margin-right: 10px !important;
+
+    flex-shrink: 0 !important;
 }
 
+
+/* =====================================================
+   USER AVATAR
+   ===================================================== */
+
 [data-testid="stChatMessageAvatarUser"] {
+
     margin-left: 10px !important;
+
+    flex-shrink: 0 !important;
 }
 
 
@@ -154,7 +196,7 @@ header {
     padding: 6px 14px !important;
 
     box-shadow:
-        0 4px 15px rgba(0,0,0,0.4);
+        0 4px 15px rgba(0, 0, 0, 0.4) !important;
 }
 
 
@@ -213,18 +255,18 @@ section[data-testid="stSidebar"] {
 
 
 /* =====================================================
-   BUTTONS
+   BUTTON
    ===================================================== */
 
 .stButton button {
 
-    border-radius: 10px;
+    border-radius: 10px !important;
 
-    border: 1px solid #424255;
+    border: 1px solid #424255 !important;
 
-    background-color: #2f2f3f;
+    background-color: #2f2f3f !important;
 
-    color: white;
+    color: white !important;
 }
 
 </style>
@@ -232,7 +274,7 @@ section[data-testid="stSidebar"] {
 
 
 # =========================================================
-# 3. SIDEBAR SETTINGS
+# 3. SIDEBAR
 # =========================================================
 
 st.sidebar.title("⚙️ Settings & Control")
@@ -264,7 +306,7 @@ selected_lang = st.sidebar.selectbox(
 
 
 # =========================================================
-# 4. THEMES
+# 4. LIGHT MODE
 # =========================================================
 
 if theme_mode == "Light Mode":
@@ -277,13 +319,6 @@ if theme_mode == "Light Mode":
         color: #111111 !important;
     }
 
-    [data-testid="stChatMessage"]:has(
-        [data-testid="stChatMessageAvatarUser"]
-    ) [data-testid="stChatMessageContent"] {
-
-        background-color: #eeeeee !important;
-        color: #111111 !important;
-    }
 
     [data-testid="stChatMessage"]:has(
         [data-testid="stChatMessageAvatarAssistant"]
@@ -292,12 +327,27 @@ if theme_mode == "Light Mode":
         color: #111111 !important;
     }
 
+
+    [data-testid="stChatMessage"]:has(
+        [data-testid="stChatMessageAvatarUser"]
+    ) [data-testid="stChatMessageContent"] {
+
+        background-color: #eeeeee !important;
+
+        color: #111111 !important;
+    }
+
+
     .stChatInputContainer {
-        background-color: #f1f1f1 !important;
+
+        background-color: #f2f2f2 !important;
+
         border: 1px solid #cccccc !important;
     }
 
+
     .stChatInputContainer textarea {
+
         color: #111111 !important;
     }
 
@@ -305,21 +355,29 @@ if theme_mode == "Light Mode":
     """, unsafe_allow_html=True)
 
 
+# =========================================================
+# 5. CUSTOM THEME
+# =========================================================
+
 elif theme_mode == "Custom Theme":
 
     st.markdown("""
     <style>
 
     .stApp {
+
         background-color: #0f172a !important;
+
         color: #38bdf8 !important;
     }
+
 
     [data-testid="stChatMessage"]:has(
         [data-testid="stChatMessageAvatarUser"]
     ) [data-testid="stChatMessageContent"] {
 
         background-color: #1e293b !important;
+
         color: #e0f2fe !important;
     }
 
@@ -328,7 +386,7 @@ elif theme_mode == "Custom Theme":
 
 
 # =========================================================
-# 5. BULINGA AI SYSTEM INFORMATION
+# 6. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -376,7 +434,7 @@ provide information about BULINGA TVET SCHOOL."
 
 
 =========================================================
-SCHOOL INFORMATION
+SCHOOL DETAILS
 =========================================================
 
 School Name:
@@ -399,15 +457,22 @@ TRAVEL TIME FROM MUHANGA GARE
 =========================================================
 
 By Car / Coaster:
+
 2 hours
 
+
 By Motorcycle:
+
 30 minutes
 
+
 On foot:
+
 3 hours
 
+
 By Helicopter:
+
 15 minutes
 
 
@@ -419,13 +484,16 @@ School Fees / Minerval:
 
 92,000 Frw
 
+
 Accident Insurance:
 
 1,500 Frw
 
+
 School ID and Behavior Card:
 
 2,000 Frw
+
 
 TOTAL:
 
@@ -440,9 +508,11 @@ Bank:
 
 Mwarimu Sacco
 
+
 Account Number:
 
 900009815200
+
 
 Account Name:
 
@@ -495,35 +565,44 @@ DAILY SCHOOL SCHEDULE
 
 Morning arrival and classes start.
 
+
 Morning study:
 
 3 hours.
 
+
 Morning break follows.
+
 
 Next study session:
 
 2 hours.
 
+
 Lunch:
 
 11:45 AM.
+
 
 Afternoon classes:
 
 1:10 PM - 4:00 PM.
 
+
 Preparation for evening revision:
 
 From 4:00 PM.
+
 
 Evening classroom cleaning:
 
 7:15 PM.
 
+
 Dinner:
 
 7:30 PM.
+
 
 After dinner:
 
@@ -642,39 +721,14 @@ LANGUAGE
 
 Always respond using the language selected by the user.
 
-Current selected language will be provided separately.
-
-If the selected language is Kinyarwanda,
-answer in Kinyarwanda.
-
-If English,
-answer in English.
-
-If French,
-answer in French.
-
-If Kiswahili,
-answer in Kiswahili.
-
-If Chinese,
-answer in Chinese.
-
-If Lingala,
-answer in Lingala.
-
-If Ikirundi,
-answer in Ikirundi.
-
-If Icyarabu,
-answer in Arabic.
-
+The current selected language will be provided separately.
 
 Always maintain the BULINGA AI persona.
 """
 
 
 # =========================================================
-# 6. GROQ API
+# 7. GROQ API KEY
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -693,7 +747,7 @@ client = Groq(
 
 
 # =========================================================
-# 7. AVATARS
+# 8. AVATARS
 # =========================================================
 
 # AI avatar
@@ -705,12 +759,11 @@ if os.path.exists("btss.png"):
 
 
 # USER AVATAR
-# Exact emoji requested by user
 user_avatar = "👤"
 
 
 # =========================================================
-# 8. DISPLAY SCHOOL LOGO
+# 9. SIDEBAR LOGO
 # =========================================================
 
 if avatar_img:
@@ -733,10 +786,11 @@ if avatar_img:
 
 
 # =========================================================
-# 9. SIDEBAR INFORMATION
+# 10. SIDEBAR INFORMATION
 # =========================================================
 
 st.sidebar.markdown("---")
+
 
 st.sidebar.markdown(
     """
@@ -756,7 +810,7 @@ Developer:
 
 
 # =========================================================
-# 10. CLEAR CHAT
+# 11. CLEAR CHAT
 # =========================================================
 
 if st.sidebar.button("🗑️ Clear Chat"):
@@ -767,10 +821,11 @@ if st.sidebar.button("🗑️ Clear Chat"):
 
 
 # =========================================================
-# 11. MAIN HEADER
+# 12. MAIN HEADER
 # =========================================================
 
 st.title("🤖 BULINGA AI Assistant")
+
 
 st.caption(
     "Your intelligent guide for BULINGA Technical Secondary School"
@@ -778,7 +833,7 @@ st.caption(
 
 
 # =========================================================
-# 12. SESSION STATE
+# 13. SESSION STATE
 # =========================================================
 
 if "messages" not in st.session_state:
@@ -787,7 +842,7 @@ if "messages" not in st.session_state:
 
 
 # =========================================================
-# 13. DISPLAY CHAT HISTORY
+# 14. DISPLAY CHAT HISTORY
 # =========================================================
 
 for message in st.session_state.messages:
@@ -815,7 +870,7 @@ for message in st.session_state.messages:
 
 
 # =========================================================
-# 14. CHAT INPUT
+# 15. CHAT INPUT
 # =========================================================
 
 user_query = st.chat_input(
@@ -824,14 +879,15 @@ user_query = st.chat_input(
 
 
 # =========================================================
-# 15. PROCESS USER MESSAGE
+# 16. USER MESSAGE + AI RESPONSE
 # =========================================================
 
 if user_query:
 
-    # -----------------------------------------------------
+
+    # =====================================================
     # SAVE USER MESSAGE
-    # -----------------------------------------------------
+    # =====================================================
 
     st.session_state.messages.append(
         {
@@ -841,10 +897,10 @@ if user_query:
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # USER MESSAGE
     # RIGHT SIDE
-    # -----------------------------------------------------
+    # =====================================================
 
     with st.chat_message(
         "user",
@@ -856,15 +912,16 @@ if user_query:
         )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # AI MESSAGE
     # LEFT SIDE
-    # -----------------------------------------------------
+    # =====================================================
 
     with st.chat_message(
         "assistant",
         avatar=avatar_img
     ):
+
 
         thinking_placeholder = st.empty()
 
@@ -881,9 +938,10 @@ if user_query:
 
         try:
 
-            # -------------------------------------------------
-            # CREATE MESSAGE PAYLOAD
-            # -------------------------------------------------
+
+            # =================================================
+            # BUILD MESSAGE PAYLOAD
+            # =================================================
 
             messages_payload = [
 
@@ -899,7 +957,7 @@ if user_query:
                     f"""
 
 =========================================================
-CURRENT USER LANGUAGE
+CURRENT PREFERRED LANGUAGE
 =========================================================
 
 {selected_lang}
@@ -911,9 +969,9 @@ Answer the user using this language.
             ]
 
 
-            # -------------------------------------------------
-            # ADD CHAT HISTORY
-            # -------------------------------------------------
+            # =================================================
+            # ADD CONVERSATION HISTORY
+            # =================================================
 
             for message in st.session_state.messages:
 
@@ -925,9 +983,9 @@ Answer the user using this language.
                 )
 
 
-            # -------------------------------------------------
-            # GROQ COMPLETION
-            # -------------------------------------------------
+            # =================================================
+            # SEND REQUEST TO GROQ
+            # =================================================
 
             completion = client.chat.completions.create(
 
@@ -941,9 +999,9 @@ Answer the user using this language.
             )
 
 
-            # -------------------------------------------------
-            # GET RESPONSE
-            # -------------------------------------------------
+            # =================================================
+            # GET AI RESPONSE
+            # =================================================
 
             response_text = (
                 completion
@@ -953,25 +1011,25 @@ Answer the user using this language.
             )
 
 
-            # -------------------------------------------------
+            # =================================================
             # REMOVE THINKING
-            # -------------------------------------------------
+            # =================================================
 
             thinking_placeholder.empty()
 
 
-            # -------------------------------------------------
-            # DISPLAY RESPONSE
-            # -------------------------------------------------
+            # =================================================
+            # DISPLAY AI RESPONSE
+            # =================================================
 
             st.markdown(
                 response_text
             )
 
 
-            # -------------------------------------------------
-            # SAVE RESPONSE
-            # -------------------------------------------------
+            # =================================================
+            # SAVE AI RESPONSE
+            # =================================================
 
             st.session_state.messages.append(
                 {
@@ -983,6 +1041,7 @@ Answer the user using this language.
 
         except Exception as e:
 
+
             thinking_placeholder.empty()
 
 
@@ -991,8 +1050,9 @@ Answer the user using this language.
 ❌ Habaye ikibazo.
 
 **Error:**
+
 `{e}`
 
-Reba niba GROQ_API_KEY yawe yashyizwe neza.
+Nyamuneka reba niba **GROQ_API_KEY** yawe yashyizwe neza.
 """
             )
