@@ -134,7 +134,7 @@ header {
 
 /* =====================================================
    USER MESSAGE
-   LEFT SIDE
+   RIGHT SIDE (BYAHINDURUWE)
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
@@ -143,11 +143,11 @@ header {
 
     width: 100% !important;
 
-    justify-content: flex-start !important;
+    justify-content: flex-end !important;
 
-    flex-direction: row !important;
+    flex-direction: row-reverse !important;
 
-    text-align: left !important;
+    text-align: right !important;
 }
 
 
@@ -159,11 +159,11 @@ header {
 
     max-width: 75% !important;
 
-    margin-left: 0 !important;
+    margin-left: auto !important;
 
-    margin-right: auto !important;
+    margin-right: 0 !important;
 
-    text-align: left !important;
+    text-align: right !important;
 
     background-color: #303030 !important;
 
@@ -197,7 +197,7 @@ header {
 
 [data-testid="stChatMessageAvatarUser"] {
 
-    margin-right: 10px !important;
+    margin-left: 10px !important;
 
     flex-shrink: 0 !important;
 }
@@ -921,7 +921,7 @@ if user_query:
 
     # =====================================================
     # USER MESSAGE
-    # LEFT SIDE
+    # RIGHT SIDE
     # =====================================================
 
     with st.chat_message(
