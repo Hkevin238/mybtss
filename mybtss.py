@@ -17,19 +17,19 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS
+# 2. CUSTOM CSS (WHATSAPP STYLE CHAT)
 # =========================================================
 
 st.markdown("""
 <style>
 
 /* =====================================================
-   MAIN APP
+   MAIN APP BACKGROUND (WhatsApp Dark Theme vibe)
    ===================================================== */
 
 .stApp {
-    background-color: #212121;
-    color: #ececec;
+    background-color: #111b21;
+    color: #e9edef;
 }
 
 #MainMenu {
@@ -68,171 +68,113 @@ header {
 
 
 /* =====================================================
-   IMPORTANT:
-   EVERY MESSAGE GETS ITS OWN FULL ROW
+   CHAT MESSAGE ROW CONTAINER
    ===================================================== */
 
 [data-testid="stChatMessage"] {
     width: 100% !important;
-
     display: flex !important;
-
     clear: both !important;
-
     position: relative !important;
-
-    margin-top: 12px !important;
-
-    margin-bottom: 28px !important;
-
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
     padding: 0 !important;
-
     background: transparent !important;
 }
 
 
 /* =====================================================
-   AI MESSAGE
-   LEFT SIDE
+   AI MESSAGE (LEFT SIDE - WHATSAPP STYLE)
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarAssistant"]
 ) {
-
     width: 100% !important;
-
     justify-content: flex-start !important;
-
     flex-direction: row !important;
-
     text-align: left !important;
 }
-
-
-/* AI CONTENT */
 
 [data-testid="stChatMessage"]:has(
     [data-testid="stChatMessageAvatarAssistant"]
 ) [data-testid="stChatMessageContent"] {
-
     max-width: 75% !important;
-
     margin-left: 0 !important;
-
     margin-right: auto !important;
-
     text-align: left !important;
-
-    background: transparent !important;
-
-    color: #ececec !important;
-
-    padding: 8px 12px !important;
-}
-
-
-/* =====================================================
-   USER MESSAGE
-   RIGHT SIDE (BYAHINDURUWE)
-   ===================================================== */
-
-[data-testid="stChatMessage"]:has(
-    [data-testid="stChatMessageAvatarUser"]
-) {
-
-    width: 100% !important;
-
-    justify-content: flex-end !important;
-
-    flex-direction: row-reverse !important;
-
-    text-align: right !important;
-}
-
-
-/* USER CONTENT */
-
-[data-testid="stChatMessage"]:has(
-    [data-testid="stChatMessageAvatarUser"]
-) [data-testid="stChatMessageContent"] {
-
-    max-width: 75% !important;
-
-    margin-left: auto !important;
-
-    margin-right: 0 !important;
-
-    text-align: right !important;
-
-    background-color: #303030 !important;
-
-    color: #ffffff !important;
-
-    padding: 10px 16px !important;
-
-    border-radius: 18px !important;
-
+    background-color: #202c33 !important;
+    color: #e9edef !important;
+    padding: 10px 14px !important;
+    border-radius: 0px 12px 12px 12px !important;
     word-wrap: break-word !important;
-
     overflow-wrap: break-word !important;
 }
 
 
 /* =====================================================
-   AI AVATAR
+   USER MESSAGE (RIGHT SIDE - WHATSAPP STYLE)
+   ===================================================== */
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="stChatMessageAvatarUser"]
+) {
+    width: 100% !important;
+    justify-content: flex-end !important;
+    flex-direction: row-reverse !important;
+    text-align: right !important;
+}
+
+[data-testid="stChatMessage"]:has(
+    [data-testid="stChatMessageAvatarUser"]
+) [data-testid="stChatMessageContent"] {
+    max-width: 75% !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+    background-color: #005c4b !important;
+    color: #e9edef !important;
+    padding: 10px 14px !important;
+    border-radius: 12px 0px 12px 12px !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+
+/* =====================================================
+   AVATARS SPACING
    ===================================================== */
 
 [data-testid="stChatMessageAvatarAssistant"] {
-
-    margin-right: 10px !important;
-
+    margin-right: 8px !important;
     flex-shrink: 0 !important;
 }
-
-
-/* =====================================================
-   USER AVATAR
-   ===================================================== */
 
 [data-testid="stChatMessageAvatarUser"] {
-
-    margin-left: 10px !important;
-
+    margin-left: 8px !important;
     flex-shrink: 0 !important;
 }
 
 
 /* =====================================================
-   CHAT INPUT
+   CHAT INPUT (WHATSAPP BAR STYLE)
    ===================================================== */
 
 .stChatInputContainer {
-
-    background-color: #2f2f3f !important;
-
-    border-radius: 28px !important;
-
-    border: 1px solid #424255 !important;
-
+    background-color: #202c33 !important;
+    border-radius: 24px !important;
+    border: none !important;
     padding: 6px 14px !important;
-
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
 }
 
-
 .stChatInputContainer textarea {
-
-    color: #ffffff !important;
-
+    color: #e9edef !important;
     font-size: 16px !important;
 }
 
-
 .stChatInputContainer textarea::placeholder {
-
-    color: #9a9aa5 !important;
+    color: #8696a0 !important;
 }
 
 
@@ -241,28 +183,15 @@ header {
    ===================================================== */
 
 .thinking-text {
-
     font-style: italic;
-
-    color: #8e8ea0;
-
+    color: #8696a0;
     animation: pulse 1.5s infinite;
 }
 
-
 @keyframes pulse {
-
-    0% {
-        opacity: 0.4;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.4;
-    }
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
 }
 
 
@@ -271,8 +200,7 @@ header {
    ===================================================== */
 
 section[data-testid="stSidebar"] {
-
-    background-color: #171717 !important;
+    background-color: #111b21 !important;
 }
 
 
@@ -281,14 +209,10 @@ section[data-testid="stSidebar"] {
    ===================================================== */
 
 .stButton button {
-
     border-radius: 10px !important;
-
-    border: 15px solid #424255 !important;
-
-    background-color: #2f2f3f !important;
-
-    color: white !important;
+    border: none !important;
+    background-color: #202c33 !important;
+    color: #e9edef !important;
 }
 
 </style>
@@ -301,7 +225,6 @@ section[data-testid="stSidebar"] {
 
 st.sidebar.title("Settings & Control")
 
-
 theme_mode = st.sidebar.selectbox(
     "Select Theme / Imiterere",
     [
@@ -310,7 +233,6 @@ theme_mode = st.sidebar.selectbox(
         "Custom Theme"
     ]
 )
-
 
 selected_lang = st.sidebar.selectbox(
     "Choose Language / Ururimi",
@@ -335,44 +257,31 @@ if theme_mode == "Light Mode":
 
     st.markdown("""
     <style>
-
     .stApp {
-        background-color: #ffffff !important;
-        color: #111111 !important;
+        background-color: #efeae2 !important;
+        color: #111b21 !important;
     }
-
-
     [data-testid="stChatMessage"]:has(
         [data-testid="stChatMessageAvatarAssistant"]
     ) [data-testid="stChatMessageContent"] {
-
-        color: #111111 !important;
+        background-color: #ffffff !important;
+        color: #111b21 !important;
     }
-
-
     [data-testid="stChatMessage"]:has(
         [data-testid="stChatMessageAvatarUser"]
     ) [data-testid="stChatMessageContent"] {
-
-        background-color: #eeeeee !important;
-
-        color: #111111 !important;
+        background-color: #d9fdd3 !important;
+        color: #111b21 !important;
     }
-
-
     .stChatInputContainer {
-
-        background-color: #f2f2f2 !important;
-
-        border: 1px solid #cccccc !important;
+        background-color: #f0f2f5 !important;
     }
-
-
     .stChatInputContainer textarea {
-
-        color: #111111 !important;
+        color: #111b21 !important;
     }
-
+    section[data-testid="stSidebar"] {
+        background-color: #ffffff !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -385,24 +294,16 @@ elif theme_mode == "Custom Theme":
 
     st.markdown("""
     <style>
-
     .stApp {
-
         background-color: #0f172a !important;
-
         color: #38bdf8 !important;
     }
-
-
     [data-testid="stChatMessage"]:has(
         [data-testid="stChatMessageAvatarUser"]
     ) [data-testid="stChatMessageContent"] {
-
         background-color: #1e293b !important;
-
         color: #e0f2fe !important;
     }
-
     </style>
     """, unsafe_allow_html=True)
 
@@ -412,340 +313,25 @@ elif theme_mode == "Custom Theme":
 # =========================================================
 
 BULINGA_INFO = """
-
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
-
 You were developed exclusively by Developer Kevin.
-
 If anyone asks who created you, say:
-
 "I was created by BULINGA Developers Team for BULINGA TVET SCHOOL."
-
 
 =========================================================
 CORE RULE
 =========================================================
-
 You ONLY answer questions related to BULINGA TVET SCHOOL.
-
-You can answer questions about:
-
-- School programs
-- School fees
-- School rules
-- School location
-- School schedule
-- School religion
-- School staff
-- School contacts
-- School combinations
-- School meals
-- School payment
-- Student life
-- School administration
-
-
-If a question is completely unrelated to BULINGA TVET SCHOOL,
-politely refuse to answer.
-
-Example:
-
-"Sorry, I am BULINGA AI and I am designed specifically to
-provide information about BULINGA TVET SCHOOL."
-
+If a question is completely unrelated, politely refuse to answer.
 
 =========================================================
 SCHOOL DETAILS
 =========================================================
-
-School Name:
-
-BULINGA TECHNICAL SECONDARY SCHOOL
-(BULINGA TVET SCHOOL)
-
-
-=========================================================
-LOCATION
-=========================================================
-
-MUHANGA, Mushishiro near KABADAHA Center.
-
-The road is a dirt road (umuhanda w'igitaka).
-
-
-=========================================================
-TRAVEL TIME FROM MUHANGA GARE
-=========================================================
-
-By Car / Coaster:
-
-2 hours
-
-
-By Motorcycle:
-
-30 minutes
-
-
-On foot:
-
-3 hours
-
-
-By Helicopter:
-
-15 minutes
-
-
-=========================================================
-SCHOOL FEES
-=========================================================
-
-School Fees / Minerval:
-
-92,000 Frw
-
-
-Accident Insurance:
-
-1,500 Frw
-
-
-School ID and Behavior Card:
-
-2,000 Frw
-
-
-TOTAL:
-
-95,500 Frw
-
-
-=========================================================
-PAYMENT ACCOUNT
-=========================================================
-
-Bank:
-
-Mwarimu Sacco
-
-
-Account Number:
-
-900009815200
-
-
-Account Name:
-
-BULINGA TVET SCHOOL
-
-
-=========================================================
-PAYMENT METHODS
-=========================================================
-
-Method 1:
-
-Go physically to Mwarimu Sacco and pay to the school account.
-
-
-Method 2:
-
-Mobile Money:
-
-Dial:
-
-*182*3*10*1*Student_SDMS_Code#
-
-Then follow the instructions.
-
-
-=========================================================
-MEALS
-=========================================================
-
-Students receive balanced meals.
-
-Examples include:
-
-- Rice
-- Meat
-- Posho / Kawunga
-- Sweet potatoes
-- Isombe
-- Porridge
-- Ugali
-- Other balanced foods
-
-
-=========================================================
-DAILY SCHOOL SCHEDULE
-=========================================================
-
-8:30 AM:
-
-Morning arrival and classes start.
-
-
-Morning study:
-
-3 hours.
-
-
-Morning break follows.
-
-
-Next study session:
-
-2 hours.
-
-
-Lunch:
-
-11:45 AM.
-
-
-Afternoon classes:
-
-1:10 PM - 4:00 PM.
-
-
-Preparation for evening revision:
-
-From 4:00 PM.
-
-
-Evening classroom cleaning:
-
-7:15 PM.
-
-
-Dinner:
-
-7:30 PM.
-
-
-After dinner:
-
-Resting / sleeping time.
-
-
-=========================================================
-STAFF
-=========================================================
-
-The school has approximately:
-
-30 staff members.
-
-
-=========================================================
-COMBINATIONS
-=========================================================
-
-BULINGA TVET SCHOOL offers 4 combinations:
-
-1. SOD - Software Development
-2. NIT - Networking and Internet Technology
-3. ACC - Accounting
-4. CSA
-
-Each combination has its own dedicated computer laboratory.
-
-
-=========================================================
-RELIGION
-=========================================================
-
-The school is non-denominational.
-
-The school does not belong to one specific religion.
-
-Students may practice different religions.
-
-Examples:
-
-- Islam
-- La Paix
-- Catholic
-- Jehovah's Witnesses
-
-Every Friday and Sunday, respective groups gather for worship.
-
-The school is also near a Catholic church.
-
-
-=========================================================
-SCHOOL CONTACTS
-=========================================================
-
-Headmaster:
-
-0788546462
-
-Email:
-
-munoel20@gmail.com
-
-
-Bursar:
-
-0782612675
-
-
-Discipline Master / DOD:
-
-0785979951
-
-
-Director of Studies / DOS:
-
-0784020929
-
-
-Secretary:
-
-0785098759
-
-
-School Email:
-
-bulingatvetschool@gmail.com
-
-
-=========================================================
-SCHOOL RULES
-=========================================================
-
-Students are not allowed to bring or use:
-
-- Laptops
-- SIM cards
-- Phones
-- Headsets
-- AirPods
-- Other electronic devices
-
-
-=========================================================
-LOGO
-=========================================================
-
-The official school logo is:
-
-btss.png
-
-
-=========================================================
-LANGUAGE
-=========================================================
-
-Always respond using the language selected by the user.
-
-The current selected language will be provided separately.
-
-Always maintain the BULINGA AI persona.
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL)
+Location: MUHANGA, Mushishiro near KABADAHA Center.
+School Fees Total: 95,500 Frw
+Payment Account: Mwarimu Sacco (900009815200)
 """
 
 
@@ -755,13 +341,8 @@ Always maintain the BULINGA AI persona.
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
-
 if not GROQ_API_KEY:
-
-    st.sidebar.warning(
-        "⚠️ GROQ_API_KEY ntabwo yashyizwe muri Environment Variables."
-    )
-
+    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe muri Environment Variables.")
 
 client = Groq(
     api_key=GROQ_API_KEY or "YOUR_GROQ_API_KEY"
@@ -772,15 +353,10 @@ client = Groq(
 # 8. AVATARS
 # =========================================================
 
-# AI avatar
 avatar_img = None
-
 if os.path.exists("btss.png"):
-
     avatar_img = "btss.png"
 
-
-# USER AVATAR
 user_avatar = "👤"
 
 
@@ -789,22 +365,15 @@ user_avatar = "👤"
 # =========================================================
 
 if avatar_img:
-
     try:
-
         logo_img = Image.open(avatar_img)
-
         st.sidebar.image(
             logo_img,
             caption="BULINGA TVET SCHOOL",
             use_container_width=True
         )
-
     except Exception:
-
-        st.sidebar.warning(
-            "btss.png ntishobora gufunguka."
-        )
+        st.sidebar.warning("btss.png ntishobora gufunguka.")
 
 
 # =========================================================
@@ -812,20 +381,13 @@ if avatar_img:
 # =========================================================
 
 st.sidebar.markdown("---")
-
-
 st.sidebar.markdown(
     """
 ### 🤖 BULINGA AI
-
 **Official AI Assistant**
-
 Developed for:
-
 **BULINGA TECHNICAL SECONDARY SCHOOL**
-
 Developers:
-
 **BULINGA Developers Team**
 """
 )
@@ -836,22 +398,16 @@ Developers:
 # =========================================================
 
 if st.sidebar.button("Clear Chat"):
-
     st.session_state.messages = []
-
     st.rerun()
 
 
 # =========================================================
-# 12. MAIN HEADER (WITH MOVING ANIMATION)
+# 12. MAIN HEADER
 # =========================================================
 
 st.markdown('<h1 class="moving-title">🤖 BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-
-
-st.caption(
-    "Your Assistant guider for BULINGA Technical Secondary School"
-)
+st.caption("Your Assistant guider for BULINGA Technical Secondary School")
 
 
 # =========================================================
@@ -859,7 +415,6 @@ st.caption(
 # =========================================================
 
 if "messages" not in st.session_state:
-
     st.session_state.messages = []
 
 
@@ -868,36 +423,18 @@ if "messages" not in st.session_state:
 # =========================================================
 
 for message in st.session_state.messages:
-
     role = message["role"]
+    current_avatar = avatar_img if role == "assistant" else user_avatar
 
-
-    if role == "assistant":
-
-        current_avatar = avatar_img
-
-    else:
-
-        current_avatar = user_avatar
-
-
-    with st.chat_message(
-        role,
-        avatar=current_avatar
-    ):
-
-        st.markdown(
-            message["content"]
-        )
+    with st.chat_message(role, avatar=current_avatar):
+        st.markdown(message["content"])
 
 
 # =========================================================
 # 15. CHAT INPUT
 # =========================================================
 
-user_query = st.chat_input(
-    "Ask related BULINGA TVET SCHOOL..."
-)
+user_query = st.chat_input("Ask related BULINGA TVET SCHOOL...")
 
 
 # =========================================================
@@ -906,11 +443,6 @@ user_query = st.chat_input(
 
 if user_query:
 
-
-    # =====================================================
-    # SAVE USER MESSAGE
-    # =====================================================
-
     st.session_state.messages.append(
         {
             "role": "user",
@@ -918,85 +450,25 @@ if user_query:
         }
     )
 
+    with st.chat_message("user", avatar=user_avatar):
+        st.markdown(user_query)
 
-    # =====================================================
-    # USER MESSAGE
-    # RIGHT SIDE
-    # =====================================================
-
-    with st.chat_message(
-        "user",
-        avatar=user_avatar
-    ):
-
-        st.markdown(
-            user_query
-        )
-
-
-    # =====================================================
-    # AI MESSAGE
-    # LEFT SIDE
-    # =====================================================
-
-    with st.chat_message(
-        "assistant",
-        avatar=avatar_img
-    ):
-
-
+    with st.chat_message("assistant", avatar=avatar_img):
         thinking_placeholder = st.empty()
-
-
         thinking_placeholder.markdown(
-            """
-            <p class="thinking-text">
-            ⚪ BULINGA AI thinking...
-            </p>
-            """,
+            '<p class="thinking-text">⚪ BULINGA AI thinking...</p>',
             unsafe_allow_html=True
         )
 
-
         try:
-
-
-            # =================================================
-            # BUILD MESSAGE PAYLOAD
-            # =================================================
-
             messages_payload = [
-
                 {
                     "role": "system",
-
-                    "content":
-
-                    BULINGA_INFO
-
-                    +
-
-                    f"""
-
-=========================================================
-CURRENT PREFERRED LANGUAGE
-=========================================================
-
-{selected_lang}
-
-Answer the user using this language.
-"""
+                    "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE: {selected_lang}"
                 }
-
             ]
 
-
-            # =================================================
-            # ADD CONVERSATION HISTORY
-            # =================================================
-
             for message in st.session_state.messages:
-
                 messages_payload.append(
                     {
                         "role": message["role"],
@@ -1004,54 +476,17 @@ Answer the user using this language.
                     }
                 )
 
-
-            # =================================================
-            # SEND REQUEST TO GROQ
-            # =================================================
-
             completion = client.chat.completions.create(
-
                 model="openai/gpt-oss-20b",
-
                 messages=messages_payload,
-
                 temperature=0.7,
-
                 max_tokens=1024
             )
 
-
-            # =================================================
-            # GET AI RESPONSE
-            # =================================================
-
-            response_text = (
-                completion
-                .choices[0]
-                .message
-                .content
-            )
-
-
-            # =================================================
-            # REMOVE THINKING
-            # =================================================
+            response_text = completion.choices[0].message.content
 
             thinking_placeholder.empty()
-
-
-            # =================================================
-            # DISPLAY AI RESPONSE
-            # =================================================
-
-            st.markdown(
-                response_text
-            )
-
-
-            # =================================================
-            # SAVE AI RESPONSE
-            # =================================================
+            st.markdown(response_text)
 
             st.session_state.messages.append(
                 {
@@ -1060,21 +495,6 @@ Answer the user using this language.
                 }
             )
 
-
         except Exception as e:
-
-
             thinking_placeholder.empty()
-
-
-            st.error(
-                f"""
-❌ Habaye ikibazo.
-
-**Error:**
-
-`{e}`
-
-Nyamuneka reba niba **GROQ_API_KEY** yawe yashyizwe neza.
-"""
-            )
+            st.error(f"❌ Habaye ikibazo.\n\n**Error:** `{e}`")
