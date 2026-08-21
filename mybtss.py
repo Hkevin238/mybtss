@@ -112,7 +112,7 @@ header {
 
 /* =====================================================
    USER MESSAGE
-   RIGHT SIDE
+   LEFT SIDE
    ===================================================== */
 
 [data-testid="stChatMessage"]:has(
@@ -125,7 +125,7 @@ header {
 
     flex-direction: row-reverse !important;
 
-    text-align: right !important;
+    text-align: left !important;
 }
 
 
@@ -137,11 +137,11 @@ header {
 
     max-width: 65% !important;
 
-    margin-left: auto !important;
+    margin-right: auto !important;
 
-    margin-right: 0 !important;
+    margin-left: 0 !important;
 
-    text-align: left !important;
+    text-align: right !important;
 
     background-color: #303030 !important;
 
@@ -262,7 +262,7 @@ section[data-testid="stSidebar"] {
 
     border-radius: 10px !important;
 
-    border: 1px solid #424255 !important;
+    border: 15px solid #424255 !important;
 
     background-color: #2f2f3f !important;
 
@@ -277,7 +277,7 @@ section[data-testid="stSidebar"] {
 # 3. SIDEBAR
 # =========================================================
 
-st.sidebar.title("⚙️ Settings & Control")
+st.sidebar.title("Settings & Control")
 
 
 theme_mode = st.sidebar.selectbox(
@@ -398,7 +398,7 @@ You were developed exclusively by Developer Kevin.
 
 If anyone asks who created you, say:
 
-"I was created by Developer Kevin for BULINGA TVET SCHOOL."
+"I was created by BULINGA Developers Team for BULINGA TVET SCHOOL."
 
 
 =========================================================
@@ -802,9 +802,9 @@ Developed for:
 
 **BULINGA TECHNICAL SECONDARY SCHOOL**
 
-Developer:
+Developers:
 
-**Kevin**
+**BULINGA Developers Team**
 """
 )
 
@@ -813,7 +813,7 @@ Developer:
 # 11. CLEAR CHAT
 # =========================================================
 
-if st.sidebar.button("🗑️ Clear Chat"):
+if st.sidebar.button("Clear Chat"):
 
     st.session_state.messages = []
 
@@ -828,7 +828,7 @@ st.title("🤖 BULINGA AI Assistant")
 
 
 st.caption(
-    "Your intelligent guide for BULINGA Technical Secondary School"
+    "Your Assistant guider for BULINGA Technical Secondary School"
 )
 
 
@@ -874,7 +874,7 @@ for message in st.session_state.messages:
 # =========================================================
 
 user_query = st.chat_input(
-    "Ask about BULINGA TVET SCHOOL..."
+    "Ask related BULINGA TVET SCHOOL..."
 )
 
 
