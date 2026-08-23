@@ -236,7 +236,7 @@ theme_mode = st.sidebar.selectbox(
 )
 
 
-selected_lang = st.sidebar.selectbox(
+selected_lang = st.sidebar.checkbox(
     "Choose Language / Ururimi",
     [
         "Kinyarwanda",
