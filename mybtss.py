@@ -186,7 +186,7 @@ EMOJI RULE:
 - Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
 
 CORE RULE:
-You ONLY answer questions related to BULINGA TVET SCHOOL.
+You ONLY answer questions related to BULINGA TVET SCHOOL and Your Creators / Developers.
 If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
@@ -238,7 +238,7 @@ if st.sidebar.button("Clear Chat"):
 # 7. MAIN HEADER & SESSION STATE
 # =========================================================
 
-st.markdown('<h1 class="moving-title">🤖 BULINGA AI Assistant</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
 st.caption("Your Assistant guider for BULINGA Technical Secondary School ✨")
 
 if "messages" not in st.session_state:
@@ -259,9 +259,9 @@ for message in st.session_state.messages:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA TVET- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TVET- Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
