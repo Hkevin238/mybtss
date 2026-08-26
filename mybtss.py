@@ -224,7 +224,7 @@ if os.path.exists("btss.png"):
 if avatar_img:
     try:
         logo_img = Image.open(avatar_img)
-        st.sidebar.image(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
+        st.sidebar.imag(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
     except Exception:
         pass
 
