@@ -17,19 +17,43 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS (WHATSAPP STYLE - USER RIGHT, AI LEFT)
+# 2. CUSTOM CSS (WHATSAPP STYLE + ✨ LARGER MOVING SPARKLES BACKGROUND)
 # =========================================================
 
 st.markdown("""
 <style>
 
 /* =====================================================
-   MAIN APP BACKGROUND (WhatsApp Dark Theme vibe)
+   MOVING SPARKLES BACKGROUND ANIMATION
+   ===================================================== */
+
+@keyframes moveSparkles {
+    0% {
+        background-position: 0 0, 0 0;
+    }
+    100% {
+        background-position: -10000px 5000px, 5000px -10000px;
+    }
+}
+
+/* =====================================================
+   MAIN APP BACKGROUND (Starry Moving Sparkles + Dark Vibe)
    ===================================================== */
 
 .stApp {
-    background-color: #111b21;
-    color: #e9edef;
+    background-color: #111b21 !important;
+    background-image: 
+        radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 40px 70px, #ffd700, rgba(0,0,0,0)),
+        radial-gradient(5px 5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(7px 7px at 160px 120px, #fff8dc, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 230px 180px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 350px 250px, #ffd700, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 450px 350px, #ffffff, rgba(0,0,0,0)) !important;
+    background-repeat: repeat !important;
+    background-size: 500px 500px !important;
+    animation: moveSparkles 90s linear infinite !important;
+    color: #e9edef !important;
 }
 
 #MainMenu {
@@ -262,6 +286,7 @@ if theme_mode == "Light Mode":
 
     .stApp {
         background-color: #efeae2 !important;
+        background-image: none !important;
         color: #111b21 !important;
     }
 
@@ -310,6 +335,7 @@ elif theme_mode == "Custom Theme":
 
     .stApp {
         background-color: #0f172a !important;
+        background-image: none !important;
         color: #38bdf8 !important;
     }
 
