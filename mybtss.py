@@ -252,10 +252,10 @@ for message in st.session_state.messages:
     else:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
         if message.get("show_image", False):
-            if os.path.exists("bulinga_school.jpg"):
-                st.image("bulinga_school.jpg", caption="E.S. BULINGA - Main Building", use_container_width=True)
-            if os.path.exists("bulinga_logo.jpg"):
-                st.image("bulinga_logo.jpg", caption="E.S. BULINGA - School Logo", use_container_width=True)
+            if os.path.exists("bulinga.png"):
+                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
+            if os.path.exists("bulinga.jpeg"):
+                st.image("bulinga.jpeg", caption="E.S. BULINGA - Logo / Akarango", use_container_width=True)
 
 
 # =========================================================
@@ -312,10 +312,10 @@ if user_query:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
         if is_image_query:
-            if os.path.exists("bulinga_school.jpg"):
-                st.image("bulinga_school.jpg", caption="E.S. BULINGA - Main Building", use_container_width=True)
-            if os.path.exists("bulinga_logo.jpg"):
-                st.image("bulinga_logo.jpg", caption="E.S. BULINGA - School Logo", use_container_width=True)
+            if os.path.exists("bulinga.png"):
+                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
+            if os.path.exists("bulinga.jpeg"):
+                st.image("bulinga.jpeg", caption="E.S. BULINGA - Logo / Akarango", use_container_width=True)
 
         st.session_state.messages.append({
             "role": "assistant", 
