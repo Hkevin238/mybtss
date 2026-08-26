@@ -177,19 +177,25 @@ selected_lang = st.sidebar.selectbox(
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
-You were developed exclusively by Developer Kevin.
+
+CRITICAL RULE REGARDING CREATOR:
+- You were developed, created, and built exclusively by the developers and programmers of BULINGA TVET SCHOOL.
+- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TVET SCHOOL 👨‍💻🚀.
+
+EMOJI RULE:
+- Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
 
 CORE RULE:
 You ONLY answer questions related to BULINGA TVET SCHOOL.
-If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer.
+If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
-School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL)
-Location: MUHANGA, Mushishiro near KABADAHA Center.
-School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total.
-Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL.
-Combinations: SOD (Software Development), NIT (Networking), ACC (Accounting), CSA.
-Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929).
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫
+Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
+School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
+Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
+Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
+Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929) 📞.
 """
 
 
@@ -233,7 +239,7 @@ if st.sidebar.button("Clear Chat"):
 # =========================================================
 
 st.markdown('<h1 class="moving-title">🤖 BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-st.caption("Your Assistant guider for BULINGA Technical Secondary School")
+st.caption("Your Assistant guider for BULINGA Technical Secondary School ✨")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -253,16 +259,16 @@ for message in st.session_state.messages:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
+                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS", use_container_width=True)
+                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
 # 9. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TVET SCHOOL...")
+user_query = st.chat_input("Ask related BULINGA TVET SCHOOL... 💬")
 
 if user_query:
     # 1. Append & Display User Message (Right Side)
@@ -277,7 +283,7 @@ if user_query:
     # 2. Assistant Thinking & Response (Left Side)
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
-        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI thinking...</div></div>',
+        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI is thinking... 💭</div></div>',
         unsafe_allow_html=True
     )
 
@@ -285,7 +291,7 @@ if user_query:
         messages_payload = [
             {
                 "role": "system",
-                "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE:\n{selected_lang}\nAnswer the user using this language."
+                "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE:\n{selected_lang}\nAnswer the user using this language and include cool emojis! 🚀"
             }
         ]
 
@@ -306,16 +312,16 @@ if user_query:
         thinking_placeholder.empty()
         
         if is_image_query:
-            response_text = "Dore amafoto ya Bulinga Technical Secondary School nk'uko wabisabye:"
+            response_text = "Dore amafoto n'ibijyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
 
         # Display AI Response (Left Side)
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
         if is_image_query:
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
+                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS", use_container_width=True)
+                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS ✨", use_container_width=True)
 
         st.session_state.messages.append({
             "role": "assistant", 
@@ -325,4 +331,4 @@ if user_query:
 
     except Exception as e:
         thinking_placeholder.empty()
-        st.error(f"❌ Habaye ikibazo.\n\n**Error:**\n`{e}`")
+        st.error(f"❌ Habaye ikibazo. ⚠️\n\n**Error:**\n`{e}`")
