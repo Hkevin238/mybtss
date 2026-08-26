@@ -288,7 +288,7 @@ if user_query:
         completion = client.chat.completions.create(
             model="openai/gpt-oss-20b",
             messages=messages_payload,
-            temperature0.7 if False else 0.7,
+            temperature=0.7,
             max_tokens=1024
         )
 
