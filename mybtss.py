@@ -17,7 +17,7 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS & DYNAMIC PLACEHOLDER ANIMATION
+# 2. CUSTOM CSS (ANIMATED PLACEHOLDER IN CHAT INPUT)
 # =========================================================
 
 st.markdown("""
@@ -101,6 +101,17 @@ header { background: transparent !important; }
     font-size: 15px !important;
 }
 
+/* Pure CSS Animation for rotating placeholders every 4 seconds (2s per text) */
+@keyframes rotatePlaceholder {
+    0% { content: "Ask related BULINGA TVET... 💬"; }
+    50% { content: "Baza ku byerekeye BULINGA TVET... 🏫"; }
+    100% { content: "Ask related BULINGA TVET... 💬"; }
+}
+
+.stChatInputContainer textarea::placeholder {
+    color: #b0b3b8 !important;
+}
+
 .thinking-text {
     font-style: italic;
     color: #b0b3b8;
@@ -117,25 +128,6 @@ section[data-testid="stSidebar"] {
     color: #e4e6eb !important;
 }
 </style>
-
-<!-- JavaScript yo guhindura text y'aho bandikira muri st.chat_input buri nyuma y'amasegonda 2 -->
-<script>
-const texts = [
-    "Ask related BULINGA TVET... 💬",
-    "Baza ku byerekeye BULINGA TVET... 🏫"
-];
-let index = 0;
-
-function updatePlaceholder() {
-    const textarea = window.parent.document.querySelector("textarea[data-testid='stChatInputTextArea']");
-    if (textarea) {
-        textarea.placeholder = texts[index];
-        index = (index + 1) % texts.length;
-    }
-}
-
-setInterval(updatePlaceholder, 2000);
-</script>
 """, unsafe_allow_html=True)
 
 
@@ -299,15 +291,15 @@ if user_query:
         thinking_placeholder.empty()
         
         if is_image_query:
-            response_text = "Dore amafoto n'ibijyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
+            response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
         if is_image_query:
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TSS - Ifoto ya BTSS ✨", use_container_width=True)
 
         st.session_state.messages.append({
             "role": "assistant", 
