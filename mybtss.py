@@ -206,7 +206,7 @@ if os.path.exists("btss.png"):
 if avatar_img:
     try:
         logo_img = Image.open(avatar_img)
-        st.sidebar.image(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
+        st.sidebar.imag(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
     except Exception:
         pass
 
@@ -299,7 +299,7 @@ if user_query:
             if os.path.exists("bulinga.png"):
                 st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TSS - Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
         st.session_state.messages.append({
             "role": "assistant", 
