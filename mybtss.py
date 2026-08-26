@@ -251,6 +251,11 @@ for message in st.session_state.messages:
         st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
     else:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
+        if message.get("show_image", False):
+            if os.path.exists("bulinga_school.jpg"):
+                st.image("bulinga_school.jpg", caption="E.S. BULINGA - Main Building", use_container_width=True)
+            if os.path.exists("bulinga_logo.jpg"):
+                st.image("bulinga_logo.jpg", caption="E.S. BULINGA - School Logo", use_container_width=True)
 
 
 # =========================================================
@@ -263,6 +268,11 @@ if user_query:
     # 1. Append & Display User Message (Right Side)
     st.session_state.messages.append({"role": "user", "content": user_query})
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{user_query}</div></div>', unsafe_allow_html=True)
+
+    # Reba niba abajije ifoto
+    query_lower = user_query.lower()
+    image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
+    is_image_query = any(kw in query_lower for kw in image_keywords)
 
     # 2. Assistant Thinking & Response (Left Side)
     thinking_placeholder = st.empty()
@@ -295,10 +305,23 @@ if user_query:
         response_text = completion.choices[0].message.content
         thinking_placeholder.empty()
         
+        if is_image_query:
+            response_text = "Dore amafoto n'ikimenyetso (Logo) bya Bulinga Technical Secondary School nk'uko wabisabye:"
+
         # Display AI Response (Left Side)
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
-        st.session_state.messages.append({"role": "assistant", "content": response_text})
+        if is_image_query:
+            if os.path.exists("bulinga_school.jpg"):
+                st.image("bulinga_school.jpg", caption="E.S. BULINGA - Main Building", use_container_width=True)
+            if os.path.exists("bulinga_logo.jpg"):
+                st.image("bulinga_logo.jpg", caption="E.S. BULINGA - School Logo", use_container_width=True)
+
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": response_text,
+            "show_image": is_image_query
+        })
 
     except Exception as e:
         thinking_placeholder.empty()
