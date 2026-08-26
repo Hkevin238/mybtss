@@ -1,4 +1,5 @@
 import os
+import time
 import streamlit as st
 from PIL import Image
 from groq import Groq
@@ -224,7 +225,7 @@ if os.path.exists("btss.png"):
 if avatar_img:
     try:
         logo_img = Image.open(avatar_img)
-        st.sidebar.imag(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
+        st.sidebar.image(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
     except Exception:
         pass
 
@@ -265,10 +266,16 @@ for message in st.session_state.messages:
 
 
 # =========================================================
-# 9. CHAT INPUT & RESPONSE HANDLING
+# 9. CHAT INPUT & RESPONSE HANDLING (WITH 2 SECONDS DELAY FEATURE)
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TVET SCHOOL... 💬")
+# Guhindura ubutumwa butegereza ko umuntu yandika (Dynamic Placeholder)
+placeholder_container = st.empty()
+user_query = placeholder_container.chat_input("Ask related BULINGA TVET... 💬")
+
+# Nyuma y'amasegonda 2 (2 seconds), bihinduka bikaba "Baza ku byerekeye BULINGA TVET"
+time.sleep(2)
+user_query = placeholder_container.chat_input("Baza ku byerekeye BULINGA TVET... 💬")
 
 if user_query:
     # 1. Append & Display User Message (Right Side)
