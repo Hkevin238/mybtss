@@ -17,13 +17,38 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM MESSENGER CHAT CSS
+# 2. CUSTOM CSS (MOVING SPARKLES + MESSENGER ALIGNMENT)
 # =========================================================
 
 st.markdown("""
 <style>
+
+/* =====================================================
+   MOVING SPARKLES BACKGROUND ANIMATION (DIFFERENT DIRECTIONS)
+   ===================================================== */
+
+@keyframes moveSparkles {
+    0% {
+        background-position: 0 0, 0 0, 0 0;
+    }
+    100% {
+        background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px;
+    }
+}
+
 .stApp {
     background-color: #121212 !important;
+    background-image: 
+        radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 40px 70px, #0084ff, rgba(0,0,0,0)),
+        radial-gradient(5px 5px at 90px 40px, #ffd700, rgba(0,0,0,0)),
+        radial-gradient(7px 7px at 160px 120px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 230px 180px, #0084ff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 350px 250px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 450px 350px, #ffd700, rgba(0,0,0,0)) !important;
+    background-repeat: repeat !important;
+    background-size: 500px 500px !important;
+    animation: moveSparkles 80s linear infinite !important;
     color: #e4e6eb !important;
 }
 
@@ -42,7 +67,11 @@ header { background: transparent !important; }
     animation: bounceSlow 3s ease-in-out infinite;
 }
 
-/* Messenger Chat Bubbles Container */
+
+/* =====================================================
+   MESSENGER CHAT BUBBLES CONTAINER
+   ===================================================== */
+
 .chat-row {
     display: flex;
     width: 100%;
@@ -80,7 +109,11 @@ header { background: transparent !important; }
     border-radius: 18px 18px 18px 4px;
 }
 
-/* Chat Input Styling */
+
+/* =====================================================
+   CHAT INPUT & SIDEBAR STYLING
+   ===================================================== */
+
 .stChatInputContainer {
     background-color: #242526 !important;
     border-radius: 24px !important;
@@ -255,7 +288,7 @@ if user_query:
         completion = client.chat.completions.create(
             model="openai/gpt-oss-20b",
             messages=messages_payload,
-            temperature=0.7,
+            temperature0.7 if False else 0.7,
             max_tokens=1024
         )
 
