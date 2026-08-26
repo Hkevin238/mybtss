@@ -1,5 +1,4 @@
 import os
-import time
 import streamlit as st
 from PIL import Image
 from groq import Groq
@@ -18,23 +17,15 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS (MOVING SPARKLES + MESSENGER ALIGNMENT)
+# 2. CUSTOM CSS & DYNAMIC PLACEHOLDER ANIMATION
 # =========================================================
 
 st.markdown("""
 <style>
 
-/* =====================================================
-   MOVING SPARKLES BACKGROUND ANIMATION (DIFFERENT DIRECTIONS)
-   ===================================================== */
-
 @keyframes moveSparkles {
-    0% {
-        background-position: 0 0, 0 0, 0 0;
-    }
-    100% {
-        background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px;
-    }
+    0% { background-position: 0 0, 0 0, 0 0; }
+    100% { background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }
 }
 
 .stApp {
@@ -68,11 +59,6 @@ header { background: transparent !important; }
     animation: bounceSlow 3s ease-in-out infinite;
 }
 
-
-/* =====================================================
-   MESSENGER CHAT BUBBLES CONTAINER
-   ===================================================== */
-
 .chat-row {
     display: flex;
     width: 100%;
@@ -80,13 +66,8 @@ header { background: transparent !important; }
     margin-bottom: 10px;
 }
 
-.chat-row.user {
-    justify-content: flex-end;
-}
-
-.chat-row.assistant {
-    justify-content: flex-start;
-}
+.chat-row.user { justify-content: flex-end; }
+.chat-row.assistant { justify-content: flex-start; }
 
 .chat-bubble {
     max-width: 75%;
@@ -96,24 +77,17 @@ header { background: transparent !important; }
     word-wrap: break-word;
 }
 
-/* User Bubble (Right - Messenger Blue) */
 .chat-row.user .chat-bubble {
     background-color: #0084ff;
     color: #ffffff;
     border-radius: 18px 18px 4px 18px;
 }
 
-/* Assistant Bubble (Left - Dark Grey) */
 .chat-row.assistant .chat-bubble {
     background-color: #3a3b3c;
     color: #e4e6eb;
     border-radius: 18px 18px 18px 4px;
 }
-
-
-/* =====================================================
-   CHAT INPUT & SIDEBAR STYLING
-   ===================================================== */
 
 .stChatInputContainer {
     background-color: #242526 !important;
@@ -125,10 +99,6 @@ header { background: transparent !important; }
 .stChatInputContainer textarea {
     color: #e4e6eb !important;
     font-size: 15px !important;
-}
-
-.stChatInputContainer textarea::placeholder {
-    color: #b0b3b8 !important;
 }
 
 .thinking-text {
@@ -147,6 +117,25 @@ section[data-testid="stSidebar"] {
     color: #e4e6eb !important;
 }
 </style>
+
+<!-- JavaScript yo guhindura text y'aho bandikira muri st.chat_input buri nyuma y'amasegonda 2 -->
+<script>
+const texts = [
+    "Ask related BULINGA TVET... 💬",
+    "Baza ku byerekeye BULINGA TVET... 🏫"
+];
+let index = 0;
+
+function updatePlaceholder() {
+    const textarea = window.parent.document.querySelector("textarea[data-testid='stChatInputTextArea']");
+    if (textarea) {
+        textarea.placeholder = texts[index];
+        index = (index + 1) % texts.length;
+    }
+}
+
+setInterval(updatePlaceholder, 2000);
+</script>
 """, unsafe_allow_html=True)
 
 
@@ -266,28 +255,19 @@ for message in st.session_state.messages:
 
 
 # =========================================================
-# 9. CHAT INPUT & RESPONSE HANDLING (WITH 2 SECONDS DELAY FEATURE)
+# 9. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-# Guhindura ubutumwa butegereza ko umuntu yandika (Dynamic Placeholder)
-placeholder_container = st.empty()
-user_query = placeholder_container.chat_input("Ask related BULINGA TVET... 💬")
-
-# Nyuma y'amasegonda 2 (2 seconds), bihinduka bikaba "Baza ku byerekeye BULINGA TVET"
-time.sleep(2)
-user_query = placeholder_container.chat_input("Baza ku byerekeye BULINGA TVET... 💬")
+user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
 if user_query:
-    # 1. Append & Display User Message (Right Side)
     st.session_state.messages.append({"role": "user", "content": user_query})
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{user_query}</div></div>', unsafe_allow_html=True)
 
-    # Reba niba abajije ifoto
     query_lower = user_query.lower()
     image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
     is_image_query = any(kw in query_lower for kw in image_keywords)
 
-    # 2. Assistant Thinking & Response (Left Side)
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
         '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI is thinking... 💭</div></div>',
@@ -321,7 +301,6 @@ if user_query:
         if is_image_query:
             response_text = "Dore amafoto n'ibijyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
 
-        # Display AI Response (Left Side)
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
         if is_image_query:
