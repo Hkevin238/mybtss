@@ -17,13 +17,11 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS (MESSENGER / WHATSAPP STYLE ALIGNMENT)
+# 2. CUSTOM MESSENGER CHAT CSS
 # =========================================================
 
 st.markdown("""
 <style>
-
-/* App Background */
 .stApp {
     background-color: #121212 !important;
     color: #e4e6eb !important;
@@ -44,53 +42,45 @@ header { background: transparent !important; }
     animation: bounceSlow 3s ease-in-out infinite;
 }
 
-
-/* =====================================================
-   MESSENGER CHAT BUBBLE ALIGNMENT FIX
-   ===================================================== */
-
-/* Base chat message container */
-[data-testid="stChatMessage"] {
-    display: flex !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
+/* Messenger Chat Bubbles Container */
+.chat-row {
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-/* 1. ASSISTANT MESSAGE (Left Side - Grey/Dark Bubble) */
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
-    flex-direction: row !important;
-    justify-content: flex-start !important;
+.chat-row.user {
+    justify-content: flex-end;
 }
 
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-    background-color: #3a3b3c !important;
-    color: #e4e6eb !important;
-    border-radius: 18px 18px 18px 4px !important;
-    padding: 10px 14px !important;
-    max-width: 75% !important;
-    margin-right: auto !important;
-    margin-left: 0 !important;
+.chat-row.assistant {
+    justify-content: flex-start;
 }
 
-/* 2. USER MESSAGE (Right Side - Messenger Blue Bubble) */
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    flex-direction: row-reverse !important;
-    justify-content: flex-start !important;
+.chat-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    font-size: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
 }
 
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-    background-color: #0084ff !important;
-    color: #ffffff !important;
-    border-radius: 18px 18px 4px 18px !important;
-    padding: 10px 14px !important;
-    max-width: 75% !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
+/* User Bubble (Right - Messenger Blue) */
+.chat-row.user .chat-bubble {
+    background-color: #0084ff;
+    color: #ffffff;
+    border-radius: 18px 18px 4px 18px;
 }
 
+/* Assistant Bubble (Left - Dark Grey) */
+.chat-row.assistant .chat-bubble {
+    background-color: #3a3b3c;
+    color: #e4e6eb;
+    border-radius: 18px 18px 18px 4px;
+}
 
-/* Chat Input Container Styling */
+/* Chat Input Styling */
 .stChatInputContainer {
     background-color: #242526 !important;
     border-radius: 24px !important;
@@ -122,7 +112,6 @@ section[data-testid="stSidebar"] {
     background-color: #3a3b3c !important;
     color: #e4e6eb !important;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -172,7 +161,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 5. GROQ API KEY
+# 5. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -186,14 +175,12 @@ client = Groq(
 
 
 # =========================================================
-# 6. AVATARS & SIDEBAR LOGO
+# 6. SIDEBAR LOGO & CLEAR CHAT
 # =========================================================
 
 avatar_img = None
 if os.path.exists("btss.png"):
     avatar_img = "btss.png"
-
-user_avatar = "👤"
 
 if avatar_img:
     try:
@@ -220,15 +207,17 @@ if "messages" not in st.session_state:
 
 
 # =========================================================
-# 8. DISPLAY CHAT HISTORY
+# 8. DISPLAY CHAT HISTORY (USING CUSTOM HTML ROWS)
 # =========================================================
 
 for message in st.session_state.messages:
     role = message["role"]
-    current_avatar = avatar_img if role == "assistant" else user_avatar
+    content = message["content"]
     
-    with st.chat_message(role, avatar=current_avatar):
-        st.markdown(message["content"])
+    if role == "user":
+        st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
 
 
 # =========================================================
@@ -238,46 +227,46 @@ for message in st.session_state.messages:
 user_query = st.chat_input("Ask related BULINGA TVET SCHOOL...")
 
 if user_query:
+    # 1. Append & Display User Message (Right Side)
     st.session_state.messages.append({"role": "user", "content": user_query})
-    
-    with st.chat_message("user", avatar=user_avatar):
-        st.markdown(user_query)
+    st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{user_query}</div></div>', unsafe_allow_html=True)
 
-    with st.chat_message("assistant", avatar=avatar_img):
-        thinking_placeholder = st.empty()
-        thinking_placeholder.markdown(
-            '<p class="thinking-text">⚪ BULINGA AI thinking...</p>',
-            unsafe_allow_html=True
+    # 2. Assistant Thinking & Response (Left Side)
+    thinking_placeholder = st.empty()
+    thinking_placeholder.markdown(
+        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI thinking...</div></div>',
+        unsafe_allow_html=True
+    )
+
+    try:
+        messages_payload = [
+            {
+                "role": "system",
+                "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE:\n{selected_lang}\nAnswer the user using this language."
+            }
+        ]
+
+        for message in st.session_state.messages:
+            messages_payload.append({
+                "role": message["role"],
+                "content": message["content"]
+            })
+
+        completion = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=messages_payload,
+            temperature=0.7,
+            max_tokens=1024
         )
 
-        try:
-            messages_payload = [
-                {
-                    "role": "system",
-                    "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE:\n{selected_lang}\nAnswer the user using this language."
-                }
-            ]
+        response_text = completion.choices[0].message.content
+        thinking_placeholder.empty()
+        
+        # Display AI Response (Left Side)
+        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
-            for message in st.session_state.messages:
-                messages_payload.append({
-                    "role": message["role"],
-                    "content": message["content"]
-                })
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
 
-            completion = client.chat.completions.create(
-                model="openai/gpt-oss-20b",
-                messages=messages_payload,
-                temperature=0.7,
-                max_tokens=1024
-            )
-
-            response_text = completion.choices[0].message.content
-            thinking_placeholder.empty()
-            st.markdown(response_text)
-
-            st.session_state.messages.append({"role": "assistant", "content": response_text})
-
-        except Exception as e:
-            if 'thinking_placeholder' in locals():
-                thinking_placeholder.empty()
-            st.error(f"❌ Habaye ikibazo.\n\n**Error:**\n`{e}`")
+    except Exception as e:
+        thinking_placeholder.empty()
+        st.error(f"❌ Habaye ikibazo.\n\n**Error:**\n`{e}`")
