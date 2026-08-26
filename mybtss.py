@@ -254,8 +254,8 @@ for message in st.session_state.messages:
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
                 st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
-            if os.path.exists("bulinga.jpeg"):
-                st.image("bulinga.jpeg", caption="E.S. BULINGA - Logo / Akarango", use_container_width=True)
+            if os.path.exists("btss.png"):
+                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS", use_container_width=True)
 
 
 # =========================================================
@@ -306,7 +306,7 @@ if user_query:
         thinking_placeholder.empty()
         
         if is_image_query:
-            response_text = "Dore amafoto n'ikimenyetso (Logo) bya Bulinga Technical Secondary School nk'uko wabisabye:"
+            response_text = "Dore amafoto ya Bulinga Technical Secondary School nk'uko wabisabye:"
 
         # Display AI Response (Left Side)
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
@@ -314,8 +314,8 @@ if user_query:
         if is_image_query:
             if os.path.exists("bulinga.png"):
                 st.image("bulinga.png", caption="E.S. BULINGA - Icyapa cy'Ishuri", use_container_width=True)
-            if os.path.exists("bulinga.jpeg"):
-                st.image("bulinga.jpeg", caption="E.S. BULINGA - Logo / Akarango", use_container_width=True)
+            if os.path.exists("btss.png"):
+                st.image("btss.png", caption="E.S. BULINGA - Ifoto ya BTSS", use_container_width=True)
 
         st.session_state.messages.append({
             "role": "assistant", 
