@@ -352,7 +352,7 @@ elif theme_mode == "Custom Theme":
 
 
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT (IYONGEREYEMO PHOTO LINKS & RESOURCES)
+# 6. BULINGA AI SYSTEM PROMPT (INCLUDING GOOGLE IMAGE SEARCH LINK)
 # =========================================================
 
 BULINGA_INFO = """
@@ -388,7 +388,7 @@ You can answer questions about:
 - School payment
 - Student life
 - School administration
-- School Photos and Media Links (Amafoto y'ikigo)
+- School Photos and Image Searches (Amafoto y'ikigo)
 
 
 If a question is completely unrelated to BULINGA TVET SCHOOL,
@@ -401,17 +401,16 @@ provide information about BULINGA TVET SCHOOL."
 
 
 =========================================================
-SCHOOL PHOTOS & MEDIA LINKS
+SCHOOL PHOTOS & IMAGE SEARCH LINK
 =========================================================
 
-When a user asks for photos, pictures, or images of BULINGA TVET SCHOOL, 
-you must provide them with helpful descriptions and relevant links where they can view or download school photos:
+When a user asks for photos, pictures, or images of BULINGA TVET SCHOOL 
+(e.g., "Nshaka amafoto ya bulinga", "show me school pictures"), you must 
+provide them with the direct Google Image Search link using Markdown:
 
-- Official School Gallery / Photos Link: https://bulingatvetschool.com (Cyangwa se ahantu hose amafoto y'ikigo abonekera nka social media zabo).
-- School Laboratories & Computers Photos: Hashingirwa ku bikoresho bya SOD, NIT, ACC, na CSA.
-- Campus & Surroundings Photos: Mushishiro, Muhanga (near Kabadaha Center).
+👉 [Reba amafoto ya Bulinga TVET School hano](https://www.google.com/search?q=bulinga+school+image)
 
-Always provide clickable markdown links when users ask for photos (e.g., [Reba Amafoto ya Bulinga TVET School hano](https://bulingatvetschool.com)).
+Always include this link so the user can easily click and view all related pictures directly on Google.
 
 
 =========================================================
