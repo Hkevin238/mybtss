@@ -17,39 +17,16 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS (STRICT CHAT ALIGNMENT FIX + ✨ MOVING SPARKLES)
+# 2. CUSTOM CSS (MESSENGER / WHATSAPP STYLE ALIGNMENT)
 # =========================================================
 
 st.markdown("""
 <style>
 
-/* =====================================================
-   MOVING SPARKLES BACKGROUND ANIMATION
-   ===================================================== */
-
-@keyframes moveSparkles {
-    0% {
-        background-position: 0 0, 0 0;
-    }
-    100% {
-        background-position: -10000px 5000px, 5000px -10000px;
-    }
-}
-
+/* App Background */
 .stApp {
-    background-color: #111b21 !important;
-    background-image: 
-        radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(8px 8px at 40px 70px, #ffd700, rgba(0,0,0,0)),
-        radial-gradient(5px 5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(7px 7px at 160px 120px, #fff8dc, rgba(0,0,0,0)),
-        radial-gradient(6px 6px at 230px 180px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(8px 8px at 350px 250px, #ffd700, rgba(0,0,0,0)),
-        radial-gradient(6px 6px at 450px 350px, #ffffff, rgba(0,0,0,0)) !important;
-    background-repeat: repeat !important;
-    background-size: 500px 500px !important;
-    animation: moveSparkles 90s linear infinite !important;
-    color: #e9edef !important;
+    background-color: #121212 !important;
+    color: #e4e6eb !important;
 }
 
 #MainMenu { visibility: hidden; }
@@ -69,91 +46,81 @@ header { background: transparent !important; }
 
 
 /* =====================================================
-   STRICT CHAT MESSAGE ALIGNMENT FIX (WHATSAPP STYLE)
+   MESSENGER CHAT BUBBLE ALIGNMENT FIX
    ===================================================== */
 
-/* Force layout row for all chat messages */
+/* Base chat message container */
 [data-testid="stChatMessage"] {
     display: flex !important;
     width: 100% !important;
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
 }
 
-/* AI MESSAGE (Left Side) */
-[data-testid="stChatMessage"][aria-label*="assistant"],
+/* 1. ASSISTANT MESSAGE (Left Side - Grey/Dark Bubble) */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
     flex-direction: row !important;
     justify-content: flex-start !important;
-    text-align: left !important;
 }
 
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-    background-color: #202c33 !important;
-    color: #e9edef !important;
-    border-radius: 0px 12px 12px 12px !important;
+    background-color: #3a3b3c !important;
+    color: #e4e6eb !important;
+    border-radius: 18px 18px 18px 4px !important;
+    padding: 10px 14px !important;
+    max-width: 75% !important;
     margin-right: auto !important;
     margin-left: 0 !important;
-    max-width: 75% !important;
 }
 
-/* USER MESSAGE (Right Side) */
-[data-testid="stChatMessage"][aria-label*="user"],
+/* 2. USER MESSAGE (Right Side - Messenger Blue Bubble) */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     flex-direction: row-reverse !important;
     justify-content: flex-start !important;
-    text-align: left !important;
 }
 
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-    background-color: #005c4b !important;
-    color: #e9edef !important;
-    border-radius: 12px 0px 12px 12px !important;
+    background-color: #0084ff !important;
+    color: #ffffff !important;
+    border-radius: 18px 18px 4px 18px !important;
+    padding: 10px 14px !important;
+    max-width: 75% !important;
     margin-left: auto !important;
     margin-right: 0 !important;
-    max-width: 75% !important;
 }
 
 
 /* Chat Input Container Styling */
 .stChatInputContainer {
-    background-color: #202c33 !important;
+    background-color: #242526 !important;
     border-radius: 24px !important;
-    border: none !important;
-    padding: 6px 14px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid #3a3b3c !important;
+    padding: 4px 12px !important;
 }
 
 .stChatInputContainer textarea {
-    color: #e9edef !important;
-    font-size: 16px !important;
+    color: #e4e6eb !important;
+    font-size: 15px !important;
 }
 
 .stChatInputContainer textarea::placeholder {
-    color: #8696a0 !important;
+    color: #b0b3b8 !important;
 }
 
 .thinking-text {
     font-style: italic;
-    color: #8696a0;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.4; }
-    50% { opacity: 1; }
-    100% { opacity: 0.4; }
+    color: #b0b3b8;
 }
 
 section[data-testid="stSidebar"] {
-    background-color: #111b21 !important;
+    background-color: #18191a !important;
 }
 
 .stButton button {
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     border: none !important;
-    background-color: #202c33 !important;
-    color: #e9edef !important;
+    background-color: #3a3b3c !important;
+    color: #e4e6eb !important;
 }
 
 </style>
@@ -165,15 +132,6 @@ section[data-testid="stSidebar"] {
 # =========================================================
 
 st.sidebar.title("Settings & Control")
-
-theme_mode = st.sidebar.selectbox(
-    "Select Theme / Imiterere",
-    [
-        "Dark Mode",
-        "Light Mode",
-        "Custom Theme"
-    ]
-)
 
 selected_lang = st.sidebar.selectbox(
     "Choose Language / Ururimi",
@@ -191,110 +149,21 @@ selected_lang = st.sidebar.selectbox(
 
 
 # =========================================================
-# 4. LIGHT MODE CONFIG
-# =========================================================
-
-if theme_mode == "Light Mode":
-    st.markdown("""
-    <style>
-    .stApp {
-        background-color: #efeae2 !important;
-        background-image: none !important;
-        color: #111b21 !important;
-    }
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) [data-testid="stChatMessageContent"] {
-        background-color: #ffffff !important;
-        color: #111b21 !important;
-    }
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-        background-color: #d9fdd3 !important;
-        color: #111b21 !important;
-    }
-    .stChatInputContainer {
-        background-color: #f0f2f5 !important;
-    }
-    .stChatInputContainer textarea {
-        color: #111b21 !important;
-    }
-    section[data-testid="stSidebar"] {
-        background-color: #ffffff !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-
-# =========================================================
-# 5. CUSTOM THEME CONFIG
-# =========================================================
-
-elif theme_mode == "Custom Theme":
-    st.markdown("""
-    <style>
-    .stApp {
-        background-color: #0f172a !important;
-        background-image: none !important;
-        color: #38bdf8 !important;
-    }
-    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-        background-color: #1e293b !important;
-        color: #e0f2fe !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-
-# =========================================================
-# 6. BULINGA AI SYSTEM PROMPT
+# 4. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
-
 You were developed exclusively by Developer Kevin.
 
-If anyone asks who created you, say:
-"I was created by BULINGA Developers Team for BULINGA TVET SCHOOL."
-
-=========================================================
-CORE RULE
-=========================================================
+CORE RULE:
 You ONLY answer questions related to BULINGA TVET SCHOOL.
+If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer.
 
-You can answer questions about:
-- School programs
-- School fees
-- School rules
-- School location
-- School schedule
-- School religion
-- School staff
-- School contacts
-- School combinations
-- School meals
-- School payment
-- Student life
-- School administration
-- School Photos and Image Searches (Amafoto y'ikigo)
-
-If a question is completely unrelated to BULINGA TVET SCHOOL,
-politely refuse to answer.
-
-=========================================================
-SCHOOL PHOTOS & IMAGE SEARCH LINK
-=========================================================
-When a user asks for photos, pictures, or images of BULINGA TVET SCHOOL 
-(e.g., "Nshaka amafoto ya bulinga", "show me school pictures"), you must 
-provide them with the direct Google Image Search link using Markdown:
-
-👉 [Reba amafoto ya Bulinga TVET School hano](https://www.google.com/search?q=bulinga+school+image)
-
-=========================================================
-SCHOOL DETAILS
-=========================================================
+SCHOOL DETAILS:
 School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL)
 Location: MUHANGA, Mushishiro near KABADAHA Center.
-Travel Time: Car (2 hours), Motorcycle (30 mins), On foot (3 hours).
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL.
 Combinations: SOD (Software Development), NIT (Networking), ACC (Accounting), CSA.
@@ -303,7 +172,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 7. GROQ API KEY
+# 5. GROQ API KEY
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -317,7 +186,7 @@ client = Groq(
 
 
 # =========================================================
-# 8. AVATARS & SIDEBAR LOGO
+# 6. AVATARS & SIDEBAR LOGO
 # =========================================================
 
 avatar_img = None
@@ -334,22 +203,13 @@ if avatar_img:
         pass
 
 st.sidebar.markdown("---")
-st.sidebar.markdown(
-    """
-### 🤖 BULINGA AI
-**Official AI Assistant**
-Developed for: **BULINGA TECHNICAL SECONDARY SCHOOL**
-Developers: **BULINGA Developers Team**
-"""
-)
-
 if st.sidebar.button("Clear Chat"):
     st.session_state.messages = []
     st.rerun()
 
 
 # =========================================================
-# 9. MAIN HEADER & SESSION STATE
+# 7. MAIN HEADER & SESSION STATE
 # =========================================================
 
 st.markdown('<h1 class="moving-title">🤖 BULINGA AI Assistant</h1>', unsafe_allow_html=True)
@@ -360,7 +220,7 @@ if "messages" not in st.session_state:
 
 
 # =========================================================
-# 10. DISPLAY CHAT HISTORY
+# 8. DISPLAY CHAT HISTORY
 # =========================================================
 
 for message in st.session_state.messages:
@@ -372,7 +232,7 @@ for message in st.session_state.messages:
 
 
 # =========================================================
-# 11. CHAT INPUT & RESPONSE HANDLING
+# 9. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TVET SCHOOL...")
@@ -418,7 +278,6 @@ if user_query:
             st.session_state.messages.append({"role": "assistant", "content": response_text})
 
         except Exception as e:
-            thinking_thinking_placeholder = locals().get('thinking_placeholder')
-            if thinking_placeholder:
+            if 'thinking_placeholder' in locals():
                 thinking_placeholder.empty()
             st.error(f"❌ Habaye ikibazo.\n\n**Error:**\n`{e}`")
