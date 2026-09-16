@@ -17,116 +17,150 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS
+# 2. THEME STATE INITIALIZATION (DARK / LIGHT MODE)
 # =========================================================
 
-st.markdown("""
-<style>
-@keyframes moveSparkles {
-    0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }
-}
+if "theme_mode" not in st.session_state:
+    st.session_state.theme_mode = "Dark Mode 🌙"
 
-.stApp {
-    background-color: #121212 !important;
-    background-image: 
+
+# =========================================================
+# 3. CUSTOM CSS (DYNAMIC BASED ON THEME)
+# =========================================================
+
+# Guhitamo amabara bitewe na Mode umukoresha yahisemo
+if st.session_state.theme_mode == "Dark Mode 🌙":
+    bg_color = "#121212"
+    app_bg_image = """
         radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
         radial-gradient(8px 8px at 40px 70px, #0084ff, rgba(0,0,0,0)),
         radial-gradient(5px 5px at 90px 40px, #ffd700, rgba(0,0,0,0)),
         radial-gradient(7px 7px at 160px 120px, #ffffff, rgba(0,0,0,0)),
         radial-gradient(6px 6px at 230px 180px, #0084ff, rgba(0,0,0,0)),
         radial-gradient(8px 8px at 350px 250px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(6px 6px at 450px 350px, #ffd700, rgba(0,0,0,0)) !important;
+        radial-gradient(6px 6px at 450px 350px, #ffd700, rgba(0,0,0,0))
+    """
+    text_color = "#e4e6eb"
+    sidebar_bg = "#18191a"
+    chat_input_bg = "#242526"
+    chat_input_border = "#3a3b3c"
+    chat_input_text = "#e4e6eb"
+    assistant_bubble_bg = "#3a3b3c"
+    assistant_bubble_text = "#e4e6eb"
+    btn_bg = "#3a3b3c"
+    btn_color = "#e4e6eb"
+else:
+    bg_color = "#f0f2f6"
+    app_bg_image = "none"
+    text_color = "#111111"
+    sidebar_bg = "#ffffff"
+    chat_input_bg = "#ffffff"
+    chat_input_border = "#cccccc"
+    chat_input_text = "#111111"
+    assistant_bubble_bg = "#e4e6fb"
+    assistant_bubble_text = "#111111"
+    btn_bg = "#e0e0e0"
+    btn_color = "#111111"
+
+st.markdown(f"""
+<style>
+@keyframes moveSparkles {{
+    0% {{ background-position: 0 0, 0 0, 0 0; }}
+    100% {{ background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }}
+}}
+
+.stApp {{
+    background-color: {bg_color} !important;
+    background-image: {app_bg_image} !important;
     background-repeat: repeat !important;
     background-size: 500px 500px !important;
     animation: moveSparkles 80s linear infinite !important;
-    color: #e4e6eb !important;
-}
+    color: {text_color} !important;
+}}
 
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
-header { background: transparent !important; }
+#MainMenu {{ visibility: hidden; }}
+footer {{ visibility: hidden; }}
+header {{ background: transparent !important; }}
 
-@keyframes bounceSlow {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-    100% { transform: translateY(0px); }
-}
+@keyframes bounceSlow {{
+    0% {{ transform: translateY(0px); }}
+    50% {{ transform: translateY(-8px); }}
+    100% {{ transform: translateY(0px); }}
+}}
 
-.moving-title {
+.moving-title {{
     display: inline-block;
     animation: bounceSlow 3s ease-in-out infinite;
-}
+}}
 
-.chat-row {
+.chat-row {{
     display: flex;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}
+}}
 
-.chat-row.user { justify-content: flex-end; }
-.chat-row.assistant { justify-content: flex-start; }
+.chat-row.user {{ justify-content: flex-end; }}
+.chat-row.assistant {{ justify-content: flex-start; }}
 
-.chat-bubble {
+.chat-bubble {{
     max-width: 75%;
     padding: 10px 14px;
     font-size: 15px;
     line-height: 1.4;
     word-wrap: break-word;
-}
+}}
 
-/* Guha amahirwe link ziri muri chat ziba clickable kandi zigaragara neza */
-.chat-bubble a {
+.chat-bubble a {{
     color: #4dabf7 !important;
     text-decoration: underline !important;
-}
+}}
 
-.chat-row.user .chat-bubble {
+.chat-row.user .chat-bubble {{
     background-color: #0084ff;
     color: #ffffff;
     border-radius: 18px 18px 4px 18px;
-}
+}}
 
-.chat-row.assistant .chat-bubble {
-    background-color: #3a3b3c;
-    color: #e4e6eb;
+.chat-row.assistant .chat-bubble {{
+    background-color: {assistant_bubble_bg};
+    color: {assistant_bubble_text};
     border-radius: 18px 18px 18px 4px;
-}
+}}
 
-.stChatInputContainer {
-    background-color: #242526 !important;
+.stChatInputContainer {{
+    background-color: {chat_input_bg} !important;
     border-radius: 24px !important;
-    border: 1px solid #3a3b3c !important;
+    border: 1px solid {chat_input_border} !important;
     padding: 4px 12px !important;
-}
+}}
 
-.stChatInputContainer textarea {
-    color: #e4e6eb !important;
+.stChatInputContainer textarea {{
+    color: {chat_input_text} !important;
     font-size: 15px !important;
-}
+}}
 
-.thinking-text {
+.thinking-text {{
     font-style: italic;
     color: #b0b3b8;
-}
+}}
 
-section[data-testid="stSidebar"] {
-    background-color: #18191a !important;
-}
+section[data-testid="stSidebar"] {{
+    background-color: {sidebar_bg} !important;
+}}
 
-.stButton button {
+.stButton button {{
     border-radius: 8px !important;
     border: none !important;
-    background-color: #3a3b3c !important;
-    color: #e4e6eb !important;
-}
+    background-color: {btn_bg} !important;
+    color: {btn_color} !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
 
 # =========================================================
-# 3. SESSION STATE & USER DATABASE INITIALIZATION
+# 4. SESSION STATE & USER DATABASE INITIALIZATION
 # =========================================================
 
 if "users_db" not in st.session_state:
@@ -146,7 +180,7 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 4. AUTHENTICATION (LOGIN / SIGN UP / GUEST) SYSTEM
+# 5. AUTHENTICATION (LOGIN / SIGN UP / GUEST) SYSTEM
 # =========================================================
 
 if not st.session_state.logged_in:
@@ -197,7 +231,7 @@ if not st.session_state.logged_in:
 
 
 # =========================================================
-# 5. SIDEBAR (SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
+# 6. SIDEBAR (THEME SWITCHER, SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
 # =========================================================
 
 st.sidebar.title("🔐 Account & Control")
@@ -206,6 +240,13 @@ st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
 if st.sidebar.button("Logout 🚪"):
     st.session_state.logged_in = False
     st.session_state.current_user = ""
+    st.rerun()
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("🎨 Appearance / Theme")
+selected_theme = st.sidebar.radio("Choose Mode", ["Dark Mode 🌙", "Light Mode ☀️"], index=0 if st.session_state.theme_mode == "Dark Mode 🌙" else 1)
+if selected_theme != st.session_state.theme_mode:
+    st.session_state.theme_mode = selected_theme
     st.rerun()
 
 st.sidebar.markdown("---")
@@ -230,7 +271,6 @@ st.sidebar.subheader("📂 Chat History")
 
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 
-# Yakosowe hano munsi ikaba st.sidebar.text_input
 new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
 if st.sidebar.button("➕ Start New Chat"):
     if new_chat_name and new_chat_name not in user_sessions:
@@ -254,7 +294,7 @@ st.sidebar.subheader("📎 Upload Files / Photos")
 uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT
+# 7. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -283,7 +323,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 7. GROQ API KEY & CLIENT
+# 8. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -297,7 +337,7 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & SESSION MANAGEMENT LINKING
+# 9. MAIN HEADER & SESSION MANAGEMENT LINKING
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
@@ -307,7 +347,7 @@ current_messages = user_sessions[st.session_state.current_session_id]
 
 
 # =========================================================
-# 9. DISPLAY CHAT HISTORY
+# 10. DISPLAY CHAT HISTORY
 # =========================================================
 
 for message in current_messages:
@@ -326,7 +366,7 @@ for message in current_messages:
 
 
 # =========================================================
-# 10. CHAT INPUT & RESPONSE HANDLING
+# 11. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TVET... 💬")
