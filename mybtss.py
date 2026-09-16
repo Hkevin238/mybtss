@@ -49,7 +49,7 @@ else:
 
 
 # =========================================================
-# 3. DYNAMIC CUSTOM CSS
+# 3. DYNAMIC CUSTOM CSS (PROMPT INPUT TEXT FORCED TO BLACK)
 # =========================================================
 
 st.markdown(f"""
@@ -116,9 +116,15 @@ header {{ background: transparent !important; }}
     padding: 4px 12px !important;
 }}
 
+/* Force prompt input text color to Black */
 .stChatInputContainer textarea {{
-    color: {text_color} !important;
+    color: #000000 !important;
     font-size: 15px !important;
+    font-weight: 500 !important;
+}}
+
+.stChatInputContainer textarea::placeholder {{
+    color: #555555 !important;
 }}
 
 .thinking-text {{
