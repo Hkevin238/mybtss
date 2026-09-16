@@ -274,6 +274,7 @@ If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to
 SCHOOL DETAILS:
 School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
+Google Maps Link for Ecole Secondaire de Bulinga: https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ 🗺️.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
 Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
@@ -345,6 +346,9 @@ if user_query or uploaded_file:
     query_lower = (user_query or "").lower()
     image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
     is_image_query = any(kw in query_lower for kw in image_keywords)
+    
+    map_keywords = ["map", "google map", "ahoherereye", "location", "icyerekezo", "direction", "irebe"]
+    is_map_query = any(kw in query_lower for kw in map_keywords)
 
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
@@ -378,6 +382,9 @@ if user_query or uploaded_file:
         
         if is_image_query:
             response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
+        
+        if is_map_query:
+            response_text = "Urashaka kureba aho ishuri riherereye kuri Google Map? Dore aho ushobora gusura Ecole Secondaire de Bulinga kuri Google Maps: [Kuri Google Maps](https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ) 🗺️📍✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
