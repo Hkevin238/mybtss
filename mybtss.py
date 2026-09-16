@@ -17,12 +17,11 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS (ANIMATED PLACEHOLDER IN CHAT INPUT)
+# 2. CUSTOM CSS
 # =========================================================
 
 st.markdown("""
 <style>
-
 @keyframes moveSparkles {
     0% { background-position: 0 0, 0 0, 0 0; }
     100% { background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }
@@ -101,17 +100,6 @@ header { background: transparent !important; }
     font-size: 15px !important;
 }
 
-/* Pure CSS Animation for rotating placeholders every 4 seconds (2s per text) */
-@keyframes rotatePlaceholder {
-    0% { content: "Ask related BULINGA TVET... 💬"; }
-    50% { content: "Baza ku byerekeye BULINGA TVET... 🏫"; }
-    100% { content: "Ask related BULINGA TVET... 💬"; }
-}
-
-.stChatInputContainer textarea::placeholder {
-    color: #b0b3b8 !important;
-}
-
 .thinking-text {
     font-style: italic;
     color: #b0b3b8;
@@ -132,10 +120,83 @@ section[data-testid="stSidebar"] {
 
 
 # =========================================================
-# 3. SIDEBAR
+# 3. SESSION STATE & USER DATABASE INITIALIZATION
 # =========================================================
 
-st.sidebar.title("Settings & Control")
+if "users_db" not in st.session_state:
+    # A simple dictionary to store registered users {username: password}
+    st.session_state.users_db = {"admin": "bulinga2026"}
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "current_user" not in st.session_state:
+    st.session_state.current_user = ""
+
+if "chat_sessions" not in st.session_state:
+    # Structure: {username: {session_name: [messages]}}
+    st.session_state.chat_sessions = {}
+
+if "current_session_id" not in st.session_state:
+    st.session_state.current_session_id = "Main Chat"
+
+
+# =========================================================
+# 4. AUTHENTICATION (LOGIN / SIGN UP) SYSTEM
+# =========================================================
+
+if not st.session_state.logged_in:
+    st.markdown('<h1 class="moving-title" style="text-align: center;">BULINGA TSS AI 🏫</h1>', unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login or Sign Up to continue 🔐</p>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        auth_mode = st.radio("Choose Action", ["Login", "Sign Up"], horizontal=True)
+        
+        username_input = st.text_input("Username")
+        password_input = st.text_input("Password", type="password")
+        
+        if auth_mode == "Sign Up":
+            if st.button("Create Account 🚀", use_container_width=True):
+                if username_input and password_input:
+                    if username_input in st.session_state.users_db:
+                        st.error("⚠️ Username already exists! Try logging in.")
+                    else:
+                        st.session_state.users_db[username_input] = password_input
+                        st.success("✅ Account created successfully! Please switch to Login.")
+                else:
+                    st.warning("⚠️ Please fill in all fields.")
+        else:
+            if st.button("Login 🔓", use_container_width=True):
+                if username_input in st.session_state.users_db and st.session_state.users_db[username_input] == password_input:
+                    st.session_state.logged_in = True
+                    st.session_state.current_user = username_input
+                    
+                    # Initialize user sessions if not present
+                    if username_input not in st.session_state.chat_sessions:
+                        st.session_state.chat_sessions[username_input] = {"Main Chat": []}
+                    
+                    st.success(f"🎉 Welcome back, {username_input}!")
+                    st.rerun()
+                else:
+                    st.error("❌ Invalid username or password.")
+    st.stop() # Stop execution here until user logs in
+
+
+# =========================================================
+# 5. SIDEBAR (SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
+# =========================================================
+
+st.sidebar.title("🔐 Account & Control")
+st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
+
+if st.sidebar.button("Logout 🚪"):
+    st.session_state.logged_in = False
+    st.session_state.current_user = ""
+    st.rerun()
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("🌐 Language Settings")
 
 selected_lang = st.sidebar.selectbox(
     "Choose Language / Ururimi",
@@ -151,9 +212,38 @@ selected_lang = st.sidebar.selectbox(
     ]
 )
 
+st.sidebar.markdown("---")
+st.sidebar.subheader("📂 Chat History")
+
+user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
+
+# Create a new chat session button
+new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
+if st.sidebar.button("➕ Start New Chat"):
+    if new_chat_name and new_chat_name not in user_sessions:
+        user_sessions[new_chat_name] = []
+        st.session_state.current_session_id = new_chat_name
+        st.rerun()
+
+# Select active session from history
+session_list = list(user_sessions.keys())
+selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id) if st.session_state.current_session_id in session_list else 0)
+
+if selected_session != st.session_state.current_session_id:
+    st.session_state.current_session_id = selected_session
+    st.rerun()
+
+# Clear current session history
+if st.sidebar.button("🗑️ Clear Current History"):
+    user_sessions[st.session_state.current_session_id] = []
+    st.rerun()
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("📎 Upload Files / Photos")
+uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 4. BULINGA AI SYSTEM PROMPT
+# 6. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -182,7 +272,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 5. GROQ API KEY & CLIENT
+# 7. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -196,42 +286,21 @@ client = Groq(
 
 
 # =========================================================
-# 6. SIDEBAR LOGO & CLEAR CHAT
-# =========================================================
-
-avatar_img = None
-if os.path.exists("btss.png"):
-    avatar_img = "btss.png"
-
-if avatar_img:
-    try:
-        logo_img = Image.open(avatar_img)
-        st.sidebar.imag(logo_img, caption="BULINGA TVET SCHOOL", use_container_width=True)
-    except Exception:
-        pass
-
-st.sidebar.markdown("---")
-if st.sidebar.button("Clear Chat"):
-    st.session_state.messages = []
-    st.rerun()
-
-
-# =========================================================
-# 7. MAIN HEADER & SESSION STATE
+# 8. MAIN HEADER & SESSION MANAGEMENT LINKING
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-st.caption("Your Assistant guider for BULINGA Technical Secondary School ✨")
+st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# Current active messages list pointer
+current_messages = user_sessions[st.session_state.current_session_id]
 
 
 # =========================================================
-# 8. DISPLAY CHAT HISTORY (USING CUSTOM HTML ROWS)
+# 9. DISPLAY CHAT HISTORY
 # =========================================================
 
-for message in st.session_state.messages:
+for message in current_messages:
     role = message["role"]
     content = message["content"]
     
@@ -247,16 +316,23 @@ for message in st.session_state.messages:
 
 
 # =========================================================
-# 9. CHAT INPUT & RESPONSE HANDLING
+# 10. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
-if user_query:
-    st.session_state.messages.append({"role": "user", "content": user_query})
-    st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{user_query}</div></div>', unsafe_allow_html=True)
+if user_query or uploaded_file:
+    # Handle uploaded file details in message if available
+    file_context_msg = ""
+    if uploaded_file is not None:
+        file_context_msg = f"\n[Attached File: {uploaded_file.name}]"
+    
+    full_user_input = (user_query or "") + file_context_msg
 
-    query_lower = user_query.lower()
+    current_messages.append({"role": "user", "content": full_user_input})
+    st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
+
+    query_lower = (user_query or "").lower()
     image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
     is_image_query = any(kw in query_lower for kw in image_keywords)
 
@@ -274,7 +350,7 @@ if user_query:
             }
         ]
 
-        for message in st.session_state.messages:
+        for message in current_messages:
             messages_payload.append({
                 "role": message["role"],
                 "content": message["content"]
@@ -301,7 +377,7 @@ if user_query:
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
-        st.session_state.messages.append({
+        current_messages.append({
             "role": "assistant", 
             "content": response_text,
             "show_image": is_image_query
