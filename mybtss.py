@@ -320,7 +320,7 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & CHAT RENDERING (WITH VOICE & MAPS)
+# 8. MAIN HEADER & CHAT RENDERING (WITH BROWSER VOICE READER)
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA TSS AI</h1>', unsafe_allow_html=True)
@@ -339,12 +339,15 @@ for i, message in enumerate(current_messages):
         
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{cleaned_content}</div></div>', unsafe_allow_html=True)
         
-        # Voice Reader (Text-to-Speech)
+        # High-Speed Browser Voice Reader (Soma Ijwi with Web Speech API)
         safe_content = cleaned_content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
         voice_html = f"""
-        <div style="margin-bottom: 6px; margin-left: 2px;">
-            <button onclick="speakText_{i}()" style="background-color: #0084ff; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                🔊 Read Aloud (Soma Ijwi)
+        <div style="margin-bottom: 8px; margin-left: 2px; display: flex; gap: 8px;">
+            <button onclick="speakText_{i}()" style="background-color: #0084ff; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">
+                🔊 Play Voice (Soma)
+            </button>
+            <button onclick="stopSpeech()" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">
+                ⏹️ Stop (Hagarika)
             </button>
             <script>
             function speakText_{i}() {{
@@ -355,7 +358,12 @@ for i, message in enumerate(current_messages):
                     utterance.rate = 1.0;
                     window.speechSynthesis.speak(utterance);
                 }} else {{
-                    alert("Speech synthesis is not supported in this browser.");
+                    alert("Browser yawe ntishyigikiye Voice Reader.");
+                }}
+            }}
+            function stopSpeech() {{
+                if ('speechSynthesis' in window) {{
+                    window.speechSynthesis.cancel();
                 }}
             }}
             </script>
