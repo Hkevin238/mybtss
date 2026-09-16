@@ -54,33 +54,27 @@ else:
 
 
 # =========================================================
-# 3. DYNAMIC CUSTOM CSS WITH MOVING MULTI-COLOR STARS
+# 3. DYNAMIC CUSTOM CSS WITH LARGE MOVING COLORFUL STARS
 # =========================================================
 
 st.markdown(f"""
 <style>
-/* Moving Multi-Color Stars Background */
-@keyframes moveStars1 {{
-    0% {{ background-position: 0 0; }}
-    100% {{ background-position: -10000px 10000px; }}
-}}
-@keyframes moveStars2 {{
-    0% {{ background-position: 0 0; }}
-    100% {{ background-position: 10000px -10000px; }}
-}}
-
+@keyframes moveStarsSmooth {{
+    0% {{ background-position: 0px 0px, 0px 0px, 0px 0px; }}
+    100% {{ background-position: -1000px 1000px, 1000px -1000px, 500px 1500px; }}
 .stApp {{
     background-color: {app_bg} !important;
     color: {text_color} !important;
     background-image: 
-        radial-gradient(2px 2px at 20px 30px, #ff4757, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 40px 70px, #2ed573, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 90px 40px, #1e90ff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 160px 120px, #ffa502, rgba(0,0,0,0)),
-        radial-gradient(1.5px 1.5px at 200px 250px, #9b59b6, rgba(0,0,0,0));
+        radial-gradient(3px 3px at 50px 80px, #ff4757, transparent),
+        radial-gradient(4px 4px at 150px 200px, #2ed573, transparent),
+        radial-gradient(3.5px 3.5px at 280px 100px, #1e90ff, transparent),
+        radial-gradient(4px 4px at 380px 300px, #ffa502, transparent),
+        radial-gradient(3px 3px at 100px 400px, #9b59b6, transparent),
+        radial-gradient(4.5px 4.5px at 450px 150px, #00d2d3, transparent);
     background-repeat: repeat;
-    background-size: 300px 300px;
-    animation: moveStars1 100s linear infinite;
+    background-size: 500px 500px;
+    animation: moveStarsSmooth 60s linear infinite;
 }}
 
 #MainMenu {{ visibility: hidden; }}
@@ -187,7 +181,7 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 5. SIDEBAR (LOGIN/SIGNUP & CHAT HISTORY KEPT LIKE OTHER AIs)
+# 5. SIDEBAR (LOGIN / SIGN UP & CHAT HISTORY KEPT LIKE OTHER AIs)
 # =========================================================
 
 with st.sidebar.expander("🔐 Account (Login / Sign Up)", expanded=not st.session_state.logged_in):
