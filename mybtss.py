@@ -28,7 +28,6 @@ if "theme_mode" not in st.session_state:
 # 3. CUSTOM CSS (DYNAMIC BASED ON THEME)
 # =========================================================
 
-# Guhitamo amabara bitewe na Mode umukoresha yahisemo
 if st.session_state.theme_mode == "Dark Mode 🌙":
     bg_color = "#121212"
     app_bg_image = """
@@ -57,7 +56,7 @@ else:
     chat_input_bg = "#ffffff"
     chat_input_border = "#cccccc"
     chat_input_text = "#111111"
-    assistant_bubble_bg = "#e4e6fb"
+    assistant_bubble_bg = "#e0e0fb"
     assistant_bubble_text = "#111111"
     btn_bg = "#e0e0e0"
     btn_color = "#111111"
@@ -231,7 +230,7 @@ if not st.session_state.logged_in:
 
 
 # =========================================================
-# 6. SIDEBAR (THEME SWITCHER, SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
+# 6. SIDEBAR (THEME SWITCHER, SETTINGS, PROFILE & FILE UPLOAD)
 # =========================================================
 
 st.sidebar.title("🔐 Account & Control")
@@ -266,25 +265,13 @@ selected_lang = st.sidebar.selectbox(
     ]
 )
 
-st.sidebar.markdown("---")
-st.sidebar.subheader("📂 Chat History")
-
+# Ibice bya Chat History byakuwemo nk'uko wabisabye (New chat title, select past chat, etc.)
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
+if "Main Chat" not in user_sessions:
+    user_sessions["Main Chat"] = []
+st.session_state.current_session_id = "Main Chat"
 
-new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
-if st.sidebar.button("➕ Start New Chat"):
-    if new_chat_name and new_chat_name not in user_sessions:
-        user_sessions[new_chat_name] = []
-        st.session_state.current_session_id = new_chat_name
-        st.rerun()
-
-session_list = list(user_sessions.keys())
-selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id) if st.session_state.current_session_id in session_list else 0)
-
-if selected_session != st.session_state.current_session_id:
-    st.session_state.current_session_id = selected_session
-    st.rerun()
-
+st.sidebar.markdown("---")
 if st.sidebar.button("🗑️ Clear Current History"):
     user_sessions[st.session_state.current_session_id] = []
     st.rerun()
@@ -341,7 +328,7 @@ client = Groq(
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
+# Agace ka st.caption ka "Active Chat" karakuwemo nk'uko wabisabye.
 
 current_messages = user_sessions[st.session_state.current_session_id]
 
