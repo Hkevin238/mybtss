@@ -172,12 +172,12 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 5. SIDEBAR (ACCOUNT, LANGUAGE, HISTORY & UPLOAD)
+# 5. SIDEBAR (CLEAN & ORGANIZED LAYOUT)
 # =========================================================
 
-with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st.session_state.logged_in):
+with st.sidebar.expander("🔐 Account (Login/Signup)", expanded=not st.session_state.logged_in):
     if not st.session_state.logged_in:
-        st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login kugira ngo ubibike.")
+        st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login.")
         auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
         
         u_input = st.text_input("Username", key="auth_user")
@@ -191,9 +191,9 @@ with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st
                     else:
                         st.session_state.users_db[u_input] = p_input
                         st.session_state.chat_sessions[u_input] = {"Main Chat": []}
-                        st.success("✅ Konti yaremwe! Kora Login.")
+                        st.success("✅ Konti yaremwe!")
                 else:
-                    st.warning("⚠️ Uzuza ibisabwa byose.")
+                    st.warning("⚠️ Uzuza ibisabwa.")
         else:
             if st.button("Login 🔓", key="login_btn"):
                 if u_input in st.session_state.users_db and st.session_state.users_db[u_input] == p_input:
@@ -203,7 +203,7 @@ with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st
                         st.session_state.chat_sessions[u_input] = {"Main Chat": []}
                     st.rerun()
                 else:
-                    st.error("❌ Username cyangwa Password bitari byo.")
+                    st.error("❌ Byanze, subira inyuma.")
     else:
         st.write(f"👤 Ufunguye nka: **{st.session_state.current_user}**")
         if st.button("Logout 🚪", key="logout_btn"):
@@ -215,10 +215,9 @@ with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st
             st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("🌐 Ururimi / Language")
 
 selected_lang = st.sidebar.selectbox(
-    "Choose Language",
+    "🌐 Choose Language",
     [
         "Kinyarwanda",
         "English",
@@ -232,6 +231,7 @@ selected_lang = st.sidebar.selectbox(
 )
 
 st.sidebar.markdown("---")
+
 st.sidebar.subheader("📂 Chat History")
 
 active_user = st.session_state.current_user
@@ -240,43 +240,48 @@ if active_user not in st.session_state.chat_sessions:
 
 user_sessions = st.session_state.chat_sessions[active_user]
 
-new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
-if st.sidebar.button("➕ Start New Chat", key="new_chat_btn"):
-    if new_chat_name and new_chat_name not in user_sessions:
-        user_sessions[new_chat_name] = []
-        st.session_state.current_session_id = new_chat_name
-        st.rerun()
+with st.sidebar.expander("➕ Start New Chat", expanded=False):
+    new_chat_name = st.text_input("Chat Title", placeholder="e.g., School Fees info", key="new_chat_input_field")
+    if st.button("Create Chat 🚀", key="create_chat_action_btn"):
+        if new_chat_name and new_chat_name not in user_sessions:
+            user_sessions[new_chat_name] = []
+            st.session_state.current_session_id = new_chat_name
+            st.rerun()
 
 session_list = list(user_sessions.keys())
 if st.session_state.current_session_id not in session_list:
     st.session_state.current_session_id = session_list[0]
 
-selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id))
+selected_session = st.sidebar.selectbox("Select Active Chat", session_list, index=session_list.index(st.session_state.current_session_id), key="select_past_chat_box")
 
 if selected_session != st.session_state.current_session_id:
     st.session_state.current_session_id = selected_session
     st.rerun()
 
-if st.sidebar.button("🗑️ Clear Current History", key="clear_hist_btn"):
-    user_sessions[st.session_state.current_session_id] = []
-    st.rerun()
+col_h1, col_h2 = st.sidebar.columns(2)
+with col_h1:
+    if st.button("🗑️ Clear", key="clear_hist_btn", use_container_width=True):
+        user_sessions[st.session_state.current_session_id] = []
+        st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("📎 Upload Files / Photos")
-uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
+
+with st.sidebar.expander("📎 Upload Files / Photos", expanded=False):
+    uploaded_file = st.file_uploader("Choose file", type=["png", "jpg", "jpeg", "pdf", "txt"], key="sidebar_file_uploader")
 
 
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT (STRICTLY BULINGA TSS)
+# 6. BULINGA AI SYSTEM PROMPT (STRICTLY BULINGA TSS - NO MISTAKES)
 # =========================================================
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
-CRITICAL NAME RULE (IMPORTANT):
-- Your name and your school's name is ALWAYS spelled and pronounced as: BULINGA TSS or BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
-- NEVER spell it as "Bilinga". Always use strictly "BULINGA".
+CRITICAL NAME RULE (STRICT & ABSOLUTE):
+- Your name and your school's name MUST ALWAYS be spelled strictly as: BULINGA TSS, BULINGA TECHNICAL SECONDARY SCHOOL, or BULINGA TVET SCHOOL.
+- NEVER, UNDER ANY CIRCUMSTANCES, spell it as "Bilinga", "Bulingha", or any other wrong variation. Always use strictly "BULINGA" (with 'U', never 'I').
+- When generating text or speaking/reading text via text-to-speech, ensure the pronunciation and spelling are completely correct for BULINGA.
 
 CRITICAL RULE REGARDING CREATOR:
 - You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS.
@@ -292,6 +297,7 @@ If a question is completely unrelated to BULINGA TSS, politely refuse to answer 
 SCHOOL DETAILS:
 School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL / BULINGA TSS) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
+Google Maps Link: https://maps.app.goo.gl/umx4ktE6mzBNjU447 (Ecole Secondaire de Bulinga) 🗺️.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
 Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
@@ -306,7 +312,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 if not GROQ_API_KEY:
-    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe muri Environment Variables.")
+    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe.")
 
 client = Groq(
     api_key=GROQ_API_KEY or "YOUR_GROQ_API_KEY"
@@ -314,7 +320,7 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & CHAT RENDERING (WITH VOICE READER)
+# 8. MAIN HEADER & CHAT RENDERING (WITH VOICE & MAPS)
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA TSS AI</h1>', unsafe_allow_html=True)
@@ -329,12 +335,14 @@ for i, message in enumerate(current_messages):
     if role == "user":
         st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
     else:
-        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
+        cleaned_content = content.replace("Bilinga", "BULINGA").replace("bilinga", "BULINGA")
         
-        # Voice Reader (Text-to-Speech using browser SpeechSynthesis API via HTML/JS)
-        safe_content = content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
+        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{cleaned_content}</div></div>', unsafe_allow_html=True)
+        
+        # Voice Reader (Text-to-Speech)
+        safe_content = cleaned_content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
         voice_html = f"""
-        <div style="margin-bottom: 12px; margin-left: 2px;">
+        <div style="margin-bottom: 6px; margin-left: 2px;">
             <button onclick="speakText_{i}()" style="background-color: #0084ff; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">
                 🔊 Read Aloud (Soma Ijwi)
             </button>
@@ -354,6 +362,15 @@ for i, message in enumerate(current_messages):
         </div>
         """
         st.markdown(voice_html, unsafe_allow_html=True)
+
+        if message.get("show_map", False):
+            st.markdown("""
+            <div style="margin-bottom: 12px;">
+                <a href="https://maps.app.goo.gl/umx4ktE6mzBNjU447" target="_blank" style="display: inline-block; background-color: #28a745; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">
+                    🗺️ Reba Location kuri Google Maps (Ecole Secondaire de Bulinga)
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
 
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
@@ -379,8 +396,12 @@ if user_query or uploaded_file:
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
 
     query_lower = (user_query or "").lower()
+    
     image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
     is_image_query = any(kw in query_lower for kw in image_keywords)
+
+    map_keywords = ["map", "location", "ahoherereye", "aho iri", "aho ibereye", "gushaka ishuri", "aho duherereye"]
+    is_map_query = any(kw in query_lower for kw in map_keywords)
 
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
@@ -410,12 +431,25 @@ if user_query or uploaded_file:
         )
 
         response_text = completion.choices[0].message.content
+        response_text = response_text.replace("Bilinga", "BULINGA").replace("bilinga", "BULINGA")
+
         thinking_placeholder.empty()
         
-        if is_image_query:
+        if is_map_query:
+            response_text = "Dore aho Ecole Secondaire de Bulinga iherereye kuri Google Maps! 🗺️ Kanda kuri buto iri hepfo kugira ngo uyirebe neza:"
+        elif is_image_query:
             response_text = "Dore amafoto ajyanye na BULINGA TSS nk'uko wabisabye! 📸✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
+
+        if is_map_query:
+            st.markdown("""
+            <div style="margin-bottom: 12px;">
+                <a href="https://maps.app.goo.gl/umx4ktE6mzBNjU447" target="_blank" style="display: inline-block; background-color: #28a745; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">
+                    🗺️ Reba Location kuri Google Maps (Ecole Secondaire de Bulinga)
+                </a>
+            </div>
+            """, unsafe_allow_html=True)
 
         if is_image_query:
             if os.path.exists("bulinga.png"):
@@ -426,7 +460,8 @@ if user_query or uploaded_file:
         current_messages.append({
             "role": "assistant", 
             "content": response_text,
-            "show_image": is_image_query
+            "show_image": is_image_query,
+            "show_map": is_map_query
         })
         st.rerun()
 
