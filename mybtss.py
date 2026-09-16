@@ -130,7 +130,6 @@ section[data-testid="stSidebar"] {
 # =========================================================
 
 if "users_db" not in st.session_state:
-    # A simple dictionary to store registered users {username: password}
     st.session_state.users_db = {"admin": "bulinga2026"}
 
 if "logged_in" not in st.session_state:
@@ -140,7 +139,6 @@ if "current_user" not in st.session_state:
     st.session_state.current_user = ""
 
 if "chat_sessions" not in st.session_state:
-    # Structure: {username: {session_name: [messages]}}
     st.session_state.chat_sessions = {}
 
 if "current_session_id" not in st.session_state:
@@ -178,7 +176,6 @@ if not st.session_state.logged_in:
                     st.session_state.logged_in = True
                     st.session_state.current_user = username_input
                     
-                    # Initialize user sessions if not present
                     if username_input not in st.session_state.chat_sessions:
                         st.session_state.chat_sessions[username_input] = {"Main Chat": []}
                     
@@ -196,7 +193,7 @@ if not st.session_state.logged_in:
                 st.session_state.chat_sessions["Guest"] = {"Main Chat": []}
             st.rerun()
 
-    st.stop() # Stop execution here until user logs in
+    st.stop()
 
 
 # =========================================================
@@ -233,7 +230,6 @@ st.sidebar.subheader("📂 Chat History")
 
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 
-# Create a new chat session button
 new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
 if st.sidebar.button("➕ Start New Chat"):
     if new_chat_name and new_chat_name not in user_sessions:
@@ -241,7 +237,6 @@ if st.sidebar.button("➕ Start New Chat"):
         st.session_state.current_session_id = new_chat_name
         st.rerun()
 
-# Select active session from history
 session_list = list(user_sessions.keys())
 selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id) if st.session_state.current_session_id in session_list else 0)
 
@@ -249,7 +244,6 @@ if selected_session != st.session_state.current_session_id:
     st.session_state.current_session_id = selected_session
     st.rerun()
 
-# Clear current session history
 if st.sidebar.button("🗑️ Clear Current History"):
     user_sessions[st.session_state.current_session_id] = []
     st.rerun()
@@ -308,7 +302,6 @@ client = Groq(
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
 st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
 
-# Current active messages list pointer
 current_messages = user_sessions[st.session_state.current_session_id]
 
 
@@ -338,7 +331,6 @@ for message in current_messages:
 user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
 if user_query or uploaded_file:
-    # Handle uploaded file details in message if available
     file_context_msg = ""
     if uploaded_file is not None:
         file_context_msg = f"\n[Attached File: {uploaded_file.name}]"
@@ -388,9 +380,8 @@ if user_query or uploaded_file:
         if is_image_query:
             response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
         
-        # Gukoresha HTML arukugira ngo link ya map ibe clickable neza muri chat bubble
         if is_map_query:
-            response_text = 'Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href="https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ" target="_blank">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨'
+            response_text = "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
