@@ -17,7 +17,7 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. SIDEBAR (THEME SELECTOR FIRST TO DEFINE STYLES)
+# 2. SIDEBAR & AUTOMATIC THEME DETECTION
 # =========================================================
 
 st.sidebar.title("🏫 BULINGA AI Control")
@@ -25,7 +25,7 @@ st.sidebar.title("🏫 BULINGA AI Control")
 # Theme Switcher
 theme_mode = st.sidebar.radio("Theme Mode", ["Dark Mode 🌙", "Light Mode ☀️"], horizontal=True)
 
-# Define Theme Colors based on selection
+# Dynamic Color Detection based on Selected Mode
 if theme_mode == "Dark Mode 🌙":
     app_bg = "#121212"
     text_color = "#e4e6eb"
@@ -36,6 +36,9 @@ if theme_mode == "Dark Mode 🌙":
     assistant_text = "#e4e6eb"
     button_bg = "#3a3b3c"
     button_text = "#e4e6eb"
+    # Auto-detected input text color for Dark Mode
+    input_text_color = "#ffffff" 
+    input_placeholder_color = "#b0b3b8"
 else:
     app_bg = "#f0f2f5"
     text_color = "#1c1e21"
@@ -46,10 +49,13 @@ else:
     assistant_text = "#1c1e21"
     button_bg = "#e4e6eb"
     button_text = "#1c1e21"
+    # Auto-detected input text color for Light Mode
+    input_text_color = "#000000" 
+    input_placeholder_color = "#555555"
 
 
 # =========================================================
-# 3. DYNAMIC CUSTOM CSS (PROMPT INPUT TEXT FORCED TO BLACK)
+# 3. DYNAMIC CUSTOM CSS (AUTO-ADJUSTS PROMPT INPUT TEXT COLOR)
 # =========================================================
 
 st.markdown(f"""
@@ -116,15 +122,15 @@ header {{ background: transparent !important; }}
     padding: 4px 12px !important;
 }}
 
-/* Force prompt input text color to Black */
+/* Automatically detected and applied input text color based on active mode */
 .stChatInputContainer textarea {{
-    color: #000000 !important;
+    color: {input_text_color} !important;
     font-size: 15px !important;
     font-weight: 500 !important;
 }}
 
 .stChatInputContainer textarea::placeholder {{
-    color: #555555 !important;
+    color: {input_placeholder_color} !important;
 }}
 
 .thinking-text {{
