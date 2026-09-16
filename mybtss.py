@@ -147,7 +147,7 @@ if "current_session_id" not in st.session_state:
 
 if not st.session_state.logged_in:
     st.markdown('<h1 class="moving-title" style="text-align: center;">BULINGA TSS AI 🏫</h1>', unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login or Sign Up to continue 🔐</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login, Sign Up, or Continue as Guest 🔐</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
@@ -180,6 +180,16 @@ if not st.session_state.logged_in:
                     st.rerun()
                 else:
                     st.error("❌ Invalid username or password.")
+        
+        st.markdown("<div style='text-align: center; margin: 10px 0; color: #b0b3b8;'>- OR -</div>", unsafe_allow_html=True)
+        
+        if st.button("Use without Register ⚡", use_container_width=True):
+            st.session_state.logged_in = True
+            st.session_state.current_user = "Guest"
+            if "Guest" not in st.session_state.chat_sessions:
+                st.session_state.chat_sessions["Guest"] = {"Main Chat": []}
+            st.rerun()
+
     st.stop() # Stop execution here until user logs in
 
 
