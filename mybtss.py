@@ -17,110 +17,131 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. CUSTOM CSS
+# 2. SIDEBAR (THEME SELECTOR FIRST TO DEFINE STYLES)
 # =========================================================
 
-st.markdown("""
+st.sidebar.title("🏫 BULINGA AI Control")
+
+# Theme Switcher
+theme_mode = st.sidebar.radio("Theme Mode", ["Dark Mode 🌙", "Light Mode ☀️"], horizontal=True)
+
+# Define Theme Colors based on selection
+if theme_mode == "Dark Mode 🌙":
+    app_bg = "#121212"
+    text_color = "#e4e6eb"
+    sidebar_bg = "#18191a"
+    chat_input_bg = "#242526"
+    chat_input_border = "#3a3b3c"
+    assistant_bubble_bg = "#3a3b3c"
+    assistant_text = "#e4e6eb"
+    button_bg = "#3a3b3c"
+    button_text = "#e4e6eb"
+else:
+    app_bg = "#f0f2f5"
+    text_color = "#1c1e21"
+    sidebar_bg = "#ffffff"
+    chat_input_bg = "#ffffff"
+    chat_input_border = "#ced4da"
+    assistant_bubble_bg = "#e4e6eb"
+    assistant_text = "#1c1e21"
+    button_bg = "#e4e6eb"
+    button_text = "#1c1e21"
+
+
+# =========================================================
+# 3. DYNAMIC CUSTOM CSS
+# =========================================================
+
+st.markdown(f"""
 <style>
-@keyframes moveSparkles {
-    0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }
-}
+@keyframes moveSparkles {{
+    0% {{ background-position: 0 0, 0 0, 0 0; }}
+    100% {{ background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }}
+}}
 
-.stApp {
-    background-color: #121212 !important;
-    background-image: 
-        radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(8px 8px at 40px 70px, #0084ff, rgba(0,0,0,0)),
-        radial-gradient(5px 5px at 90px 40px, #ffd700, rgba(0,0,0,0)),
-        radial-gradient(7px 7px at 160px 120px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(6px 6px at 230px 180px, #0084ff, rgba(0,0,0,0)),
-        radial-gradient(8px 8px at 350px 250px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(6px 6px at 450px 350px, #ffd700, rgba(0,0,0,0)) !important;
-    background-repeat: repeat !important;
-    background-size: 500px 500px !important;
-    animation: moveSparkles 80s linear infinite !important;
-    color: #e4e6eb !important;
-}
+.stApp {{
+    background-color: {app_bg} !important;
+    color: {text_color} !important;
+}}
 
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
-header { background: transparent !important; }
+#MainMenu {{ visibility: hidden; }}
+footer {{ visibility: hidden; }}
+header {{ background: transparent !important; }}
 
-@keyframes bounceSlow {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-    100% { transform: translateY(0px); }
-}
+@keyframes bounceSlow {{
+    0% {{ transform: translateY(0px); }}
+    50% {{ transform: translateY(-8px); }}
+    100% {{ transform: translateY(0px); }}
+}}
 
-.moving-title {
+.moving-title {{
     display: inline-block;
     animation: bounceSlow 3s ease-in-out infinite;
-}
+}}
 
-.chat-row {
+.chat-row {{
     display: flex;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}
+}}
 
-.chat-row.user { justify-content: flex-end; }
-.chat-row.assistant { justify-content: flex-start; }
+.chat-row.user {{ justify-content: flex-end; }}
+.chat-row.assistant {{ justify-content: flex-start; }}
 
-.chat-bubble {
+.chat-bubble {{
     max-width: 75%;
     padding: 10px 14px;
     font-size: 15px;
     line-height: 1.4;
     word-wrap: break-word;
-}
+}}
 
-.chat-row.user .chat-bubble {
+.chat-row.user .chat-bubble {{
     background-color: #0084ff;
     color: #ffffff;
     border-radius: 18px 18px 4px 18px;
-}
+}}
 
-.chat-row.assistant .chat-bubble {
-    background-color: #3a3b3c;
-    color: #e4e6eb;
+.chat-row.assistant .chat-bubble {{
+    background-color: {assistant_bubble_bg};
+    color: {assistant_text};
     border-radius: 18px 18px 18px 4px;
-}
+}}
 
-.stChatInputContainer {
-    background-color: #242526 !important;
+.stChatInputContainer {{
+    background-color: {chat_input_bg} !important;
     border-radius: 24px !important;
-    border: 1px solid #3a3b3c !important;
+    border: 1px solid {chat_input_border} !important;
     padding: 4px 12px !important;
-}
+}}
 
-.stChatInputContainer textarea {
-    color: #e4e6eb !important;
+.stChatInputContainer textarea {{
+    color: {text_color} !important;
     font-size: 15px !important;
-}
+}}
 
-.thinking-text {
+.thinking-text {{
     font-style: italic;
     color: #b0b3b8;
-}
+}}
 
-section[data-testid="stSidebar"] {
-    background-color: #18191a !important;
-}
+section[data-testid="stSidebar"] {{
+    background-color: {sidebar_bg} !important;
+}}
 
-.stButton button {
+.stButton button {{
     border-radius: 8px !important;
     border: none !important;
-    background-color: #3a3b3c !important;
-    color: #e4e6eb !important;
-}
+    background-color: {button_bg} !important;
+    color: {button_text} !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
 
 # =========================================================
-# 3. SESSION STATE & USER DATABASE INITIALIZATION
+# 4. SESSION STATE & USER DATABASE INITIALIZATION
 # =========================================================
 
 if "users_db" not in st.session_state:
@@ -130,10 +151,9 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "current_user" not in st.session_state:
-    st.session_state.current_user = "Guest"  # By default, anyone starts as Guest
+    st.session_state.current_user = "Guest"
 
 if "chat_sessions" not in st.session_state:
-    # Initialize with Guest storage
     st.session_state.chat_sessions = {
         "Guest": {"Main Chat": []}
     }
@@ -143,22 +163,19 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 4. SIDEBAR (OPTIONAL LOGIN/SIGNUP, HISTORY & SETTINGS)
+# 5. SIDEBAR (ACCOUNT, LANGUAGE, HISTORY & UPLOAD)
 # =========================================================
 
-st.sidebar.title("🏫 BULINGA AI Control")
-
-# Optional Login / Sign Up Section inside an Expander
 with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st.session_state.logged_in):
     if not st.session_state.logged_in:
         st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login kugira ngo ubibike.")
-        auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True)
+        auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
         
         u_input = st.text_input("Username", key="auth_user")
         p_input = st.text_input("Password", type="password", key="auth_pass")
         
         if auth_mode == "Sign Up":
-            if st.button("Create Account 🚀"):
+            if st.button("Create Account 🚀", key="signup_btn"):
                 if u_input and p_input:
                     if u_input in st.session_state.users_db:
                         st.error("⚠️ Izina ryatwawe!")
@@ -169,19 +186,18 @@ with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st
                 else:
                     st.warning("⚠️ Uzuza ibisabwa byose.")
         else:
-            if st.button("Login 🔓"):
+            if st.button("Login 🔓", key="login_btn"):
                 if u_input in st.session_state.users_db and st.session_state.users_db[u_input] == p_input:
                     st.session_state.logged_in = True
                     st.session_state.current_user = u_input
                     if u_input not in st.session_state.chat_sessions:
                         st.session_state.chat_sessions[u_input] = {"Main Chat": []}
-                    st.success(LoganMsg := f"🎉 Murakaza neza, {u_input}!")
                     st.rerun()
                 else:
                     st.error("❌ Username cyangwa Password bitari byo.")
     else:
         st.write(f"👤 Ufunguye nka: **{st.session_state.current_user}**")
-        if st.button("Logout 🚪"):
+        if st.button("Logout 🚪", key="logout_btn"):
             st.session_state.logged_in = False
             st.session_state.current_user = "Guest"
             st.session_state.current_session_id = "Main Chat"
@@ -209,7 +225,6 @@ selected_lang = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.subheader("📂 Chat History")
 
-# Ensure active user has a valid dictionary in chat_sessions
 active_user = st.session_state.current_user
 if active_user not in st.session_state.chat_sessions:
     st.session_state.chat_sessions[active_user] = {"Main Chat": []}
@@ -217,7 +232,7 @@ if active_user not in st.session_state.chat_sessions:
 user_sessions = st.session_state.chat_sessions[active_user]
 
 new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
-if st.sidebar.button("➕ Start New Chat"):
+if st.sidebar.button("➕ Start New Chat", key="new_chat_btn"):
     if new_chat_name and new_chat_name not in user_sessions:
         user_sessions[new_chat_name] = []
         st.session_state.current_session_id = new_chat_name
@@ -233,7 +248,7 @@ if selected_session != st.session_state.current_session_id:
     st.session_state.current_session_id = selected_session
     st.rerun()
 
-if st.sidebar.button("🗑️ Clear Current History"):
+if st.sidebar.button("🗑️ Clear Current History", key="clear_hist_btn"):
     user_sessions[st.session_state.current_session_id] = []
     st.rerun()
 
@@ -243,7 +258,7 @@ uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png"
 
 
 # =========================================================
-# 5. BULINGA AI SYSTEM PROMPT
+# 6. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -272,7 +287,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 6. GROQ API KEY & CLIENT
+# 7. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -286,7 +301,7 @@ client = Groq(
 
 
 # =========================================================
-# 7. MAIN HEADER & CHAT RENDERING
+# 8. MAIN HEADER & CHAT RENDERING
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
@@ -310,7 +325,7 @@ for message in current_messages:
 
 
 # =========================================================
-# 8. CHAT INPUT & RESPONSE HANDLING
+# 9. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TVET... 💬")
