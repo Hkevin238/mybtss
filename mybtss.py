@@ -20,7 +20,7 @@ st.set_page_config(
 # 2. SIDEBAR & AUTOMATIC THEME DETECTION
 # =========================================================
 
-st.sidebar.title("🏫 BULINGA AI Control")
+st.sidebar.title("🏫 BTSS AI Control")
 
 # Theme Switcher
 theme_mode = st.sidebar.radio("Theme Mode", ["Dark Mode 🌙", "Light Mode ☀️"], horizontal=True)
@@ -175,10 +175,10 @@ if "current_session_id" not in st.session_state:
 # 5. SIDEBAR (CLEAN & ORGANIZED LAYOUT)
 # =========================================================
 
-with st.sidebar.expander("🔐 Account (Login/Signup)", expanded=not st.session_state.logged_in):
+with st.sidebar.expander("(Login/Signup)", expanded=not st.session_state.logged_in):
     if not st.session_state.logged_in:
         st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login.")
-        auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
+        auth_mode = st.radio(":", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
         
         u_input = st.text_input("Username", key="auth_user")
         p_input = st.text_input("Password", type="password", key="auth_pass")
@@ -232,7 +232,7 @@ selected_lang = st.sidebar.selectbox(
 
 st.sidebar.markdown("---")
 
-st.sidebar.subheader("📂 Chat History")
+st.sidebar.subheader("Chat History")
 
 active_user = st.session_state.current_user
 if active_user not in st.session_state.chat_sessions:
@@ -240,7 +240,7 @@ if active_user not in st.session_state.chat_sessions:
 
 user_sessions = st.session_state.chat_sessions[active_user]
 
-with st.sidebar.expander("➕ Start New Chat", expanded=False):
+with st.sidebar.expander("➕ New Chat", expanded=False):
     new_chat_name = st.text_input("Chat Title", placeholder="e.g., School Fees info", key="new_chat_input_field")
     if st.button("Create Chat 🚀", key="create_chat_action_btn"):
         if new_chat_name and new_chat_name not in user_sessions:
@@ -260,7 +260,7 @@ if selected_session != st.session_state.current_session_id:
 
 col_h1, col_h2 = st.sidebar.columns(2)
 with col_h1:
-    if st.button("🗑️ Clear", key="clear_hist_btn", use_container_width=True):
+    if st.button("Clear", key="clear_hist_btn", use_container_width=True):
         user_sessions[st.session_state.current_session_id] = []
         st.rerun()
 
@@ -276,10 +276,10 @@ with st.sidebar.expander("📎 Upload Files / Photos", expanded=False):
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
-for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
+for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TSS SCHOOL).
 
 CRITICAL NAME RULE (STRICT & ABSOLUTE):
-- Your name and your school's name MUST ALWAYS be spelled strictly as: BULINGA TSS, BULINGA TECHNICAL SECONDARY SCHOOL, or BULINGA TVET SCHOOL.
+- Your name and your school's name MUST ALWAYS be spelled strictly as: BULINGA TSS, BULINGA TECHNICAL SECONDARY SCHOOL, or BULINGA TSS SCHOOL.
 - NEVER, UNDER ANY CIRCUMSTANCES, spell it as "Bilinga", "Bulingha", or any other wrong variation. Always use strictly "BULINGA" (with 'U', never 'I').
 - When generating text or speaking/reading text via text-to-speech, ensure the pronunciation and spelling are completely correct for BULINGA.
 
@@ -295,11 +295,11 @@ You ONLY answer questions related to BULINGA TSS and Your Creators / Developers.
 If a question is completely unrelated to BULINGA TSS, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
-School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL / BULINGA TSS) 🏫
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TSS SCHOOL / BULINGA TSS) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
 Google Maps Link: https://maps.app.goo.gl/umx4ktE6mzBNjU447 (Ecole Secondaire de Bulinga) 🗺️.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
-Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
+Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TSS SCHOOL 🏦.
 Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
 Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929) 📞.
 """
@@ -324,7 +324,7 @@ client = Groq(
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA TSS AI</h1>', unsafe_allow_html=True)
-st.caption(f"User: **{st.session_state.current_user}** | Active Chat: **{st.session_state.current_session_id}** ✨")
+ | Developed by BULINGA TSS: **{st.session_state.current_session_id}** ✨")
 
 current_messages = user_sessions[st.session_state.current_session_id]
 
@@ -382,9 +382,9 @@ for i, message in enumerate(current_messages):
 
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA TVET - Ifoto y'ibiro (front-view) by'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA TSS - Ifoto y'ibiro (front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TVET - Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TSS - Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
