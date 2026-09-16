@@ -179,32 +179,100 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 5. AUTHENTICATION (LOGIN / SIGN UP / GUEST) SYSTEM
+# 5. UI DICTIONARY (TRANSLATIONS FOR SYSTEM INTERFACE)
+# =========================================================
+
+translations = {
+    "Kinyarwanda": {
+        "login_title": "BULINGA TSS AI 🏫",
+        "login_desc": "Nyamuneka Injira, Iyandikishe, cyangwa Ukomeze nka Guest 🔐",
+        "auth_choice": "Hitamo Igikorwa",
+        "mode_login": "Injira",
+        "mode_signup": "Iyandikishe",
+        "user_label": "Izina ry'ukoresha (Username)",
+        "pass_label": "Ijambo ry'ibanga (Password)",
+        "signup_btn": "Fungura Konti 🚀",
+        "login_btn": "Injira 🔓",
+        "or_text": "- CYANGWA -",
+        "guest_btn": "Koresha utiyandikishije ⚡",
+        "sidebar_control": "🔐 Konti n'Uburenganzira",
+        "logged_in_as": "👤 Winjiye nka",
+        "logout_btn": "Sohoka 🚪",
+        "theme_header": "🎨 Ishusho y'Aha hagaragara",
+        "theme_choice": "Hitamo Uburyo",
+        "lang_header": "🌐 Ururimi rwose (Global Language)",
+        "lang_choice": "Hitamo Ururimi rwa System",
+        "clear_history": "🗑️ Hanagura Amateka y'Ibiganiro",
+        "upload_header": "📎 Shyiramo Dosiye / Ifoto",
+        "upload_label": "Shyiramo ifoto cyangwa dosiye",
+        "main_title": "Ubufasha bwa BULINGA AI",
+        "chat_placeholder": "Baza ibijyanye na BULINGA TVET... 💬",
+        "thinking": "⚪ BULINGA AI irimo gutekereza... 💭",
+        "img_resp": "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨",
+        "map_resp": "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
+    },
+    "English": {
+        "login_title": "BULINGA TSS AI 🏫",
+        "login_desc": "Please Login, Sign Up, or Continue as Guest 🔐",
+        "auth_choice": "Choose Action",
+        "mode_login": "Login",
+        "mode_signup": "Sign Up",
+        "user_label": "Username",
+        "pass_label": "Password",
+        "signup_btn": "Create Account 🚀",
+        "login_btn": "Login 🔓",
+        "or_text": "- OR -",
+        "guest_btn": "Use without Register ⚡",
+        "sidebar_control": "🔐 Account & Control",
+        "logged_in_as": "👤 Logged in as",
+        "logout_btn": "Logout 🚪",
+        "theme_header": "🎨 Appearance / Theme",
+        "theme_choice": "Choose Mode",
+        "lang_header": "🌐 Global Language Settings",
+        "lang_choice": "Choose System Language",
+        "clear_history": "🗑️ Clear Current History",
+        "upload_header": "📎 Upload Files / Photos",
+        "upload_label": "Upload image or document",
+        "main_title": "BULINGA AI Assistant",
+        "chat_placeholder": "Ask related BULINGA TVET... 💬",
+        "thinking": "⚪ BULINGA AI is thinking... 💭",
+        "img_resp": "Here are the photos related to Bulinga Technical Secondary School as you requested! 📸✨",
+        "map_resp": "Do you want to see where the school is located? You can click here to open <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> to find the direction to our school! 🗺️📍✨"
+    }
+}
+
+
+# =========================================================
+# 6. AUTHENTICATION (LOGIN / SIGN UP / GUEST) SYSTEM
 # =========================================================
 
 if not st.session_state.logged_in:
-    st.markdown('<h1 class="moving-title" style="text-align: center;">BULINGA TSS AI 🏫</h1>', unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login, Sign Up, or Continue as Guest 🔐</p>", unsafe_allow_html=True)
+    # First let users choose language even before login using a top selectbox
+    login_lang = st.selectbox("🌐 Choose Language / Hitamo Ururimi", ["Kinyarwanda", "English"], index=0)
+    t = translations[login_lang]
+
+    st.markdown(f'<h1 class="moving-title" style="text-align: center;">{t["login_title"]}</h1>', unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center; color: #b0b3b8;'>{t['login_desc']}</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        auth_mode = st.radio("Choose Action", ["Login", "Sign Up"], horizontal=True)
+        auth_mode = st.radio(t["auth_choice"], [t["mode_login"], t["mode_signup"]], horizontal=True)
         
-        username_input = st.text_input("Username")
-        password_input = st.text_input("Password", type="password")
+        username_input = st.text_input(t["user_label"])
+        password_input = st.text_input(t["pass_label"], type="password")
         
-        if auth_mode == "Sign Up":
-            if st.button("Create Account 🚀", use_container_width=True):
+        if auth_mode == t["mode_signup"]:
+            if st.button(t["signup_btn"], use_container_width=True):
                 if username_input and password_input:
                     if username_input in st.session_state.users_db:
-                        st.error("⚠️ Username already exists! Try logging in.")
+                        st.error("⚠️ Username already exists! Try logging in." if login_lang == "English" else "⚠️ Izina ry'ukoresha risanzweho! Gerageza kwinjira.")
                     else:
                         st.session_state.users_db[username_input] = password_input
-                        st.success("✅ Account created successfully! Please switch to Login.")
+                        st.success("✅ Account created successfully! Please switch to Login." if login_lang == "English" else "✅ Konti yaremwe neza! Nyamuneka hindura ujye awo kwinjira.")
                 else:
-                    st.warning("⚠️ Please fill in all fields.")
+                    st.warning("⚠️ Please fill in all fields." if login_lang == "English" else "⚠️ Nyamuneka yora ibice byose bisabwa.")
         else:
-            if st.button("Login 🔓", use_container_width=True):
+            if st.button(t["login_btn"], use_container_width=True):
                 if username_input in st.session_state.users_db and st.session_state.users_db[username_input] == password_input:
                     st.session_state.logged_in = True
                     st.session_state.current_user = username_input
@@ -212,14 +280,14 @@ if not st.session_state.logged_in:
                     if username_input not in st.session_state.chat_sessions:
                         st.session_state.chat_sessions[username_input] = {"Main Chat": []}
                     
-                    st.success(f"🎉 Welcome back, {username_input}!")
+                    st.success(f"🎉 Welcome back, {username_input}!" if login_lang == "English" else f"🎉 Murakaza neza, {username_input}!")
                     st.rerun()
                 else:
-                    st.error("❌ Invalid username or password.")
+                    st.error("❌ Invalid username or password." if login_lang == "English" else "❌ Izina ry'ukoresha cyangwa ijambo ry'ibanga si byo.")
         
-        st.markdown("<div style='text-align: center; margin: 10px 0; color: #b0b3b8;'>- OR -</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align: center; margin: 10px 0; color: #b0b3b8;'>{t['or_text']}</div>", unsafe_allow_html=True)
         
-        if st.button("Use without Register ⚡", use_container_width=True):
+        if st.button(t["guest_btn"], use_container_width=True):
             st.session_state.logged_in = True
             st.session_state.current_user = "Guest"
             if "Guest" not in st.session_state.chat_sessions:
@@ -230,40 +298,28 @@ if not st.session_state.logged_in:
 
 
 # =========================================================
-# 6. SIDEBAR (THEME SWITCHER, SETTINGS, PROFILE & FILE UPLOAD)
+# 7. SIDEBAR (GLOBAL LANGUAGE, THEME SWITCHER & CONTROLS)
 # =========================================================
 
-st.sidebar.title("🔐 Account & Control")
-st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
+# Guhitamo ururimi rwa system yose (Global Language Selection)
+st.sidebar.subheader("🌐 Global Language")
+selected_lang = st.sidebar.selectbox("Choose System Language", ["Kinyarwanda", "English"], index=0)
+t = translations[selected_lang]
 
-if st.sidebar.button("Logout 🚪"):
+st.sidebar.title(t["sidebar_control"])
+st.sidebar.write(f"{t['logged_in_as']}: **{st.session_state.current_user}**")
+
+if st.sidebar.button(t["logout_btn"]):
     st.session_state.logged_in = False
     st.session_state.current_user = ""
     st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("🎨 Appearance / Theme")
-selected_theme = st.sidebar.radio("Choose Mode", ["Dark Mode 🌙", "Light Mode ☀️"], index=0 if st.session_state.theme_mode == "Dark Mode 🌙" else 1)
+st.sidebar.subheader(t["theme_header"])
+selected_theme = st.sidebar.radio(t["theme_choice"], ["Dark Mode 🌙", "Light Mode ☀️"], index=0 if st.session_state.theme_mode == "Dark Mode 🌙" else 1)
 if selected_theme != st.session_state.theme_mode:
     st.session_state.theme_mode = selected_theme
     st.rerun()
-
-st.sidebar.markdown("---")
-st.sidebar.subheader("🌐 Language Settings")
-
-selected_lang = st.sidebar.selectbox(
-    "Choose Language / Ururimi",
-    [
-        "Kinyarwanda",
-        "English",
-        "French",
-        "Kiswahili",
-        "Chinese",
-        "Lingala",
-        "Ikirundi",
-        "Icyarabu"
-    ]
-)
 
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 if "Main Chat" not in user_sessions:
@@ -271,16 +327,16 @@ if "Main Chat" not in user_sessions:
 st.session_state.current_session_id = "Main Chat"
 
 st.sidebar.markdown("---")
-if st.sidebar.button("🗑️ Clear Current History"):
+if st.sidebar.button(t["clear_history"]):
     user_sessions[st.session_state.current_session_id] = []
     st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("📎 Upload Files / Photos")
-uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
+st.sidebar.subheader(t["upload_header"])
+uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 7. BULINGA AI SYSTEM PROMPT
+# 8. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -309,7 +365,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 8. GROQ API KEY & CLIENT
+# 9. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -323,13 +379,12 @@ client = Groq(
 
 
 # =========================================================
-# 9. MAIN HEADER & ROTATING THANK YOU MESSAGE (2 SECONDS INTERVAL)
+# 10. MAIN HEADER & ROTATING THANK YOU MESSAGE (2 SECONDS INTERVAL)
 # =========================================================
 
-st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
+st.markdown(f'<h1 class="moving-title">{t["main_title"]}</h1>', unsafe_allow_html=True)
 
-# Uburyo bwo gusimburanya ubutumwa mu Kinyarwanda no mu Cyongereza buri nyuma y'amasegonda 2
-@st.fragment(run_every=5)
+@st.fragment(run_every=2)
 def show_rotating_thank_you():
     if "thank_you_toggle" not in st.session_state:
         st.session_state.thank_you_toggle = True
@@ -337,9 +392,9 @@ def show_rotating_thank_you():
         st.session_state.thank_you_toggle = not st.session_state.thank_you_toggle
     
     if st.session_state.thank_you_toggle:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇷🇼 Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
     else:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇬🇧 Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
 
 show_rotating_thank_you()
 
@@ -347,7 +402,7 @@ current_messages = user_sessions[st.session_state.current_session_id]
 
 
 # =========================================================
-# 10. DISPLAY CHAT HISTORY
+# 11. DISPLAY CHAT HISTORY
 # =========================================================
 
 for message in current_messages:
@@ -366,10 +421,10 @@ for message in current_messages:
 
 
 # =========================================================
-# 11. CHAT INPUT & RESPONSE HANDLING
+# 12. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TVET... 💬")
+user_query = st.chat_input(t["chat_placeholder"])
 
 if user_query or uploaded_file:
     file_context_msg = ""
@@ -390,7 +445,7 @@ if user_query or uploaded_file:
 
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
-        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI is thinking... 💭</div></div>',
+        f'<div class="chat-row assistant"><div class="chat-bubble thinking-text">{t["thinking"]}</div></div>',
         unsafe_allow_html=True
     )
 
@@ -398,7 +453,7 @@ if user_query or uploaded_file:
         messages_payload = [
             {
                 "role": "system",
-                "content": BULINGA_INFO + f"\n\nCURRENT PREFERRED LANGUAGE:\n{selected_lang}\nAnswer the user using this language and include cool emojis! 🚀"
+                "content": BULINGA_INFO + f"\n\nCURRENT GLOBAL LANGUAGE REQUIREMENT:\n{selected_lang}\nYou MUST strictly answer the user in this exact language ({selected_lang}) and include cool emojis! 🚀"
             }
         ]
 
@@ -419,10 +474,10 @@ if user_query or uploaded_file:
         thinking_placeholder.empty()
         
         if is_image_query:
-            response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
+            response_text = t["img_resp"]
         
         if is_map_query:
-            response_text = "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
+            response_text = t["map_resp"]
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
