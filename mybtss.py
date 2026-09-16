@@ -124,82 +124,76 @@ section[data-testid="stSidebar"] {
 # =========================================================
 
 if "users_db" not in st.session_state:
-    # A simple dictionary to store registered users {username: password}
     st.session_state.users_db = {"admin": "bulinga2026"}
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "current_user" not in st.session_state:
-    st.session_state.current_user = ""
+    st.session_state.current_user = "Guest"  # By default, anyone starts as Guest
 
 if "chat_sessions" not in st.session_state:
-    # Structure: {username: {session_name: [messages]}}
-    st.session_state.chat_sessions = {}
+    # Initialize with Guest storage
+    st.session_state.chat_sessions = {
+        "Guest": {"Main Chat": []}
+    }
 
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = "Main Chat"
 
 
 # =========================================================
-# 4. AUTHENTICATION (LOGIN / SIGN UP) SYSTEM
+# 4. SIDEBAR (OPTIONAL LOGIN/SIGNUP, HISTORY & SETTINGS)
 # =========================================================
 
-if not st.session_state.logged_in:
-    st.markdown('<h1 class="moving-title" style="text-align: center;">BULINGA TSS AI 🏫</h1>', unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login or Sign Up to continue 🔐</p>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        auth_mode = st.radio("Choose Action", ["Login", "Sign Up"], horizontal=True)
+st.sidebar.title("🏫 BULINGA AI Control")
+
+# Optional Login / Sign Up Section inside an Expander
+with st.sidebar.expander("🔐 Account (Optional Login/Signup)", expanded=not st.session_state.logged_in):
+    if not st.session_state.logged_in:
+        st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login kugira ngo ubibike.")
+        auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True)
         
-        username_input = st.text_input("Username")
-        password_input = st.text_input("Password", type="password")
+        u_input = st.text_input("Username", key="auth_user")
+        p_input = st.text_input("Password", type="password", key="auth_pass")
         
         if auth_mode == "Sign Up":
-            if st.button("Create Account 🚀", use_container_width=True):
-                if username_input and password_input:
-                    if username_input in st.session_state.users_db:
-                        st.error("⚠️ Username already exists! Try logging in.")
+            if st.button("Create Account 🚀"):
+                if u_input and p_input:
+                    if u_input in st.session_state.users_db:
+                        st.error("⚠️ Izina ryatwawe!")
                     else:
-                        st.session_state.users_db[username_input] = password_input
-                        st.success("✅ Account created successfully! Please switch to Login.")
+                        st.session_state.users_db[u_input] = p_input
+                        st.session_state.chat_sessions[u_input] = {"Main Chat": []}
+                        st.success("✅ Konti yaremwe! Kora Login.")
                 else:
-                    st.warning("⚠️ Please fill in all fields.")
+                    st.warning("⚠️ Uzuza ibisabwa byose.")
         else:
-            if st.button("Login 🔓", use_container_width=True):
-                if username_input in st.session_state.users_db and st.session_state.users_db[username_input] == password_input:
+            if st.button("Login 🔓"):
+                if u_input in st.session_state.users_db and st.session_state.users_db[u_input] == p_input:
                     st.session_state.logged_in = True
-                    st.session_state.current_user = username_input
-                    
-                    # Initialize user sessions if not present
-                    if username_input not in st.session_state.chat_sessions:
-                        st.session_state.chat_sessions[username_input] = {"Main Chat": []}
-                    
-                    st.success(f"🎉 Welcome back, {username_input}!")
+                    st.session_state.current_user = u_input
+                    if u_input not in st.session_state.chat_sessions:
+                        st.session_state.chat_sessions[u_input] = {"Main Chat": []}
+                    st.success(LoganMsg := f"🎉 Murakaza neza, {u_input}!")
                     st.rerun()
                 else:
-                    st.error("❌ Invalid username or password.")
-    st.stop() # Stop execution here until user logs in
-
-
-# =========================================================
-# 5. SIDEBAR (SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
-# =========================================================
-
-st.sidebar.title("🔐 Account & Control")
-st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
-
-if st.sidebar.button("Logout 🚪"):
-    st.session_state.logged_in = False
-    st.session_state.current_user = ""
-    st.rerun()
+                    st.error("❌ Username cyangwa Password bitari byo.")
+    else:
+        st.write(f"👤 Ufunguye nka: **{st.session_state.current_user}**")
+        if st.button("Logout 🚪"):
+            st.session_state.logged_in = False
+            st.session_state.current_user = "Guest"
+            st.session_state.current_session_id = "Main Chat"
+            if "Guest" not in st.session_state.chat_sessions:
+                st.session_state.chat_sessions["Guest"] = {"Main Chat": []}
+            st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("🌐 Language Settings")
+st.sidebar.subheader("🌐 Ururimi / Language")
 
 selected_lang = st.sidebar.selectbox(
-    "Choose Language / Ururimi",
+    "Choose Language",
     [
         "Kinyarwanda",
         "English",
@@ -215,9 +209,13 @@ selected_lang = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.subheader("📂 Chat History")
 
-user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
+# Ensure active user has a valid dictionary in chat_sessions
+active_user = st.session_state.current_user
+if active_user not in st.session_state.chat_sessions:
+    st.session_state.chat_sessions[active_user] = {"Main Chat": []}
 
-# Create a new chat session button
+user_sessions = st.session_state.chat_sessions[active_user]
+
 new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
 if st.sidebar.button("➕ Start New Chat"):
     if new_chat_name and new_chat_name not in user_sessions:
@@ -225,15 +223,16 @@ if st.sidebar.button("➕ Start New Chat"):
         st.session_state.current_session_id = new_chat_name
         st.rerun()
 
-# Select active session from history
 session_list = list(user_sessions.keys())
-selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id) if st.session_state.current_session_id in session_list else 0)
+if st.session_state.current_session_id not in session_list:
+    st.session_state.current_session_id = session_list[0]
+
+selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id))
 
 if selected_session != st.session_state.current_session_id:
     st.session_state.current_session_id = selected_session
     st.rerun()
 
-# Clear current session history
 if st.sidebar.button("🗑️ Clear Current History"):
     user_sessions[st.session_state.current_session_id] = []
     st.rerun()
@@ -242,8 +241,9 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("📎 Upload Files / Photos")
 uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
 
+
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT
+# 5. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -272,7 +272,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 
 # =========================================================
-# 7. GROQ API KEY & CLIENT
+# 6. GROQ API KEY & CLIENT
 # =========================================================
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -286,19 +286,13 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & SESSION MANAGEMENT LINKING
+# 7. MAIN HEADER & CHAT RENDERING
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
+st.caption(f"User: **{st.session_state.current_user}** | Active Chat: **{st.session_state.current_session_id}** ✨")
 
-# Current active messages list pointer
 current_messages = user_sessions[st.session_state.current_session_id]
-
-
-# =========================================================
-# 9. DISPLAY CHAT HISTORY
-# =========================================================
 
 for message in current_messages:
     role = message["role"]
@@ -316,13 +310,12 @@ for message in current_messages:
 
 
 # =========================================================
-# 10. CHAT INPUT & RESPONSE HANDLING
+# 8. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
 if user_query or uploaded_file:
-    # Handle uploaded file details in message if available
     file_context_msg = ""
     if uploaded_file is not None:
         file_context_msg = f"\n[Attached File: {uploaded_file.name}]"
