@@ -329,7 +329,7 @@ client = Groq(
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
 
 # Uburyo bwo gusimburanya ubutumwa mu Kinyarwanda no mu Cyongereza buri nyuma y'amasegonda 2
-@st.fragment(run_every=2)
+@st.fragment(run_every=5)
 def show_rotating_thank_you():
     if "thank_you_toggle" not in st.session_state:
         st.session_state.thank_you_toggle = True
@@ -337,9 +337,9 @@ def show_rotating_thank_you():
         st.session_state.thank_you_toggle = not st.session_state.thank_you_toggle
     
     if st.session_state.thank_you_toggle:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇷🇼 Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
     else:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇬🇧 Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
 
 show_rotating_thank_you()
 
