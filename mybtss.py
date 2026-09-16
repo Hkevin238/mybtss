@@ -234,8 +234,8 @@ translations = {
         "upload_header": "📎 Upload Files / Photos",
         "upload_label": "Upload image or document",
         "main_title": "BULINGA AI Assistant",
-        "chat_placeholder": "Ask related BULINGA TVET... 💬",
-        "thinking": "⚪ BULINGA AI is thinking... 💭",
+        "chat_placeholder": "Ask related BULINGA TSS... 💬",
+        "thinking": "⚪ BULINGA AI is thinking....",
         "img_resp": "Here are the photos related to Bulinga Technical Secondary School as you requested! 📸✨",
         "map_resp": "Do you want to see where the school is located? You can click here to open <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> to find the direction to our school! 🗺️📍✨"
     }
@@ -384,7 +384,7 @@ client = Groq(
 
 st.markdown(f'<h1 class="moving-title">{t["main_title"]}</h1>', unsafe_allow_html=True)
 
-@st.fragment(run_every=2)
+@st.fragment(run_every=8)
 def show_rotating_thank_you():
     if "thank_you_toggle" not in st.session_state:
         st.session_state.thank_you_toggle = True
@@ -392,9 +392,9 @@ def show_rotating_thank_you():
         st.session_state.thank_you_toggle = not st.session_state.thank_you_toggle
     
     if st.session_state.thank_you_toggle:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇷🇼 Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
     else:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇬🇧 Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
 
 show_rotating_thank_you()
 
