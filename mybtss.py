@@ -384,7 +384,7 @@ if user_query or uploaded_file:
             response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
         
         if is_map_query:
-            response_text = "Urashaka kureba aho ishuri riherereye kuri Google Map? Dore aho ushobora gusura Ecole Secondaire de Bulinga kuri Google Maps: [Kuri Google Maps](https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ) 🗺️📍✨"
+            response_text = "Urashaka kureba aho ishuri riherereye kuri Google Map? Dore aho ushobora gusura Ecole Secondaire de Bulinga: [google map](https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ) 🗺️📍✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
