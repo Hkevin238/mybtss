@@ -265,7 +265,6 @@ selected_lang = st.sidebar.selectbox(
     ]
 )
 
-# Ibice bya Chat History byakuwemo nk'uko wabisabye (New chat title, select past chat, etc.)
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 if "Main Chat" not in user_sessions:
     user_sessions["Main Chat"] = []
@@ -324,11 +323,25 @@ client = Groq(
 
 
 # =========================================================
-# 9. MAIN HEADER & SESSION MANAGEMENT LINKING
+# 9. MAIN HEADER & ROTATING THANK YOU MESSAGE (2 SECONDS INTERVAL)
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-# Agace ka st.caption ka "Active Chat" karakuwemo nk'uko wabisabye.
+
+# Uburyo bwo gusimburanya ubutumwa mu Kinyarwanda no mu Cyongereza buri nyuma y'amasegonda 2
+@st.fragment(run_every=2)
+def show_rotating_thank_you():
+    if "thank_you_toggle" not in st.session_state:
+        st.session_state.thank_you_toggle = True
+    else:
+        st.session_state.thank_you_toggle = not st.session_state.thank_you_toggle
+    
+    if st.session_state.thank_you_toggle:
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇷🇼 Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
+    else:
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>🇬🇧 Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
+
+show_rotating_thank_you()
 
 current_messages = user_sessions[st.session_state.current_session_id]
 
