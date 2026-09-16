@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from PIL import Image
 from groq import Groq
+import time
 
 
 # =========================================================
@@ -53,19 +54,33 @@ else:
 
 
 # =========================================================
-# 3. DYNAMIC CUSTOM CSS
+# 3. DYNAMIC CUSTOM CSS WITH MOVING MULTI-COLOR STARS
 # =========================================================
 
 st.markdown(f"""
 <style>
-@keyframes moveSparkles {{
-    0% {{ background-position: 0 0, 0 0, 0 0; }}
-    100% {{ background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }}
+/* Moving Multi-Color Stars Background */
+@keyframes moveStars1 {{
+    0% {{ background-position: 0 0; }}
+    100% {{ background-position: -10000px 10000px; }}
+}}
+@keyframes moveStars2 {{
+    0% {{ background-position: 0 0; }}
+    100% {{ background-position: 10000px -10000px; }}
 }}
 
 .stApp {{
     background-color: {app_bg} !important;
     color: {text_color} !important;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #ff4757, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #2ed573, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #1e90ff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #ffa502, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 200px 250px, #9b59b6, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    animation: moveStars1 100s linear infinite;
 }}
 
 #MainMenu {{ visibility: hidden; }}
@@ -172,12 +187,12 @@ if "current_session_id" not in st.session_state:
 
 
 # =========================================================
-# 5. SIDEBAR (CLEAN & ORGANIZED LAYOUT)
+# 5. SIDEBAR (LOGIN/SIGNUP & CHAT HISTORY KEPT LIKE OTHER AIs)
 # =========================================================
 
-with st.sidebar.expander("🔐 Account (Login/Signup)", expanded=not st.session_state.logged_in):
+with st.sidebar.expander("🔐 Account (Login / Sign Up)", expanded=not st.session_state.logged_in):
     if not st.session_state.logged_in:
-        st.write("Ushobora gukoresha AI utinjiyemo, cyangwa ukora Login.")
+        st.write("Ushobora gukoresha AI cyangwa ugakora Login/Sign Up.")
         auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
         
         u_input = st.text_input("Username", key="auth_user")
@@ -191,7 +206,7 @@ with st.sidebar.expander("🔐 Account (Login/Signup)", expanded=not st.session_
                     else:
                         st.session_state.users_db[u_input] = p_input
                         st.session_state.chat_sessions[u_input] = {"Main Chat": []}
-                        st.success("✅ Konti yaremwe!")
+                        st.success("✅ Konti yaremwe neza!")
                 else:
                     st.warning("⚠️ Uzuza ibisabwa.")
         else:
@@ -203,7 +218,7 @@ with st.sidebar.expander("🔐 Account (Login/Signup)", expanded=not st.session_
                         st.session_state.chat_sessions[u_input] = {"Main Chat": []}
                     st.rerun()
                 else:
-                    st.error("❌ Byanze, subira inyuma.")
+                    st.error("❌ Byanze, subira inyuma urebe neza.")
     else:
         st.write(f"👤 Ufunguye nka: **{st.session_state.current_user}**")
         if st.button("Logout 🚪", key="logout_btn"):
@@ -271,7 +286,7 @@ with st.sidebar.expander("📎 Upload Files / Photos", expanded=False):
 
 
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT (STRICTLY BULINGA TSS - NO MISTAKES)
+# 6. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -280,24 +295,19 @@ for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
 CRITICAL NAME RULE (STRICT & ABSOLUTE):
 - Your name and your school's name MUST ALWAYS be spelled strictly as: BULINGA TSS, BULINGA TECHNICAL SECONDARY SCHOOL, or BULINGA TVET SCHOOL.
-- NEVER, UNDER ANY CIRCUMSTANCES, spell it as "Bilinga", "Bulingha", or any other wrong variation. Always use strictly "BULINGA" (with 'U', never 'I').
-- When generating text or speaking/reading text via text-to-speech, ensure the pronunciation and spelling are completely correct for BULINGA.
+- NEVER spell it as "Bilinga", "Bulingha", or any other wrong variation. Always use strictly "BULINGA" (with 'U', never 'I').
 
 CRITICAL RULE REGARDING CREATOR:
-- You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS.
-- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TSS 👨‍💻🚀.
+- You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS 👨‍💻🚀.
+- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator.
 
 EMOJI RULE:
-- Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
-
-CORE RULE:
-You ONLY answer questions related to BULINGA TSS and Your Creators / Developers.
-If a question is completely unrelated to BULINGA TSS, politely refuse to answer with a friendly message and emojis.
+- Always include relevant, cool, and engaging emojis in your responses.
 
 SCHOOL DETAILS:
 School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL / BULINGA TSS) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
-Google Maps Link: https://maps.app.goo.gl/umx4ktE6mzBNjU447 (Ecole Secondaire de Bulinga) 🗺️.
+Google Maps Link: https://maps.app.goo.gl/umx4ktE6mzBNjU447 🗺️.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
 Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
@@ -339,7 +349,7 @@ for i, message in enumerate(current_messages):
         
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{cleaned_content}</div></div>', unsafe_allow_html=True)
         
-        # High-Speed Browser Voice Reader (Soma Ijwi with Web Speech API)
+        # High-Speed Browser Voice Reader
         safe_content = cleaned_content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
         voice_html = f"""
         <div style="margin-bottom: 8px; margin-left: 2px; display: flex; gap: 8px;">
@@ -388,7 +398,7 @@ for i, message in enumerate(current_messages):
 
 
 # =========================================================
-# 9. CHAT INPUT & RESPONSE HANDLING
+# 9. CHAT INPUT & AUTOMATIC 2-SEC NOTIFICATION (TOAST)
 # =========================================================
 
 user_query = st.chat_input("Ask related BULINGA TSS... 💬")
@@ -471,6 +481,11 @@ if user_query or uploaded_file:
             "show_image": is_image_query,
             "show_map": is_map_query
         })
+        
+        # 2-Seconds Delay Notification (Toast Message)
+        time.sleep(2)
+        st.toast("Thank you for Using our BTSS AI ✨", icon="🏫")
+        
         st.rerun()
 
     except Exception as e:
