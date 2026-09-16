@@ -203,7 +203,7 @@ if not st.session_state.logged_in:
 st.sidebar.title("🔐 Account & Control")
 st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
 
-if st.sidebar.button("Logout"):
+if st.sidebar.button("Logout 🚪"):
     st.session_state.logged_in = False
     st.session_state.current_user = ""
     st.rerun()
@@ -230,7 +230,8 @@ st.sidebar.subheader("📂 Chat History")
 
 user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 
-new_chat_name = st.sidebaxt_input("New Chat Title", placeholder="e.g., School Fees info")
+# Yakosowe hano munsi ikaba st.sidebar.text_input
+new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
 if st.sidebar.button("➕ Start New Chat"):
     if new_chat_name and new_chat_name not in user_sessions:
         user_sessions[new_chat_name] = []
@@ -258,17 +259,17 @@ uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png"
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
-for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TSS SCHOOL).
+for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
 CRITICAL RULE REGARDING CREATOR:
-- You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS SCHOOL.
+- You were developed, created, and built exclusively by the developers and programmers of BULINGA TVET SCHOOL.
 - NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TVET SCHOOL 👨‍💻🚀.
 
 EMOJI RULE:
 - Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
 
 CORE RULE:
-You ONLY answer questions related to BULINGA TSS SCHOOL and Your Creators / Developers.
+You ONLY answer questions related to BULINGA TVET SCHOOL and Your Creators / Developers.
 If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
@@ -300,7 +301,7 @@ client = Groq(
 # =========================================================
 
 st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
-st.caption(f"I'M YOUR Bulinga TSS AI Assistant: **{st.session_sate.urrent_session_id}** ✨")
+st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
 
 current_messages = user_sessions[st.session_state.current_session_id]
 
@@ -328,7 +329,7 @@ for message in current_messages:
 # 10. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TSS... 💬")
+user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
 if user_query or uploaded_file:
     file_context_msg = ""
