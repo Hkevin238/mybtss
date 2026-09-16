@@ -2,7 +2,6 @@ import os
 import streamlit as st
 from PIL import Image
 from groq import Groq
-import time
 
 
 # =========================================================
@@ -18,215 +17,189 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. SIDEBAR & AUTOMATIC THEME DETECTION
+# 2. CUSTOM CSS
 # =========================================================
 
-st.sidebar.title("🏫 BULINGA AI Control")
-
-# Theme Switcher
-theme_mode = st.sidebar.radio("Theme Mode", ["Dark Mode 🌙", "Light Mode ☀️"], horizontal=True)
-
-# Dynamic Color Detection based on Selected Mode
-if theme_mode == "Dark Mode 🌙":
-    app_bg = "#121212"
-    text_color = "#e4e6eb"
-    sidebar_bg = "#18191a"
-    chat_input_bg = "#242526"
-    chat_input_border = "#3a3b3c"
-    assistant_bubble_bg = "#3a3b3c"
-    assistant_text = "#e4e6eb"
-    button_bg = "#3a3b3c"
-    button_text = "#e4e6eb"
-    input_text_color = "#ffffff" 
-    input_placeholder_color = "#b0b3b8"
-else:
-    app_bg = "#f0f2f5"
-    text_color = "#1c1e21"
-    sidebar_bg = "#ffffff"
-    chat_input_bg = "#ffffff"
-    chat_input_border = "#ced4da"
-    assistant_bubble_bg = "#e4e6eb"
-    assistant_text = "#1c1e21"
-    button_bg = "#e4e6eb"
-    button_text = "#1c1e21"
-    input_text_color = "#000000" 
-    input_placeholder_color = "#555555"
-
-
-# =========================================================
-# 3. DYNAMIC CUSTOM CSS WITH LARGE MOVING COLORFUL STARS
-# =========================================================
-
-st.markdown(f"""
+st.markdown("""
 <style>
-@keyframes moveStarsSmooth {{
-    0% {{ background-position: 0px 0px, 0px 0px, 0px 0px; }}
-    100% {{ background-position: -1000px 1000px, 1000px -1000px, 500px 1500px; }}
-.stApp {{
-    background-color: {app_bg} !important;
-    color: {text_color} !important;
+@keyframes moveSparkles {
+    0% { background-position: 0 0, 0 0, 0 0; }
+    100% { background-position: -10000px 5000px, 5000px -10000px, -7500px -7500px; }
+}
+
+.stApp {
+    background-color: #121212 !important;
     background-image: 
-        radial-gradient(3px 3px at 50px 80px, #ff4757, transparent),
-        radial-gradient(4px 4px at 150px 200px, #2ed573, transparent),
-        radial-gradient(3.5px 3.5px at 280px 100px, #1e90ff, transparent),
-        radial-gradient(4px 4px at 380px 300px, #ffa502, transparent),
-        radial-gradient(3px 3px at 100px 400px, #9b59b6, transparent),
-        radial-gradient(4.5px 4.5px at 450px 150px, #00d2d3, transparent);
-    background-repeat: repeat;
-    background-size: 500px 500px;
-    animation: moveStarsSmooth 60s linear infinite;
-}}
+        radial-gradient(6px 6px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 40px 70px, #0084ff, rgba(0,0,0,0)),
+        radial-gradient(5px 5px at 90px 40px, #ffd700, rgba(0,0,0,0)),
+        radial-gradient(7px 7px at 160px 120px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 230px 180px, #0084ff, rgba(0,0,0,0)),
+        radial-gradient(8px 8px at 350px 250px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(6px 6px at 450px 350px, #ffd700, rgba(0,0,0,0)) !important;
+    background-repeat: repeat !important;
+    background-size: 500px 500px !important;
+    animation: moveSparkles 80s linear infinite !important;
+    color: #e4e6eb !important;
+}
 
-#MainMenu {{ visibility: hidden; }}
-footer {{ visibility: hidden; }}
-header {{ background: transparent !important; }}
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header { background: transparent !important; }
 
-@keyframes bounceSlow {{
-    0% {{ transform: translateY(0px); }}
-    50% {{ transform: translateY(-8px); }}
-    100% {{ transform: translateY(0px); }}
-}}
+@keyframes bounceSlow {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
 
-.moving-title {{
+.moving-title {
     display: inline-block;
     animation: bounceSlow 3s ease-in-out infinite;
-}}
+}
 
-.chat-row {{
+.chat-row {
     display: flex;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-}}
+}
 
-.chat-row.user {{ justify-content: flex-end; }}
-.chat-row.assistant {{ justify-content: flex-start; }}
+.chat-row.user { justify-content: flex-end; }
+.chat-row.assistant { justify-content: flex-start; }
 
-.chat-bubble {{
+.chat-bubble {
     max-width: 75%;
     padding: 10px 14px;
     font-size: 15px;
     line-height: 1.4;
     word-wrap: break-word;
-}}
+}
 
-.chat-row.user .chat-bubble {{
+.chat-row.user .chat-bubble {
     background-color: #0084ff;
     color: #ffffff;
     border-radius: 18px 18px 4px 18px;
-}}
+}
 
-.chat-row.assistant .chat-bubble {{
-    background-color: {assistant_bubble_bg};
-    color: {assistant_text};
+.chat-row.assistant .chat-bubble {
+    background-color: #3a3b3c;
+    color: #e4e6eb;
     border-radius: 18px 18px 18px 4px;
-}}
+}
 
-.stChatInputContainer {{
-    background-color: {chat_input_bg} !important;
+.stChatInputContainer {
+    background-color: #242526 !important;
     border-radius: 24px !important;
-    border: 1px solid {chat_input_border} !important;
+    border: 1px solid #3a3b3c !important;
     padding: 4px 12px !important;
-}}
+}
 
-.stChatInputContainer textarea {{
-    color: {input_text_color} !important;
+.stChatInputContainer textarea {
+    color: #e4e6eb !important;
     font-size: 15px !important;
-    font-weight: 500 !important;
-}}
+}
 
-.stChatInputContainer textarea::placeholder {{
-    color: {input_placeholder_color} !important;
-}}
-
-.thinking-text {{
+.thinking-text {
     font-style: italic;
     color: #b0b3b8;
-}}
+}
 
-section[data-testid="stSidebar"] {{
-    background-color: {sidebar_bg} !important;
-}}
+section[data-testid="stSidebar"] {
+    background-color: #18191a !important;
+}
 
-.stButton button {{
+.stButton button {
     border-radius: 8px !important;
     border: none !important;
-    background-color: {button_bg} !important;
-    color: {button_text} !important;
-}}
+    background-color: #3a3b3c !important;
+    color: #e4e6eb !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
 
 # =========================================================
-# 4. SESSION STATE & USER DATABASE INITIALIZATION
+# 3. SESSION STATE & USER DATABASE INITIALIZATION
 # =========================================================
 
 if "users_db" not in st.session_state:
+    # A simple dictionary to store registered users {username: password}
     st.session_state.users_db = {"admin": "bulinga2026"}
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "current_user" not in st.session_state:
-    st.session_state.current_user = "Guest"
+    st.session_state.current_user = ""
 
 if "chat_sessions" not in st.session_state:
-    st.session_state.chat_sessions = {
-        "Guest": {"Main Chat": []}
-    }
+    # Structure: {username: {session_name: [messages]}}
+    st.session_state.chat_sessions = {}
 
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = "Main Chat"
 
 
 # =========================================================
-# 5. SIDEBAR (LOGIN / SIGN UP & CHAT HISTORY KEPT LIKE OTHER AIs)
+# 4. AUTHENTICATION (LOGIN / SIGN UP) SYSTEM
 # =========================================================
 
-with st.sidebar.expander("🔐 Account (Login / Sign Up)", expanded=not st.session_state.logged_in):
-    if not st.session_state.logged_in:
-        st.write("Ushobora gukoresha AI cyangwa ugakora Login/Sign Up.")
-        auth_mode = st.radio("Hitamo:", ["Login", "Sign Up"], horizontal=True, key="auth_radio")
+if not st.session_state.logged_in:
+    st.markdown('<h1 class="moving-title" style="text-align: center;">BULINGA TSS AI 🏫</h1>', unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #b0b3b8;'>Please Login or Sign Up to continue 🔐</p>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        auth_mode = st.radio("Choose Action", ["Login", "Sign Up"], horizontal=True)
         
-        u_input = st.text_input("Username", key="auth_user")
-        p_input = st.text_input("Password", type="password", key="auth_pass")
+        username_input = st.text_input("Username")
+        password_input = st.text_input("Password", type="password")
         
         if auth_mode == "Sign Up":
-            if st.button("Create Account 🚀", key="signup_btn"):
-                if u_input and p_input:
-                    if u_input in st.session_state.users_db:
-                        st.error("⚠️ Izina ryatwawe!")
+            if st.button("Create Account 🚀", use_container_width=True):
+                if username_input and password_input:
+                    if username_input in st.session_state.users_db:
+                        st.error("⚠️ Username already exists! Try logging in.")
                     else:
-                        st.session_state.users_db[u_input] = p_input
-                        st.session_state.chat_sessions[u_input] = {"Main Chat": []}
-                        st.success("✅ Konti yaremwe neza!")
+                        st.session_state.users_db[username_input] = password_input
+                        st.success("✅ Account created successfully! Please switch to Login.")
                 else:
-                    st.warning("⚠️ Uzuza ibisabwa.")
+                    st.warning("⚠️ Please fill in all fields.")
         else:
-            if st.button("Login 🔓", key="login_btn"):
-                if u_input in st.session_state.users_db and st.session_state.users_db[u_input] == p_input:
+            if st.button("Login 🔓", use_container_width=True):
+                if username_input in st.session_state.users_db and st.session_state.users_db[username_input] == password_input:
                     st.session_state.logged_in = True
-                    st.session_state.current_user = u_input
-                    if u_input not in st.session_state.chat_sessions:
-                        st.session_state.chat_sessions[u_input] = {"Main Chat": []}
+                    st.session_state.current_user = username_input
+                    
+                    # Initialize user sessions if not present
+                    if username_input not in st.session_state.chat_sessions:
+                        st.session_state.chat_sessions[username_input] = {"Main Chat": []}
+                    
+                    st.success(f"🎉 Welcome back, {username_input}!")
                     st.rerun()
                 else:
-                    st.error("❌ Byanze, subira inyuma urebe neza.")
-    else:
-        st.write(f"👤 Ufunguye nka: **{st.session_state.current_user}**")
-        if st.button("Logout 🚪", key="logout_btn"):
-            st.session_state.logged_in = False
-            st.session_state.current_user = "Guest"
-            st.session_state.current_session_id = "Main Chat"
-            if "Guest" not in st.session_state.chat_sessions:
-                st.session_state.chat_sessions["Guest"] = {"Main Chat": []}
-            st.rerun()
+                    st.error("❌ Invalid username or password.")
+    st.stop() # Stop execution here until user logs in
+
+
+# =========================================================
+# 5. SIDEBAR (SETTINGS, PROFILE, CHAT HISTORY & FILE UPLOAD)
+# =========================================================
+
+st.sidebar.title("🔐 Account & Control")
+st.sidebar.write(f"👤 Logged in as: **{st.session_state.current_user}**")
+
+if st.sidebar.button("Logout 🚪"):
+    st.session_state.logged_in = False
+    st.session_state.current_user = ""
+    st.rerun()
 
 st.sidebar.markdown("---")
+st.sidebar.subheader("🌐 Language Settings")
 
 selected_lang = st.sidebar.selectbox(
-    "🌐 Choose Language",
+    "Choose Language / Ururimi",
     [
         "Kinyarwanda",
         "English",
@@ -240,44 +213,34 @@ selected_lang = st.sidebar.selectbox(
 )
 
 st.sidebar.markdown("---")
-
 st.sidebar.subheader("📂 Chat History")
 
-active_user = st.session_state.current_user
-if active_user not in st.session_state.chat_sessions:
-    st.session_state.chat_sessions[active_user] = {"Main Chat": []}
+user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
 
-user_sessions = st.session_state.chat_sessions[active_user]
+# Create a new chat session button
+new_chat_name = st.sidebar.text_input("New Chat Title", placeholder="e.g., School Fees info")
+if st.sidebar.button("➕ Start New Chat"):
+    if new_chat_name and new_chat_name not in user_sessions:
+        user_sessions[new_chat_name] = []
+        st.session_state.current_session_id = new_chat_name
+        st.rerun()
 
-with st.sidebar.expander("➕ Start New Chat", expanded=False):
-    new_chat_name = st.text_input("Chat Title", placeholder="e.g., School Fees info", key="new_chat_input_field")
-    if st.button("Create Chat 🚀", key="create_chat_action_btn"):
-        if new_chat_name and new_chat_name not in user_sessions:
-            user_sessions[new_chat_name] = []
-            st.session_state.current_session_id = new_chat_name
-            st.rerun()
-
+# Select active session from history
 session_list = list(user_sessions.keys())
-if st.session_state.current_session_id not in session_list:
-    st.session_state.current_session_id = session_list[0]
-
-selected_session = st.sidebar.selectbox("Select Active Chat", session_list, index=session_list.index(st.session_state.current_session_id), key="select_past_chat_box")
+selected_session = st.sidebar.selectbox("Select Past Chat", session_list, index=session_list.index(st.session_state.current_session_id) if st.session_state.current_session_id in session_list else 0)
 
 if selected_session != st.session_state.current_session_id:
     st.session_state.current_session_id = selected_session
     st.rerun()
 
-col_h1, col_h2 = st.sidebar.columns(2)
-with col_h1:
-    if st.button("🗑️ Clear", key="clear_hist_btn", use_container_width=True):
-        user_sessions[st.session_state.current_session_id] = []
-        st.rerun()
+# Clear current session history
+if st.sidebar.button("🗑️ Clear Current History"):
+    user_sessions[st.session_state.current_session_id] = []
+    st.rerun()
 
 st.sidebar.markdown("---")
-
-with st.sidebar.expander("📎 Upload Files / Photos", expanded=False):
-    uploaded_file = st.file_uploader("Choose file", type=["png", "jpg", "jpeg", "pdf", "txt"], key="sidebar_file_uploader")
-
+st.sidebar.subheader("📎 Upload Files / Photos")
+uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
 # 6. BULINGA AI SYSTEM PROMPT
@@ -287,21 +250,20 @@ BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
-CRITICAL NAME RULE (STRICT & ABSOLUTE):
-- Your name and your school's name MUST ALWAYS be spelled strictly as: BULINGA TSS, BULINGA TECHNICAL SECONDARY SCHOOL, or BULINGA TVET SCHOOL.
-- NEVER spell it as "Bilinga", "Bulingha", or any other wrong variation. Always use strictly "BULINGA" (with 'U', never 'I').
-
 CRITICAL RULE REGARDING CREATOR:
-- You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS 👨‍💻🚀.
-- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator.
+- You were developed, created, and built exclusively by the developers and programmers of BULINGA TVET SCHOOL.
+- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TVET SCHOOL 👨‍💻🚀.
 
 EMOJI RULE:
-- Always include relevant, cool, and engaging emojis in your responses.
+- Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
+
+CORE RULE:
+You ONLY answer questions related to BULINGA TVET SCHOOL and Your Creators / Developers.
+If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
-School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL / BULINGA TSS) 🏫
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
-Google Maps Link: https://maps.app.goo.gl/umx4ktE6mzBNjU447 🗺️.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
 Combinations: SOD (Software Development 💻), NIT (Networking 🌐), ACC (Accounting 📊), CSA.
@@ -316,7 +278,7 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 if not GROQ_API_KEY:
-    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe.")
+    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe muri Environment Variables.")
 
 client = Groq(
     api_key=GROQ_API_KEY or "YOUR_GROQ_API_KEY"
@@ -324,80 +286,43 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & CHAT RENDERING (WITH BROWSER VOICE READER)
+# 8. MAIN HEADER & SESSION MANAGEMENT LINKING
 # =========================================================
 
-st.markdown('<h1 class="moving-title">BULINGA TSS AI</h1>', unsafe_allow_html=True)
-st.caption(f"User: **{st.session_state.current_user}** | Active Chat: **{st.session_state.current_session_id}** ✨")
+st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
+st.caption(f"Active Chat: **{st.session_state.current_session_id}** ✨")
 
+# Current active messages list pointer
 current_messages = user_sessions[st.session_state.current_session_id]
 
-for i, message in enumerate(current_messages):
+
+# =========================================================
+# 9. DISPLAY CHAT HISTORY
+# =========================================================
+
+for message in current_messages:
     role = message["role"]
     content = message["content"]
     
     if role == "user":
         st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
     else:
-        cleaned_content = content.replace("Bilinga", "BULINGA").replace("bilinga", "BULINGA")
-        
-        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{cleaned_content}</div></div>', unsafe_allow_html=True)
-        
-        # High-Speed Browser Voice Reader
-        safe_content = cleaned_content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
-        voice_html = f"""
-        <div style="margin-bottom: 8px; margin-left: 2px; display: flex; gap: 8px;">
-            <button onclick="speakText_{i}()" style="background-color: #0084ff; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">
-                🔊 Play Voice (Soma)
-            </button>
-            <button onclick="stopSpeech()" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">
-                ⏹️ Stop (Hagarika)
-            </button>
-            <script>
-            function speakText_{i}() {{
-                if ('speechSynthesis' in window) {{
-                    window.speechSynthesis.cancel();
-                    var text = "{safe_content}";
-                    var utterance = new SpeechSynthesisUtterance(text);
-                    utterance.rate = 1.0;
-                    window.speechSynthesis.speak(utterance);
-                }} else {{
-                    alert("Browser yawe ntishyigikiye Voice Reader.");
-                }}
-            }}
-            function stopSpeech() {{
-                if ('speechSynthesis' in window) {{
-                    window.speechSynthesis.cancel();
-                }}
-            }}
-            </script>
-        </div>
-        """
-        st.markdown(voice_html, unsafe_allow_html=True)
-
-        if message.get("show_map", False):
-            st.markdown("""
-            <div style="margin-bottom: 12px;">
-                <a href="https://maps.app.goo.gl/umx4ktE6mzBNjU447" target="_blank" style="display: inline-block; background-color: #28a745; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">
-                    🗺️ Reba Location kuri Google Maps (Ecole Secondaire de Bulinga)
-                </a>
-            </div>
-            """, unsafe_allow_html=True)
-
+        st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA TVET - Ifoto y'ibiro (front-view) by'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA TVET- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TVET - Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TVET- Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
-# 9. CHAT INPUT & AUTOMATIC 2-SEC NOTIFICATION (TOAST)
+# 10. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TSS... 💬")
+user_query = st.chat_input("Ask related BULINGA TVET... 💬")
 
 if user_query or uploaded_file:
+    # Handle uploaded file details in message if available
     file_context_msg = ""
     if uploaded_file is not None:
         file_context_msg = f"\n[Attached File: {uploaded_file.name}]"
@@ -408,16 +333,12 @@ if user_query or uploaded_file:
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
 
     query_lower = (user_query or "").lower()
-    
     image_keywords = ["foto", "photo", "ishuri", "school", "ifoto", "icyapa", "image", "logo", "akarango"]
     is_image_query = any(kw in query_lower for kw in image_keywords)
 
-    map_keywords = ["map", "location", "ahoherereye", "aho iri", "aho ibereye", "gushaka ishuri", "aho duherereye"]
-    is_map_query = any(kw in query_lower for kw in map_keywords)
-
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
-        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA TSS AI is thinking... 💭</div></div>',
+        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI is thinking... 💭</div></div>',
         unsafe_allow_html=True
     )
 
@@ -443,44 +364,24 @@ if user_query or uploaded_file:
         )
 
         response_text = completion.choices[0].message.content
-        response_text = response_text.replace("Bilinga", "BULINGA").replace("bilinga", "BULINGA")
-
         thinking_placeholder.empty()
         
-        if is_map_query:
-            response_text = "Dore aho Ecole Secondaire de Bulinga iherereye kuri Google Maps! 🗺️ Kanda kuri buto iri hepfo kugira ngo uyirebe neza:"
-        elif is_image_query:
-            response_text = "Dore amafoto ajyanye na BULINGA TSS nk'uko wabisabye! 📸✨"
+        if is_image_query:
+            response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
-        if is_map_query:
-            st.markdown("""
-            <div style="margin-bottom: 12px;">
-                <a href="https://maps.app.goo.gl/umx4ktE6mzBNjU447" target="_blank" style="display: inline-block; background-color: #28a745; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold;">
-                    🗺️ Reba Location kuri Google Maps (Ecole Secondaire de Bulinga)
-                </a>
-            </div>
-            """, unsafe_allow_html=True)
-
         if is_image_query:
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration (Front-view) y'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
         current_messages.append({
             "role": "assistant", 
             "content": response_text,
-            "show_image": is_image_query,
-            "show_map": is_map_query
+            "show_image": is_image_query
         })
-        
-        # 2-Seconds Delay Notification (Toast Message)
-        time.sleep(2)
-        st.toast("Thank you for Using our BTSS AI ✨", icon="🏫")
-        
-        st.rerun()
 
     except Exception as e:
         thinking_placeholder.empty()
