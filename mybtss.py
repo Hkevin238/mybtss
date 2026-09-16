@@ -575,7 +575,7 @@ def show_rotating_thank_you():
         st.session_state.thank_you_toggle = not st.session_state.thank_you_toggle
 
     if st.session_state.thank_you_toggle:
-        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Murakoze cyane gukoresha BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Urakaza neza kuri BTSS AI Assistant! 🙏✨</p>", unsafe_allow_html=True)
     else:
         st.markdown("<p style='color: #4dabf7; font-weight: 500;'>Thanks for using BTSS AI Assistant! 🚀✨</p>", unsafe_allow_html=True)
 
