@@ -76,6 +76,12 @@ header { background: transparent !important; }
     word-wrap: break-word;
 }
 
+/* Guha amahirwe link ziri muri chat ziba clickable kandi zigaragara neza */
+.chat-bubble a {
+    color: #4dabf7 !important;
+    text-decoration: underline !important;
+}
+
 .chat-row.user .chat-bubble {
     background-color: #0084ff;
     color: #ffffff;
@@ -382,8 +388,9 @@ if user_query or uploaded_file:
         if is_image_query:
             response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
         
+        # Gukoresha HTML arukugira ngo link ya map ibe clickable neza muri chat bubble
         if is_map_query:
-            response_text = "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse [google map](https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ) kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu kuri Google Maps! 🗺️📍✨"
+            response_text = 'Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href="https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ" target="_blank">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨'
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
