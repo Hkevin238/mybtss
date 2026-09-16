@@ -36,7 +36,6 @@ if theme_mode == "Dark Mode 🌙":
     assistant_text = "#e4e6eb"
     button_bg = "#3a3b3c"
     button_text = "#e4e6eb"
-    # Auto-detected input text color for Dark Mode
     input_text_color = "#ffffff" 
     input_placeholder_color = "#b0b3b8"
 else:
@@ -49,13 +48,12 @@ else:
     assistant_text = "#1c1e21"
     button_bg = "#e4e6eb"
     button_text = "#1c1e21"
-    # Auto-detected input text color for Light Mode
     input_text_color = "#000000" 
     input_placeholder_color = "#555555"
 
 
 # =========================================================
-# 3. DYNAMIC CUSTOM CSS (AUTO-ADJUSTS PROMPT INPUT TEXT COLOR)
+# 3. DYNAMIC CUSTOM CSS
 # =========================================================
 
 st.markdown(f"""
@@ -122,7 +120,6 @@ header {{ background: transparent !important; }}
     padding: 4px 12px !important;
 }}
 
-/* Automatically detected and applied input text color based on active mode */
 .stChatInputContainer textarea {{
     color: {input_text_color} !important;
     font-size: 15px !important;
@@ -270,26 +267,30 @@ uploaded_file = st.sidebar.file_uploader("Upload image or document", type=["png"
 
 
 # =========================================================
-# 6. BULINGA AI SYSTEM PROMPT
+# 6. BULINGA AI SYSTEM PROMPT (STRICTLY BULINGA TSS)
 # =========================================================
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
 for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
+CRITICAL NAME RULE (IMPORTANT):
+- Your name and your school's name is ALWAYS spelled and pronounced as: BULINGA TSS or BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
+- NEVER spell it as "Bilinga". Always use strictly "BULINGA".
+
 CRITICAL RULE REGARDING CREATOR:
-- You were developed, created, and built exclusively by the developers and programmers of BULINGA TVET SCHOOL.
-- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TVET SCHOOL 👨‍💻🚀.
+- You were developed, created, and built exclusively by the developers and programmers of BULINGA TSS.
+- NEVER mention OpenAI, ChatGPT, or any other outside entities as your creator. If anyone asks who made you, built you, or programmed you, proudly state that you were developed and built by the developers / programmers of BULINGA TSS 👨‍💻🚀.
 
 EMOJI RULE:
 - Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
 
 CORE RULE:
-You ONLY answer questions related to BULINGA TVET SCHOOL and Your Creators / Developers.
-If a question is completely unrelated to BULINGA TVET SCHOOL, politely refuse to answer with a friendly message and emojis.
+You ONLY answer questions related to BULINGA TSS and Your Creators / Developers.
+If a question is completely unrelated to BULINGA TSS, politely refuse to answer with a friendly message and emojis.
 
 SCHOOL DETAILS:
-School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL / BULINGA TSS) 🏫
 Location: MUHANGA, Mushishiro near KABADAHA Center 📍.
 School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰.
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
@@ -313,15 +314,15 @@ client = Groq(
 
 
 # =========================================================
-# 8. MAIN HEADER & CHAT RENDERING
+# 8. MAIN HEADER & CHAT RENDERING (WITH VOICE READER)
 # =========================================================
 
-st.markdown('<h1 class="moving-title">BULINGA AI Assistant</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="moving-title">BULINGA TSS AI</h1>', unsafe_allow_html=True)
 st.caption(f"User: **{st.session_state.current_user}** | Active Chat: **{st.session_state.current_session_id}** ✨")
 
 current_messages = user_sessions[st.session_state.current_session_id]
 
-for message in current_messages:
+for i, message in enumerate(current_messages):
     role = message["role"]
     content = message["content"]
     
@@ -329,18 +330,43 @@ for message in current_messages:
         st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
     else:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
+        
+        # Voice Reader (Text-to-Speech using browser SpeechSynthesis API via HTML/JS)
+        safe_content = content.replace('"', '&quot;').replace("'", "&#39;").replace('\n', ' ')
+        voice_html = f"""
+        <div style="margin-bottom: 12px; margin-left: 2px;">
+            <button onclick="speakText_{i}()" style="background-color: #0084ff; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                🔊 Read Aloud (Soma Ijwi)
+            </button>
+            <script>
+            function speakText_{i}() {{
+                if ('speechSynthesis' in window) {{
+                    window.speechSynthesis.cancel();
+                    var text = "{safe_content}";
+                    var utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 1.0;
+                    window.speechSynthesis.speak(utterance);
+                }} else {{
+                    alert("Speech synthesis is not supported in this browser.");
+                }}
+            }}
+            </script>
+        </div>
+        """
+        st.markdown(voice_html, unsafe_allow_html=True)
+
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA TVET- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA TVET - Ifoto y'ibiro (front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TVET- Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TVET - Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
 # 9. CHAT INPUT & RESPONSE HANDLING
 # =========================================================
 
-user_query = st.chat_input("Ask related BULINGA TVET... 💬")
+user_query = st.chat_input("Ask related BULINGA TSS... 💬")
 
 if user_query or uploaded_file:
     file_context_msg = ""
@@ -358,7 +384,7 @@ if user_query or uploaded_file:
 
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
-        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA AI is thinking... 💭</div></div>',
+        '<div class="chat-row assistant"><div class="chat-bubble thinking-text">⚪ BULINGA TSS AI is thinking... 💭</div></div>',
         unsafe_allow_html=True
     )
 
@@ -387,13 +413,13 @@ if user_query or uploaded_file:
         thinking_placeholder.empty()
         
         if is_image_query:
-            response_text = "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨"
+            response_text = "Dore amafoto ajyanye na BULINGA TSS nk'uko wabisabye! 📸✨"
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
         if is_image_query:
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration (Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
@@ -402,6 +428,7 @@ if user_query or uploaded_file:
             "content": response_text,
             "show_image": is_image_query
         })
+        st.rerun()
 
     except Exception as e:
         thinking_placeholder.empty()
