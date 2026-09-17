@@ -3,3 +3,4 @@ groq
 pillow
 gTTS
 requests
+supabase
