@@ -3,6 +3,9 @@ import streamlit as st
 from PIL import Image
 from groq import Groq
 
+# Huza na Supabase Database binyuze muri database.py
+from database import load_chat_history, save_message_to_db, verify_user, create_user
+
 
 # =========================================================
 # 1. PAGE CONFIGURATION
@@ -159,20 +162,14 @@ section[data-testid="stSidebar"] {{
 
 
 # =========================================================
-# 4. SESSION STATE & USER DATABASE INITIALIZATION
+# 4. SESSION STATE & DATABASE USER INITIALIZATION
 # =========================================================
-
-if "users_db" not in st.session_state:
-    st.session_state.users_db = {"admin": "bulinga2026"}
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = ""
-
-if "chat_sessions" not in st.session_state:
-    st.session_state.chat_sessions = {}
 
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = "Main Chat"
@@ -298,126 +295,10 @@ translations = {
         "thinking": "⚪ BULINGA AI inafikiri....",
         "img_resp": "Hapa kuna picha zinazohusiana na Shule ya Sekondari ya Ufundi ya Bulinga kama ulivyoomba! 📸✨",
         "map_resp": "Je, unataka kuona shule ilipo? Unaweza kubonyeza hapa kufungua <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kupata mwelekeo wa shule yetu! 🗺️📍✨"
-    },
-    "Kirundi": {
-        "login_title": "BULINGA TSS AI 🏫",
-        "login_desc": "Nimba Winjiye, Wiyandikishe, cg Umbere nk'Ushitsi 🔐",
-        "auth_choice": "Hitamo Ibikorwa",
-        "mode_login": "Injira",
-        "mode_signup": "Wiyandikishe",
-        "user_label": "Izina ry'umukoresha",
-        "pass_label": "Ijambo ry'ibanga",
-        "signup_btn": "Fungura Konti 🚀",
-        "login_btn": "Injira 🔓",
-        "or_text": "- CANGWE -",
-        "guest_btn": "Koresha utiyandikishije ⚡",
-        "sidebar_control": "🔐 Konti n'Uburenganzira",
-        "logged_in_as": "👤 Winjiye nka",
-        "logout_btn": "Sohoka 🚪",
-        "theme_header": "🎨 Ishusho",
-        "theme_choice": "Hitamo Uburyo",
-        "lang_header": "🌐 Ururimi rwose",
-        "lang_choice": "Hitamo Ururimi rwa System",
-        "response_lang_choice": "Hitamo Ururimi rw'Igisubizo",
-        "clear_history": "🗑️ Hanagura Amateka",
-        "upload_header": "📎 Shyiramo Dosiye / Ifoto",
-        "upload_label": "Shyiramo ifoto cyangwa dosiye",
-        "main_title": "Ubufasha bwa BULINGA AI",
-        "chat_placeholder": "Baza ibijyanye na BULINGA TVET... 💬",
-        "thinking": "⚪ BULINGA AI irimo gutekereza... 💭",
-        "img_resp": "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨",
-        "map_resp": "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
-    },
-    "中文": {
-        "login_title": "BULINGA TSS AI 🏫",
-        "login_desc": "请登录、注册或以访客身份继续 🔐",
-        "auth_choice": "选择操作",
-        "mode_login": "登录",
-        "mode_signup": "注册",
-        "user_label": "用户名",
-        "pass_label": "密码",
-        "signup_btn": "创建账号 🚀",
-        "login_btn": "登录 🔓",
-        "or_text": "- 或 -",
-        "guest_btn": "免注册使用 ⚡",
-        "sidebar_control": "🔐 账户与控制",
-        "logged_in_as": "👤 已登录为",
-        "logout_btn": "登出 🚪",
-        "theme_header": "🎨 外观/主题",
-        "theme_choice": "选择模式",
-        "lang_header": "🌐 全局语言设置",
-        "lang_choice": "选择系统语言",
-        "response_lang_choice": "选择回复语言",
-        "clear_history": "🗑️ 清除当前历史记录",
-        "upload_header": "📎 上传文件/照片",
-        "upload_label": "上传图片或文档",
-        "main_title": "BULINGA AI 助手",
-        "chat_placeholder": "咨询有关 BULINGA TSS 的问题... 💬",
-        "thinking": "⚪ BULINGA AI 正在思考....",
-        "img_resp": "这是您要求的布林加技术中学的相关照片！ 📸✨",
-        "map_resp": "您想查看学校的位置吗？您可以点击此处打开 <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> 来寻找我们学校的方向！ 🗺️📍✨"
-    },
-    "Lingala": {
-        "login_title": "BULINGA TSS AI 🏫",
-        "login_desc": "Pona Kokende, Komiyekola, to Zala na Moleki 🔐",
-        "auth_choice": "Pona Mosantu",
-        "mode_login": "Kokende",
-        "mode_signup": "Komiyekola",
-        "user_label": "Kombo ya mosangani",
-        "pass_label": "Liloba ya mabombami",
-        "signup_btn": "Salela Konti 🚀",
-        "login_btn": "Kokende 🔓",
-        "or_text": "- TO -",
-        "guest_btn": "Salela kozanga komiyekola ⚡",
-        "sidebar_control": "🔐 Konti mpe Boyangeli",
-        "logged_in_as": "👤 Ozali oponi nka",
-        "logout_btn": "Bima 🚪",
-        "theme_header": "🎨 Maloba ya Bonene",
-        "theme_choice": "Pona Lolenge",
-        "lang_header": "🌐 Monoko ya Mokili Mobimba",
-        "lang_choice": "Pona Monoko ya System",
-        "response_lang_choice": "Pona Monoko ya Eyano",
-        "clear_history": "🗑️ Longola Masolo ya Kala",
-        "upload_header": "📎 Tinda Dosiye / Lifoto",
-        "upload_label": "Tinda lifoto to dosiye",
-        "main_title": "Lisungi ya BULINGA AI",
-        "chat_placeholder": "Tuna makambo ya BULINGA TSS... 💬",
-        "thinking": "⚪ BULINGA AI ezali kobongola... 💭",
-        "img_resp": "Talá mafoto ya Bulinga Technical Secondary School lokola olobi! 📸✨",
-        "map_resp": "Ozali kolinga komona esika eteyelo ezali? Okoki kokele awa na <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> po omona nzela ya eteyelo na biso! 🗺️📍✨"
-    },
-    "日本語": {
-        "login_title": "BULINGA TSS AI 🏫",
-        "login_desc": "ログイン、サインアップ、またはゲストとして続行してください 🔐",
-        "auth_choice": "アクションを選択",
-        "mode_login": "ログイン",
-        "mode_signup": "サインアップ",
-        "user_label": "ユーザー名",
-        "pass_label": "パスワード",
-        "signup_btn": "アカウント作成 🚀",
-        "login_btn": "ログイン 🔓",
-        "or_text": "- または -",
-        "guest_btn": "登録なしで使用する ⚡",
-        "sidebar_control": "🔐 アカウントと管理",
-        "logged_in_as": "👤 ログイン中:",
-        "logout_btn": "ログアウト 戻る 🚪",
-        "theme_header": "🎨 外観 / テーマ",
-        "theme_choice": "モードを選択",
-        "lang_header": "🌐 グローバル言語設定",
-        "lang_choice": "システム言語を選択",
-        "response_lang_choice": "回答の言語を選択",
-        "clear_history": "🗑️ 現在の履歴を消去",
-        "upload_header": "📎 ファイル / 写真のアップロード",
-        "upload_label": "画像またはドキュメントをアップロード",
-        "main_title": "BULINGA AI アシスタント",
-        "chat_placeholder": "BULINGA TSSについて質問する... 💬",
-        "thinking": "⚪ BULINGA AI が考えています....",
-        "img_resp": "ご要望に応じたブルリンガ工業中等学校の写真です！ 📸✨",
-        "map_resp": "学校の場所を確認したいですか？ここをクリックして <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> を開き、学校への道順を確認してください！ 🗺️📍✨"
     }
 }
 
-AVAILABLE_LANGUAGES = ["Kinyarwanda", "English", "Français", "Kiswahili", "Kirundi", "中文", "Lingala", "日本語"]
+AVAILABLE_LANGUAGES = ["Kinyarwanda", "English", "Français", "Kiswahili"]
 
 
 # =========================================================
@@ -425,7 +306,6 @@ AVAILABLE_LANGUAGES = ["Kinyarwanda", "English", "Français", "Kiswahili", "Kiru
 # =========================================================
 
 if not st.session_state.logged_in:
-    # First let users choose language even before login using a top selectbox
     login_lang = st.selectbox("🌐 Choose Language / Hitamo Ururimi", AVAILABLE_LANGUAGES, index=0)
     t = translations[login_lang]
 
@@ -442,34 +322,29 @@ if not st.session_state.logged_in:
         if auth_mode == t["mode_signup"]:
             if st.button(t["signup_btn"], use_container_width=True):
                 if username_input and password_input:
-                    if username_input in st.session_state.users_db:
-                        st.error("⚠️ Username already exists! Try logging in." if login_lang == "English" else "⚠️ Izina ry'ukoresha risanzweho! Gerageza kwinjira.")
-                    else:
-                        st.session_state.users_db[username_input] = password_input
+                    success, msg = create_user(username_input, password_input)
+                    if success:
                         st.success("✅ Account created successfully! Please switch to Login." if login_lang == "English" else "✅ Konti yaremwe neza! Nyamuneka hindura ujye awo kwinjira.")
+                    else:
+                        st.error(f"⚠️ {msg}")
                 else:
                     st.warning("⚠️ Please fill in all fields." if login_lang == "English" else "⚠️ Nyamuneka yora ibice byose bisabwa.")
         else:
             if st.button(t["login_btn"], use_container_width=True):
-                if username_input in st.session_state.users_db and st.session_state.users_db[username_input] == password_input:
+                success, msg = verify_user(username_input, password_input)
+                if success:
                     st.session_state.logged_in = True
                     st.session_state.current_user = username_input
-
-                    if username_input not in st.session_state.chat_sessions:
-                        st.session_state.chat_sessions[username_input] = {"Main Chat": []}
-
                     st.success(f"🎉 Welcome back, {username_input}!" if login_lang == "English" else f"🎉 Murakaza neza, {username_input}!")
                     st.rerun()
                 else:
-                    st.error("❌ Invalid username or password." if login_lang == "English" else "❌ Izina ry'ukoresha cyangwa ijambo ry'ibanga si byo.")
+                    st.error(f"❌ {msg}")
 
         st.markdown(f"<div style='text-align: center; margin: 10px 0; color: #b0b3b8;'>{t['or_text']}</div>", unsafe_allow_html=True)
 
         if st.button(t["guest_btn"], use_container_width=True):
             st.session_state.logged_in = True
             st.session_state.current_user = "Guest"
-            if "Guest" not in st.session_state.chat_sessions:
-                st.session_state.chat_sessions["Guest"] = {"Main Chat": []}
             st.rerun()
 
     st.stop()
@@ -479,12 +354,10 @@ if not st.session_state.logged_in:
 # 7. SIDEBAR (GLOBAL LANGUAGE, THEME SWITCHER & CONTROLS)
 # =========================================================
 
-# Guhitamo ururimi rwa system yose (Global Language Selection)
 st.sidebar.subheader("🌐 Global Language")
 selected_lang = st.sidebar.selectbox("Choose System Language", AVAILABLE_LANGUAGES, index=0)
 t = translations[selected_lang]
 
-# Guhitamo ururimi rwo kuba yahabwamo response na BULINGA AI
 st.sidebar.markdown("---")
 st.sidebar.subheader("💬 Response Language")
 response_lang = st.sidebar.selectbox(t["response_lang_choice"], AVAILABLE_LANGUAGES, index=0)
@@ -504,14 +377,8 @@ if selected_theme != st.session_state.theme_mode:
     st.session_state.theme_mode = selected_theme
     st.rerun()
 
-user_sessions = st.session_state.chat_sessions[st.session_state.current_user]
-if "Main Chat" not in user_sessions:
-    user_sessions["Main Chat"] = []
-st.session_state.current_session_id = "Main Chat"
-
 st.sidebar.markdown("---")
 if st.sidebar.button(t["clear_history"]):
-    user_sessions[st.session_state.current_session_id] = []
     st.rerun()
 
 st.sidebar.markdown("---")
@@ -553,16 +420,13 @@ Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
-if not GROQ_API_KEY:
-    st.sidebar.warning("⚠️ GROQ_API_KEY ntabwo yashyizwe muri Environment Variables.")
-
 client = Groq(
     api_key=GROQ_API_KEY or "YOUR_GROQ_API_KEY"
 )
 
 
 # =========================================================
-# 10. MAIN HEADER & ROTATING THANK YOU MESSAGE (2 SECONDS INTERVAL)
+# 10. MAIN HEADER & ROTATING THANK YOU MESSAGE
 # =========================================================
 
 st.markdown(f'<h1 class="moving-title">{t["main_title"]}</h1>', unsafe_allow_html=True)
@@ -581,7 +445,8 @@ def show_rotating_thank_you():
 
 show_rotating_thank_you()
 
-current_messages = user_sessions[st.session_state.current_session_id]
+# Load chat history from Supabase Cloud Database
+current_messages = load_chat_history(st.session_state.current_user, st.session_state.current_session_id)
 
 
 # =========================================================
@@ -616,7 +481,8 @@ if user_query or uploaded_file:
 
     full_user_input = (user_query or "") + file_context_msg
 
-    current_messages.append({"role": "user", "content": full_user_input})
+    # Save user message to Supabase
+    save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "user", full_user_input)
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
 
     query_lower = (user_query or "").lower()
@@ -640,6 +506,7 @@ if user_query or uploaded_file:
             }
         ]
 
+        current_messages = load_chat_history(st.session_state.current_user, st.session_state.current_session_id)
         for message in current_messages:
             messages_payload.append({
                 "role": message["role"],
@@ -657,16 +524,11 @@ if user_query or uploaded_file:
         thinking_placeholder.empty()
 
         if is_image_query:
-            # Map translations for image response depending on response_lang
             img_resp_dict = {
                 "Kinyarwanda": translations["Kinyarwanda"]["img_resp"],
                 "English": translations["English"]["img_resp"],
                 "Français": translations["Français"]["img_resp"],
-                "Kiswahili": translations["Kiswahili"]["img_resp"],
-                "Kirundi": translations["Kirundi"]["img_resp"],
-                "中文": translations["中文"]["img_resp"],
-                "Lingala": translations["Lingala"]["img_resp"],
-                "日本語": translations["日本語"]["img_resp"]
+                "Kiswahili": translations["Kiswahili"]["img_resp"]
             }
             response_text = img_resp_dict.get(response_lang, translations["English"]["img_resp"])
 
@@ -675,11 +537,7 @@ if user_query or uploaded_file:
                 "Kinyarwanda": translations["Kinyarwanda"]["map_resp"],
                 "English": translations["English"]["map_resp"],
                 "Français": translations["Français"]["map_resp"],
-                "Kiswahili": translations["Kiswahili"]["map_resp"],
-                "Kirundi": translations["Kirundi"]["map_resp"],
-                "中文": translations["中文"]["map_resp"],
-                "Lingala": translations["Lingala"]["map_resp"],
-                "日本語": translations["日本語"]["map_resp"]
+                "Kiswahili": translations["Kiswahili"]["map_resp"]
             }
             response_text = map_resp_dict.get(response_lang, translations["English"]["map_resp"])
 
@@ -691,11 +549,8 @@ if user_query or uploaded_file:
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
-        current_messages.append({
-            "role": "assistant", 
-            "content": response_text,
-            "show_image": is_image_query
-        })
+        # Save assistant response to Supabase
+        save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "assistant", response_text, show_image=is_image_query)
 
     except Exception as e:
         thinking_placeholder.empty()
