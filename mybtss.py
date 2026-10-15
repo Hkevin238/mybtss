@@ -235,7 +235,7 @@ translations = {
         "upload_header": "📎 Shyiramo Dosiye / Ifoto",
         "upload_label": "Shyiramo ifoto cyangwa dosiye",
         "main_title": "Ubufasha bwa BULINGA AI",
-        "chat_placeholder": "Baza ibijyanye na BULINGA TVET... 💬",
+        "chat_placeholder": "Baza icyo ushaka cyose cyangwa ibijyanye na BULINGA TVET... 💬",
         "thinking": "⚪ BULINGA AI irimo gutekereza... 💭",
         "img_resp": "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨",
         "map_resp": "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
@@ -264,7 +264,7 @@ translations = {
         "upload_header": "📎 Upload Files / Photos",
         "upload_label": "Upload image or document",
         "main_title": "BULINGA AI Assistant",
-        "chat_placeholder": "Ask related BULINGA TSS... 💬",
+        "chat_placeholder": "Ask anything or related to BULINGA TSS... 💬",
         "thinking": "⚪ BULINGA AI is thinking....",
         "img_resp": "Here are the photos related to Bulinga Technical Secondary School as you requested! 📸✨",
         "map_resp": "Do you want to see where the school is located? You can click here to open <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> to find the direction to our school! 🗺️📍✨"
@@ -293,7 +293,7 @@ translations = {
         "upload_header": "📎 Télécharger des fichiers / Photos",
         "upload_label": "Télécharger une image ou un document",
         "main_title": "Assistant IA BULINGA",
-        "chat_placeholder": "Posez des questions sur BULINGA TSS... 💬",
+        "chat_placeholder": "Posez n'importe quelle question ou sur BULINGA TSS... 💬",
         "thinking": "⚪ BULINGA AI réfléchit....",
         "img_resp": "Voici les photos relatives à l'École Secondaire Technique de Bulinga comme demandé ! 📸✨",
         "map_resp": "Voulez-vous voir où se trouve l'école ? Vous pouvez cliquer ici pour ouvrir <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> pour trouver l'itinéraire ! 🗺️📍✨"
@@ -322,7 +322,7 @@ translations = {
         "upload_header": "📎 Pakia Faili / Picha",
         "upload_label": "Pakia picha au waraka",
         "main_title": "Msaidizi wa AI wa BULINGA",
-        "chat_placeholder": "Uliza kuhusu BULINGA TSS... 💬",
+        "chat_placeholder": "Uliza chochote au kuhusu BULINGA TSS... 💬",
         "thinking": "⚪ BULINGA AI inafikiri....",
         "img_resp": "Hapa kuna picha zinazohusiana na Shule ya Sekondari ya Ufundi ya Bulinga kama ulivyoomba! 📸✨",
         "map_resp": "Je, unataka kuona shule ilipo? Unaweza kubonyeza hapa kufungua <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kupata mwelekeo wa shule yetu! 🗺️📍✨"
@@ -420,12 +420,12 @@ st.sidebar.subheader(t["upload_header"])
 uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 8. BULINGA AI SYSTEM PROMPT (UPDATED WITH STRATEGIC PLAN 2026-2030 DATA)
+# 8. BULINGA AI SYSTEM PROMPT (UPDATED WITH GENERAL KNOWLEDGE SUPPORT)
 # =========================================================
 
 BULINGA_INFO = """
 You are BULINGA AI, an official AI assistant built exclusively
-for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL)[cite: 1].
+for BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL).
 
 CRITICAL RULE REGARDING CREATOR:
 - You were developed, created, and built exclusively by the developers and programmers of BULINGA TVET SCHOOL.
@@ -435,22 +435,21 @@ EMOJI RULE:
 - Always include relevant, cool, and engaging emojis (such as 🏫, 📚, 💡, ✨, 👨‍💻, 👍, etc.) in your responses to make them lively and friendly.
 
 CORE RULE:
-Answer all questions related to BULINGA TSS , real life and Your Creators / Developers(Kevin).
-If a question is completely unrelated to BULINGA TVET SCHOOL, politely answer with a friendly message and emojis.
+You are a helpful, smart, and versatile assistant. Answer any questions the user asks—whether it's about general knowledge, coding, science, mathematics, geography, history, everyday life, or specific details about BULINGA TVET SCHOOL. Never refuse to answer general questions; be helpful and accurate on all topics while proudly representing BULINGA TVET SCHOOL! 🌍💡
 
 SCHOOL DETAILS & STRATEGIC PLAN (2026-2030):
-School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫[cite: 1]
-Vision: “To become a center of excellence in ICT and business education, producing competent, innovative graduates who drive Rwanda's digital economy and entrepreneurship by 2030.”[cite: 1]
-Mission: “To provide quality, competency-based technical and vocational education that equips learners with relevant ICT, business, and soft skills for successful careers and sustainable socio-economic development.”[cite: 1]
-Location: Kiyoro Village, Munazi Cell, Mushishiro Sector, Muhanga District, Southern Province, Rwanda 📍[cite: 1].
-School Fees & Financials: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year Strategic Plan budget is RWF 850,000,000 (2026-2030)[cite: 1].
+School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫
+Vision: “To become a center of excellence in ICT and business education, producing competent, innovative graduates who drive Rwanda's digital economy and entrepreneurship by 2030.”
+Mission: “To provide quality, competency-based technical and vocational education that equips learners with relevant ICT, business, and soft skills for successful careers and sustainable socio-economic development.”
+Location: Kiyoro Village, Munazi Cell, Mushishiro Sector, Muhanga District, Southern Province, Rwanda 📍.
+School Fees & Financials: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year Strategic Plan budget is RWF 850,000,000 (2026-2030).
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
 Programs & Combinations: 
-- Software Development (Levels 3, 4 & 5)[cite: 1]
-- Network and internet technology (Levels 3, 4, 5)[cite: 1]
-- Computer system and architecture (Levels 3, 4, 5)[cite: 1]
-- Accounting (Senior 4, 5, 6)[cite: 1]
-Student & Staff Stats: Approximately 582 students, 32 trainers and support personnel[cite: 1].
+- Software Development (Levels 3, 4 & 5)
+- Network and internet technology (Levels 3, 4, 5)
+- Computer system and architecture (Levels 3, 4, 5)
+- Accounting (Senior 4, 5, 6)
+Student & Staff Stats: Approximately 582 students, 32 trainers and support personnel.
 Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929) 📞.
 """
 
