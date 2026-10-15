@@ -386,7 +386,7 @@ st.sidebar.subheader(t["upload_header"])
 uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 8. BULINGA AI SYSTEM PROMPT (UPDATED WITH STRATEGIC PLAN 2026-2030 DATA)
+# 8. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -409,14 +409,14 @@ School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫[cite:
 Vision: “To become a center of excellence in ICT and business education, producing competent, innovative graduates who drive Rwanda's digital economy and entrepreneurship by 2030.”[cite: 1]
 Mission: “To provide quality, competency-based technical and vocational education that equips learners with relevant ICT, business, and soft skills for successful careers and sustainable socio-economic development.”[cite: 1]
 Location: Kiyoro Village, Munazi Cell, Mushishiro Sector, Muhanga District, Southern Province, Rwanda 📍[cite: 1].
-School Fees & Financials: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year Strategic Plan budget is RWF 850,000,000 (2026-2030)[cite: 1].
+School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year budget is RWF 850,000,000[cite: 1].
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
-Programs & Combinations: 
+Combinations & Programs: 
 - Software Development (Levels 3, 4 & 5)[cite: 1]
 - Network and internet technology (Levels 3, 4, 5)[cite: 1]
 - Computer system and architecture (Levels 3, 4, 5)[cite: 1]
 - Accounting (Senior 4, 5, 6)[cite: 1]
-Student & Staff Stats: Approximately 582 students, 32 trainers and support personnel[cite: 1].
+Students & Staff: ~582 students, 32 trainers and support personnel[cite: 1].
 Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929) 📞.
 """
 
@@ -554,7 +554,7 @@ if user_query or uploaded_file:
             if os.path.exists("bulinga.png"):
                 st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=Type=True)
+                st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
         # Save assistant response to Supabase
         save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "assistant", response_text, show_image=is_image_query)
