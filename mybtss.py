@@ -3,10 +3,6 @@ import streamlit as st
 from PIL import Image
 from groq import Groq
 
-# Huza na Supabase Database binyuze muri database.py
-from database import load_chat_history, save_message_to_db, verify_user, create_user
-
-
 # =========================================================
 # 1. PAGE CONFIGURATION
 # =========================================================
@@ -162,7 +158,7 @@ section[data-testid="stSidebar"] {{
 
 
 # =========================================================
-# 4. SESSION STATE & DATABASE USER INITIALIZATION
+# 4. SESSION STATE & LOCAL STORAGE INITIALIZATION (NO DB)
 # =========================================================
 
 if "logged_in" not in st.session_state:
@@ -173,6 +169,41 @@ if "current_user" not in st.session_state:
 
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = "Main Chat"
+
+# Local dictionary for mock users if needed
+if "users_db" not in st.session_state:
+    st.session_state.users_db = {"admin": "1234"}
+
+# Local chat history storage per user
+if "chat_histories" not in st.session_state:
+    st.session_state.chat_histories = {}
+
+def load_chat_history(username, session_id):
+    key = f"{username}_{session_id}"
+    return st.session_state.chat_histories.get(key, [])
+
+def save_message_to_db(username, session_id, role, content, show_image=False):
+    key = f"{username}_{session_id}"
+    if key not in st.session_state.chat_histories:
+        st.session_state.chat_histories[key] = []
+    st.session_state.chat_histories[key].append({
+        "role": role,
+        "content": content,
+        "show_image": show_image
+    })
+
+def verify_user(username, password):
+    if username in st.session_state.users_db and st.session_state.users_db[username] == password:
+        return True, "Login successful"
+    return False, "Izina ry'ukoresha cyangwa ijambo ry'ibanga sibyo."
+
+def create_user(username, password):
+    if username in st.session_state.users_db:
+        return False, "Konti ifite iri zina isanzweho."
+    if not username or not password:
+        return False, "Nyamuneka yuzuza ibisabwa byose."
+    st.session_state.users_db[username] = password
+    return True, "Konti yaremwe neza!"
 
 
 # =========================================================
@@ -379,6 +410,9 @@ if selected_theme != st.session_state.theme_mode:
 
 st.sidebar.markdown("---")
 if st.sidebar.button(t["clear_history"]):
+    key = f"{st.session_state.current_user}_{st.session_state.current_session_id}"
+    if key in st.session_state.chat_histories:
+        st.session_state.chat_histories[key] = []
     st.rerun()
 
 st.sidebar.markdown("---")
@@ -386,7 +420,7 @@ st.sidebar.subheader(t["upload_header"])
 uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 8. BULINGA AI SYSTEM PROMPT
+# 8. BULINGA AI SYSTEM PROMPT (UPDATED WITH STRATEGIC PLAN 2026-2030 DATA)
 # =========================================================
 
 BULINGA_INFO = """
@@ -409,14 +443,14 @@ School Name: BULINGA TECHNICAL SECONDARY SCHOOL (BULINGA TVET SCHOOL) 🏫[cite:
 Vision: “To become a center of excellence in ICT and business education, producing competent, innovative graduates who drive Rwanda's digital economy and entrepreneurship by 2030.”[cite: 1]
 Mission: “To provide quality, competency-based technical and vocational education that equips learners with relevant ICT, business, and soft skills for successful careers and sustainable socio-economic development.”[cite: 1]
 Location: Kiyoro Village, Munazi Cell, Mushishiro Sector, Muhanga District, Southern Province, Rwanda 📍[cite: 1].
-School Fees: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year budget is RWF 850,000,000[cite: 1].
+School Fees & Financials: 92,000 Frw + 1,500 Frw Insurance + 2,000 Frw ID/Card = 95,500 Frw Total 💰. Total 5-year Strategic Plan budget is RWF 850,000,000 (2026-2030)[cite: 1].
 Account: Mwarimu Sacco, Account Number: 900009815200, Account Name: BULINGA TVET SCHOOL 🏦.
-Combinations & Programs: 
+Programs & Combinations: 
 - Software Development (Levels 3, 4 & 5)[cite: 1]
 - Network and internet technology (Levels 3, 4, 5)[cite: 1]
 - Computer system and architecture (Levels 3, 4, 5)[cite: 1]
 - Accounting (Senior 4, 5, 6)[cite: 1]
-Students & Staff: ~582 students, 32 trainers and support personnel[cite: 1].
+Student & Staff Stats: Approximately 582 students, 32 trainers and support personnel[cite: 1].
 Contacts: Headmaster (0788546462), Bursar (0782612675), DOD (0785979951), DOS (0784020929) 📞.
 """
 
@@ -452,7 +486,7 @@ def show_rotating_thank_you():
 
 show_rotating_thank_you()
 
-# Load chat history from Supabase Cloud Database
+# Load chat history from session state
 current_messages = load_chat_history(st.session_state.current_user, st.session_state.current_session_id)
 
 
@@ -488,7 +522,7 @@ if user_query or uploaded_file:
 
     full_user_input = (user_query or "") + file_context_msg
 
-    # Save user message to Supabase
+    # Save user message to session state
     save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "user", full_user_input)
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
 
@@ -556,7 +590,7 @@ if user_query or uploaded_file:
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
-        # Save assistant response to Supabase
+        # Save assistant response to session state
         save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "assistant", response_text, show_image=is_image_query)
 
     except Exception as e:
