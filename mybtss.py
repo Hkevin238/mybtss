@@ -503,9 +503,9 @@ for message in current_messages:
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{content}</div></div>', unsafe_allow_html=True)
         if message.get("show_image", False):
             if os.path.exists("bulinga.png"):
-                st.image("bulinga.png", caption="BULINGA TVET- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
+                st.image("bulinga.png", caption="BULINGA TSS- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
-                st.image("btss.png", caption="BULINGA TVET- Ifoto ya BTSS ✨", use_container_width=True)
+                st.image("btss.png", caption="BULINGA TSS- Ifoto ya BTSS ✨", use_container_width=True)
 
 
 # =========================================================
