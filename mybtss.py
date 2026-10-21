@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from PIL import Image
 from groq import Groq
+import urllib.parse
 
 # =========================================================
 # 1. PAGE CONFIGURATION
@@ -170,11 +171,9 @@ if "current_user" not in st.session_state:
 if "current_session_id" not in st.session_state:
     st.session_state.current_session_id = "Main Chat"
 
-# Local dictionary for mock users if needed
 if "users_db" not in st.session_state:
     st.session_state.users_db = {"admin": "1234"}
 
-# Local chat history storage per user
 if "chat_histories" not in st.session_state:
     st.session_state.chat_histories = {}
 
@@ -182,14 +181,15 @@ def load_chat_history(username, session_id):
     key = f"{username}_{session_id}"
     return st.session_state.chat_histories.get(key, [])
 
-def save_message_to_db(username, session_id, role, content, show_image=False):
+def save_message_to_db(username, session_id, role, content, show_image=False, generated_img_url=None):
     key = f"{username}_{session_id}"
     if key not in st.session_state.chat_histories:
         st.session_state.chat_histories[key] = []
     st.session_state.chat_histories[key].append({
         "role": role,
         "content": content,
-        "show_image": show_image
+        "show_image": show_image,
+        "generated_img_url": generated_img_url
     })
 
 def verify_user(username, password):
@@ -235,9 +235,10 @@ translations = {
         "upload_header": "📎 Shyiramo Dosiye / Ifoto",
         "upload_label": "Shyiramo ifoto cyangwa dosiye",
         "main_title": "Ubufasha bwa BULINGA AI",
-        "chat_placeholder": "Baza icyo ushaka cyose cyangwa ibijyanye na BULINGA TVET... 💬",
+        "chat_placeholder": "Baza icyo ushaka cyose cyangwa wandike nka 'kora ifoto ya...' 💬",
         "thinking": "⚪ BULINGA AI irimo gutekereza... 💭",
         "img_resp": "Dore amafoto ajyanye na Bulinga Technical Secondary School nk'uko wabisabye! 📸✨",
+        "gen_img_resp": "Dore ifoto wavuze ko nkwiremereza cyangwa ko nshushanya! 🎨✨",
         "map_resp": "Urashaka kureba aho ishuri riherereye? Ushobora gukanda hano wanditse <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kugira ngo ubashe kureba icyerekezo cy'ishuri ryacu! 🗺️📍✨"
     },
     "English": {
@@ -264,9 +265,10 @@ translations = {
         "upload_header": "📎 Upload Files / Photos",
         "upload_label": "Upload image or document",
         "main_title": "BULINGA AI Assistant",
-        "chat_placeholder": "Ask anything or related to BULINGA TSS... 💬",
+        "chat_placeholder": "Ask anything or type like 'generate an image of...' 💬",
         "thinking": "⚪ BULINGA AI is thinking....",
         "img_resp": "Here are the photos related to Bulinga Technical Secondary School as you requested! 📸✨",
+        "gen_img_resp": "Here is the generated image you asked me to create! 🎨✨",
         "map_resp": "Do you want to see where the school is located? You can click here to open <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> to find the direction to our school! 🗺️📍✨"
     },
     "Français": {
@@ -293,9 +295,10 @@ translations = {
         "upload_header": "📎 Télécharger des fichiers / Photos",
         "upload_label": "Télécharger une image ou un document",
         "main_title": "Assistant IA BULINGA",
-        "chat_placeholder": "Posez n'importe quelle question ou sur BULINGA TSS... 💬",
+        "chat_placeholder": "Posez une question ou tapez 'générer une image de...' 💬",
         "thinking": "⚪ BULINGA AI réfléchit....",
         "img_resp": "Voici les photos relatives à l'École Secondaire Technique de Bulinga comme demandé ! 📸✨",
+        "gen_img_resp": "Voici l'image générée que vous m'avez demandé de créer ! 🎨✨",
         "map_resp": "Voulez-vous voir où se trouve l'école ? Vous pouvez cliquer ici pour ouvrir <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> pour trouver l'itinéraire ! 🗺️📍✨"
     },
     "Kiswahili": {
@@ -322,9 +325,10 @@ translations = {
         "upload_header": "📎 Pakia Faili / Picha",
         "upload_label": "Pakia picha au waraka",
         "main_title": "Msaidizi wa AI wa BULINGA",
-        "chat_placeholder": "Uliza chochote au kuhusu BULINGA TSS... 💬",
+        "chat_placeholder": "Uliza chochote auandike 'tengeneza picha ya...' 💬",
         "thinking": "⚪ BULINGA AI inafikiri....",
         "img_resp": "Hapa kuna picha zinazohusiana na Shule ya Sekondari ya Ufundi ya Bulinga kama ulivyoomba! 📸✨",
+        "gen_img_resp": "Hapa kuna picha uliyoniomba nitengeneze! 🎨✨",
         "map_resp": "Je, unataka kuona shule ilipo? Unaweza kubonyeza hapa kufungua <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> kupata mwelekeo wa shule yetu! 🗺️📍✨"
     }
 }
@@ -333,7 +337,7 @@ AVAILABLE_LANGUAGES = ["Kinyarwanda", "English", "Français", "Kiswahili"]
 
 
 # =========================================================
-# 6. AUTHENTICATION (LOGIN / SIGN UP / GUEST) SYSTEM
+# 6. AUTHENTICATION SYSTEM
 # =========================================================
 
 if not st.session_state.logged_in:
@@ -382,7 +386,7 @@ if not st.session_state.logged_in:
 
 
 # =========================================================
-# 7. SIDEBAR (GLOBAL LANGUAGE, THEME SWITCHER & CONTROLS)
+# 7. SIDEBAR
 # =========================================================
 
 st.sidebar.subheader("🌐 Global Language")
@@ -420,7 +424,7 @@ st.sidebar.subheader(t["upload_header"])
 uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
 
 # =========================================================
-# 8. BULINGA AI SYSTEM PROMPT (UPDATED WITH GENERAL KNOWLEDGE SUPPORT)
+# 8. BULINGA AI SYSTEM PROMPT
 # =========================================================
 
 BULINGA_INFO = """
@@ -485,7 +489,6 @@ def show_rotating_thank_you():
 
 show_rotating_thank_you()
 
-# Load chat history from session state
 current_messages = load_chat_history(st.session_state.current_user, st.session_state.current_session_id)
 
 
@@ -506,10 +509,12 @@ for message in current_messages:
                 st.image("bulinga.png", caption="BULINGA TSS- Ifoto y'ibiro(front-view) by'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS- Ifoto ya BTSS ✨", use_container_width=True)
+        if message.get("generated_img_url"):
+            st.image(message["generated_img_url"], caption="Generated Image 🎨✨", use_container_width=True)
 
 
 # =========================================================
-# 12. CHAT INPUT & RESPONSE HANDLING
+# 12. CHAT INPUT & RESPONSE HANDLING (WITH IMAGE AUTO GENERATE)
 # =========================================================
 
 user_query = st.chat_input(t["chat_placeholder"])
@@ -521,7 +526,6 @@ if user_query or uploaded_file:
 
     full_user_input = (user_query or "") + file_context_msg
 
-    # Save user message to session state
     save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "user", full_user_input)
     st.markdown(f'<div class="chat-row user"><div class="chat-bubble">{full_user_input}</div></div>', unsafe_allow_html=True)
 
@@ -531,6 +535,10 @@ if user_query or uploaded_file:
 
     map_keywords = ["map", "google map", "ahoherereye", "location", "icyerekezo", "direction", "irebe", "aho riherereye"]
     is_map_query = any(kw in query_lower for kw in map_keywords)
+
+    # Image generation check keywords (e.g. generate image, kora ifoto, shushanya, draw, etc.)
+    gen_img_keywords = ["generate image", "kora ifoto", "shushanya", "draw", "create image", "ushushanye", "rekama ifoto", "image ya"]
+    is_gen_img_query = any(kw in query_lower for kw in gen_img_keywords)
 
     thinking_placeholder = st.empty()
     thinking_placeholder.markdown(
@@ -563,7 +571,20 @@ if user_query or uploaded_file:
         response_text = completion.choices[0].message.content
         thinking_placeholder.empty()
 
-        if is_image_query:
+        generated_img_url = None
+        if is_gen_img_query:
+            gen_img_resp_dict = {
+                "Kinyarwanda": translations["Kinyarwanda"]["gen_img_resp"],
+                "English": translations["English"]["gen_img_resp"],
+                "Français": translations["Français"]["gen_img_resp"],
+                "Kiswahili": translations["Kiswahili"]["gen_img_resp"]
+            }
+            response_text = gen_img_resp_dict.get(response_lang, translations["English"]["gen_img_resp"])
+            # Auto generate image URL via Pollinations AI based on user prompt query
+            encoded_prompt = urllib.parse.quote(user_query)
+            generated_img_url = f"https://pollinations.ai/p/{encoded_prompt}?width=1024&height=1024&seed=42&nologo=true"
+
+        if is_image_query and not is_gen_img_query:
             img_resp_dict = {
                 "Kinyarwanda": translations["Kinyarwanda"]["img_resp"],
                 "English": translations["English"]["img_resp"],
@@ -583,14 +604,16 @@ if user_query or uploaded_file:
 
         st.markdown(f'<div class="chat-row assistant"><div class="chat-bubble">{response_text}</div></div>', unsafe_allow_html=True)
 
-        if is_image_query:
+        if is_image_query and not is_gen_img_query:
             if os.path.exists("bulinga.png"):
                 st.image("bulinga.png", caption="BULINGA - Ifoto ya Administration(Front-view) y'Ishuri 🏫", use_container_width=True)
             if os.path.exists("btss.png"):
                 st.image("btss.png", caption="BULINGA TSS - Logo ya BTSS ✨", use_container_width=True)
 
-        # Save assistant response to session state
-        save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "assistant", response_text, show_image=is_image_query)
+        if generated_img_url:
+            st.image(generated_img_url, caption="Generated Image 🎨✨", use_container_width=True)
+
+        save_message_to_db(st.session_state.current_user, st.session_state.current_session_id, "assistant", response_text, show_image=(is_image_query and not is_gen_img_query), generated_img_url=generated_img_url)
 
     except Exception as e:
         thinking_placeholder.empty()
