@@ -297,7 +297,7 @@ translations = {
         "main_title": "Assistant IA BULINGA",
         "chat_placeholder": "Posez une question ou tapez 'générer une image de...' 💬",
         "thinking": "⚪ BULINGA AI réfléchit....",
-        "img_resp": "Voici les photos relatives à l'École Secondaire Technique de Bulinga comme demandé ! 📸✨",
+        "img_resp": "Voici les photos relatives à l'École Secondaire Technique de Bulinga comme demandé !",
         "gen_img_resp": "Voici l'image générée que vous m'avez demandé de créer ! 🎨✨",
         "map_resp": "Voulez-vous voir où se trouve l'école ? Vous pouvez cliquer ici pour ouvrir <a href=\"https://maps.google.com/?cid=5000695181927039479&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ\" target=\"_blank\">Google Map</a> pour trouver l'itinéraire ! 🗺️📍✨"
     },
@@ -422,6 +422,11 @@ if st.sidebar.button(t["clear_history"]):
 st.sidebar.markdown("---")
 st.sidebar.subheader(t["upload_header"])
 uploaded_file = st.sidebar.file_uploader(t["upload_label"], type=["png", "jpg", "jpeg", "pdf", "txt"])
+
+# Persistent feedback link button always visible in the sidebar
+st.sidebar.markdown("---")
+st.sidebar.link_button("📝 TUBWIRE IKIBAZO UGIZE", "https://docs.google.com/forms/d/e/1FAIpQLSfkJpKdEOUBHTSqoQ_nux4DSLqvJVI8suOcPsAPT8AU1MuhWA/viewform?usp=publish-editor", use_container_width=True)
+
 
 # =========================================================
 # 8. BULINGA AI SYSTEM PROMPT
