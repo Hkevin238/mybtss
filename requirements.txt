@@ -4,3 +4,4 @@ pillow
 gTTS
 requests
 supabase
+openai
